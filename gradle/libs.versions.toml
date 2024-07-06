@@ -1,0 +1,11 @@
+[versions]
+shadow = "8.1.1"
+minestom = "d606051f1e"
+
+[libraries]
+
+minestom = { module = "net.minestom:minestom-snapshots", version.ref = "minestom" }
+
+
+[plugins]
+shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
