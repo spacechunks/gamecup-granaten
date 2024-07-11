@@ -3,6 +3,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("java")
     alias(libs.plugins.shadow)
+    alias(libs.plugins.lombok)
 }
 
 group = "space.chunks"
@@ -14,6 +15,10 @@ repositories {
 
 dependencies {
     implementation(rootProject.libs.minestom)
+    implementation(rootProject.libs.guice)
+    implementation(rootProject.libs.guice.assistedinject)
+    implementation(rootProject.libs.jackson.core)
+    implementation(rootProject.libs.jackson.databind)
 }
 
 tasks.test {
