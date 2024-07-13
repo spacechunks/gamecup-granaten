@@ -1,15 +1,22 @@
 package space.chunks.gamecup.dgr;
 
 import com.google.inject.Inject;
+import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
+import net.minestom.server.MinecraftServer;
+import net.minestom.server.command.builder.Command;
+import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.phase.WaitingPhase;
 import space.chunks.gamecup.dgr.phase.handler.PhaseHandler;
 import space.chunks.gamecup.dgr.team.Team;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -17,30 +24,63 @@ import java.util.List;
  */
 @Getter
 @Accessors(fluent=true)
+@Log4j2
 public final class GameImpl implements Game {
   private final PhaseHandler phases;
   private final List<Map> maps;
   private final List<Team> teams;
 
   @Inject
-  public GameImpl(@NotNull PhaseHandler phases, @NotNull GameConfig config, @NotNull GameFactory factory) {
+  public GameImpl(@NotNull PhaseHandler phases, @NotNull GameConfig config, @NotNull GameFactory factory, @NotNull Provider<Team> teamProvider) {
     this.phases = phases;
-    this.maps = new ArrayList<>();
-    this.teams = createTeams(config, factory);
+
+    log.info("Init game with config: {}", config);
+    this.teams = createTeams(config, teamProvider);
+    this.maps = createMaps(factory);
   }
 
-  private @NotNull List<Team> createTeams(@NotNull GameConfig config, @NotNull GameFactory factory) {
+  private @NotNull List<Map> createMaps(@NotNull GameFactory factory) {
+    List<Map> maps = new ArrayList<>();
+    for (Team team : this.teams) {
+      Map map = factory.createMap(team);
+      maps.add(map);
+      team.map(map);
+      map.load();
+    }
+
+    log.info("Created and loaded {} for {} teams.", maps.size(), this.teams.size());
+    return maps;
+  }
+
+  private @NotNull List<Team> createTeams(@NotNull GameConfig config, @NotNull Provider<Team> teamProvider) {
     List<Team> teams = new ArrayList<>();
     for (int i = 0; i < config.teams(); i++) {
-      Team team = factory.createTeam();
+      Team team = teamProvider.get();
       teams.add(team);
     }
+    log.info("Created {} teams.", teams.size());
     return teams;
   }
 
   @Override
   public void launch() {
+    log.info("Launching game, entering waiting phase");
 
+    this.phases.enterPhase(WaitingPhase.class);
+  }
+
+  @Inject
+  public void registerTickTask(@NotNull GameTickTask task) {
+    MinecraftServer.getSchedulerManager().scheduleTask(task, TaskSchedule.seconds(5), TaskSchedule.tick(1));
+    log.info("Scheduled tick task");
+  }
+
+  @Inject
+  public void registerCommands(@NotNull Set<Command> commands) {
+    for (Command command : commands) {
+      MinecraftServer.getCommandManager().register(command);
+      log.info("Registered command: {}", command.getName());
+    }
   }
 
   @Override

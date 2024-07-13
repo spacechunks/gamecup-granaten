@@ -4,6 +4,8 @@ import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.Ticking;
 import space.chunks.gamecup.dgr.phase.Phase;
 
+import java.util.Collection;
+
 
 /**
  * @author Nico_ND1
@@ -22,6 +24,13 @@ public interface PhaseHandler extends Ticking {
    * @param phase The phase to register
    */
   void registerPhase(@NotNull Phase phase);
+
+  /**
+   * Returns all registered {@link Phase phases}. They may be registered by either calling {@link PhaseHandler#registerPhase(Phase)} or by being bound with Guice in
+   * {@link space.chunks.gamecup.dgr.GameModule}.
+   */
+  @NotNull
+  Collection<Phase> registeredPhases();
 
   /**
    * Enters the {@link Phase} bound to the given {@code name}, throws {@link NullPointerException} if none is found. The {@link PhaseHandler#currentPhase()} will be quit before entering the new

@@ -1,8 +1,8 @@
-package space.chunks.gamecup.dgr.map.incident;
+package space.chunks.gamecup.dgr.map.procedure.incident;
 
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.Named;
-import space.chunks.gamecup.dgr.map.machine.Procedure;
+import space.chunks.gamecup.dgr.map.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 
 import java.util.Set;
@@ -13,5 +13,5 @@ import java.util.Set;
  */
 public interface Incident extends MapObject, Named {
   @NotNull
-  Set<Procedure> blockedMachines();
+  Set<Procedure> blockedProcedures();
 }

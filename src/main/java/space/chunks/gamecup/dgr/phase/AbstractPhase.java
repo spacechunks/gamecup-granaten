@@ -1,9 +1,11 @@
 package space.chunks.gamecup.dgr.phase;
 
+import com.google.inject.Inject;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import space.chunks.gamecup.dgr.Game;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,9 @@ import java.util.List;
 public abstract class AbstractPhase implements Phase {
   private final List<EventListener<?>> listeners;
   private boolean active;
+
+  @Inject
+  protected Game game;
 
   public AbstractPhase() {
     this.listeners = new ArrayList<>();

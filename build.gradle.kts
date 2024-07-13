@@ -19,6 +19,8 @@ dependencies {
     implementation(rootProject.libs.guice.assistedinject)
     implementation(rootProject.libs.jackson.core)
     implementation(rootProject.libs.jackson.databind)
+    implementation(rootProject.libs.log4j2)
+    implementation(rootProject.libs.log4j2.simple)
 }
 
 tasks.test {

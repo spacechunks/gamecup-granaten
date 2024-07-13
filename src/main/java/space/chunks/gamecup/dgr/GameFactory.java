@@ -1,10 +1,16 @@
 package space.chunks.gamecup.dgr;
 
+import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
+import space.chunks.gamecup.dgr.map.procedure.incident.TroubleMaker;
+import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.PassengerConfig;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
 import space.chunks.gamecup.dgr.team.Team;
+import space.chunks.gamecup.dgr.team.member.Member;
 
 
 /**
@@ -12,14 +18,20 @@ import space.chunks.gamecup.dgr.team.Team;
  */
 public interface GameFactory {
   @NotNull
-  Team createTeam();
-
-  @NotNull
   Map createMap(@NotNull Team owner);
 
   @NotNull
   MapObjectRegistry createMapObjectRegistry(@NotNull Map parent);
 
   @NotNull
+  Member createMember(@NotNull Player player);
+
+  @NotNull
   TroubleMaker createTroubleMaker(@NotNull Map parent);
+
+  @NotNull
+  Passenger createPassenger(@NotNull PassengerConfig config);
+
+  @NotNull
+  PassengerQueue createPassengerQueue(@NotNull PassengerQueueConfig config);
 }

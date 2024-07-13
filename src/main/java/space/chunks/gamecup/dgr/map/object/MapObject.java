@@ -21,7 +21,7 @@ public interface MapObject extends Named {
 
   void handleRegister(@NotNull Map parent);
 
-  void handleUnregister(@NotNull Map parent);
+  void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason);
 
   enum UnregisterReason {
     UNKNOWN,
@@ -29,6 +29,7 @@ public interface MapObject extends Named {
     BINDING,
     INCIDENT_REMOVE_SUCCESS,
     INCIDENT_REMOVE_FAIL_TIME,
-    INCIDENT_REMOVE_FAIL_OTHER
+    INCIDENT_REMOVE_FAIL_OTHER,
+    PASSENGER_NO_PROCEDURE_TARGET
   }
 }

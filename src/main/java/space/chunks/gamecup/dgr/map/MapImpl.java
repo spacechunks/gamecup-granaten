@@ -1,26 +1,31 @@
 package space.chunks.gamecup.dgr.map;
 
-import com.google.common.collect.Queues;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.instance.Instance;
+import net.minestom.server.instance.InstanceManager;
+import net.minestom.server.instance.anvil.AnvilLoader;
 import net.minestom.server.utils.time.Tick;
+import net.minestom.server.world.DimensionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.GameFactory;
 import space.chunks.gamecup.dgr.map.event.MapObjectPostRegisterEvent;
 import space.chunks.gamecup.dgr.map.event.MapObjectPreRegisterEvent;
 import space.chunks.gamecup.dgr.map.event.MapObjectUnregisterEvent;
-import space.chunks.gamecup.dgr.map.incident.Incident;
-import space.chunks.gamecup.dgr.map.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.Bindable;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject.UnregisterReason;
 import space.chunks.gamecup.dgr.map.object.Ticking;
 import space.chunks.gamecup.dgr.map.object.Ticking.TickResult;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
+import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
+import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.team.Team;
 
 import java.time.Duration;
@@ -28,6 +33,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.concurrent.ArrayBlockingQueue;
 
 
 /**
@@ -35,6 +41,7 @@ import java.util.Random;
  */
 @Getter
 @Accessors(fluent=true)
+@Log4j2
 public class MapImpl implements Map {
   private static final Random RANDOM = new Random();
   private static final int TROUBLE_DELAY_MIN = Tick.SERVER_TICKS.fromDuration(Duration.ofSeconds(30));
@@ -50,17 +57,21 @@ public class MapImpl implements Map {
 
   private int lastTroubleTick;
 
+  private Instance instance;
+
   @AssistedInject
   public MapImpl(
       @Assisted Team owner,
-      GameFactory factory
+      GameFactory factory,
+      MapObjectDefaultSetup mapObjectDefaultSetup
   ) {
     this.owner = owner;
     this.objects = factory.createMapObjectRegistry(this);
-    this.objectAddQueue = Queues.newSynchronousQueue();
-    this.objectRemoveQueue = Queues.newSynchronousQueue();
+    this.objectAddQueue = new ArrayBlockingQueue<>(100);
+    this.objectRemoveQueue = new ArrayBlockingQueue<>(100);
 
     this.troubleMaker = factory.createTroubleMaker(this);
+    mapObjectDefaultSetup.createDefaultObjects(this);
   }
 
   @Override
@@ -100,7 +111,7 @@ public class MapImpl implements Map {
       MapObjectToUnregister mapObjectToRemove = this.objectRemoveQueue.poll();
       MapObject mapObject = mapObjectToRemove.mapObject();
       if (objects().remove(mapObject)) {
-        mapObject.handleUnregister(this);
+        mapObject.handleUnregister(this, mapObjectToRemove.reason());
         handlePostRemove(mapObjectToRemove);
       }
     }
@@ -115,10 +126,8 @@ public class MapImpl implements Map {
   // Still safe to add further map objects add this point
   private void handlePostAdd(@NotNull MapObject addedMapObject) {
     if (addedMapObject instanceof Bindable bindable) {
-      MapObject target = bindable.boundTarget();
-      if (target != null && objects().add(target)) {
-        target.handleRegister(this);
-        bindable.handleTargetRegister(this);
+      for (Bindable boundObject : bindable.boundObjects()) {
+        boundObject.handleTargetRegister(this);
       }
     }
 
@@ -129,11 +138,10 @@ public class MapImpl implements Map {
   private void handlePostRemove(@NotNull MapObjectToUnregister removedMapObject) {
     MapObject mapObject = removedMapObject.mapObject();
     if (mapObject instanceof Bindable bindable) {
-      MapObject target = bindable.boundTarget();
-      if (target != null && objects().remove(target)) {
-        target.handleRegister(this);
-        bindable.handleTargetUnregister(this);
+      for (Bindable boundObject : bindable.boundObjects()) {
+        boundObject.handleTargetUnregister(this);
       }
+      bindable.boundObjects().clear();
     }
 
     MapObjectUnregisterEvent unregisterEvent = new MapObjectUnregisterEvent(mapObject, removedMapObject.reason());
@@ -153,6 +161,20 @@ public class MapImpl implements Map {
 
     this.lastTroubleTick = currentTick;
     this.troubleMaker.makeTrouble();
+  }
+
+  @Override
+  public @NotNull Instance instance() {
+    return this.instance;
+  }
+
+  @Override
+  public void load() {
+    InstanceManager instanceManager = MinecraftServer.getInstanceManager();
+    String worldPath = "template/maps/game";
+    this.instance = instanceManager.createInstanceContainer(DimensionType.OVERWORLD, new AnvilLoader(worldPath));
+    this.instance.enableAutoChunkLoad(true);
+    this.instance.loadChunk(0, 0);
   }
 
   @Override

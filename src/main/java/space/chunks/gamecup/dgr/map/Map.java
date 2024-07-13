@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr.map;
 
+import net.minestom.server.instance.Instance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Ticking;
@@ -17,6 +18,14 @@ import space.chunks.gamecup.dgr.team.Team;
 public interface Map extends Ticking {
   @NotNull
   Team owner();
+
+  /**
+   * Returns the {@link Instance} for this map. If it's not loaded yet, it will be loaded synchronously.
+   */
+  @NotNull
+  Instance instance();
+
+  void load();
 
   @NotNull
   MapObjectRegistry objects();

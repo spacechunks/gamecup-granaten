@@ -10,8 +10,5 @@ public interface MapObjectConfigEntry {
   @NotNull
   String name();
 
-  @NotNull
-  String type();
-
-  MapObjectConfigEntry EMPTY = new MapObjectConfigEntryDefault("EMPTY", "unknown");
+  MapObjectConfigEntry EMPTY = new MapObjectConfigEntryDefault("EMPTY");
 }
