@@ -28,16 +28,6 @@ public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCh
   }
 
   @Override
-  public void handleRegister(@NotNull Map parent) {
-    super.handleRegister(parent);
-  }
-
-  @Override
-  public void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
-    super.handleUnregister(parent, reason);
-  }
-
-  @Override
   public @NotNull TickResult tick(int currentTick) {
     if (this.animationTick < 20) {
       this.securityCheck.worker.lookAt(this.passenger.entityUnsafe());

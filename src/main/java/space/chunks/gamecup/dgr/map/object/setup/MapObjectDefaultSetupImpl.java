@@ -6,6 +6,7 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheckConfig;
+import space.chunks.gamecup.dgr.map.procedure.ticketcontrol.TicketControlConfig;
 
 
 /**
@@ -24,7 +25,15 @@ public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
   @Override
   public void createDefaultObjects(@NotNull Map map) {
     createSecurityChecks(map);
+    createTicketControls(map);
     createMarketing(map);
+  }
+
+  private void createTicketControls(Map map) {
+    for (TicketControlConfig ticketControlConfig : this.config.ticketControls()) {
+      MapObject ticketControl = this.registry.create("ticket_control", ticketControlConfig);
+      map.queueMapObjectRegister(ticketControl);
+    }
   }
 
   private void createMarketing(Map map) {

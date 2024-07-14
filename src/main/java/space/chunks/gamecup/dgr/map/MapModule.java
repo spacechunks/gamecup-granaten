@@ -17,6 +17,8 @@ import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
 import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheck;
 import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheckFailedIncident;
+import space.chunks.gamecup.dgr.map.procedure.ticketcontrol.TicketControl;
+import space.chunks.gamecup.dgr.map.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 
@@ -35,13 +37,13 @@ public final class MapModule extends AbstractModule {
     mapObjectTypeBinder.addBinding("test").to(TestMapObject.class);
     mapObjectTypeBinder.addBinding("security_check").to(SecurityCheck.class);
     mapObjectTypeBinder.addBinding("security_check_failed_incident").to(SecurityCheckFailedIncident.class);
+    mapObjectTypeBinder.addBinding("ticket_control").to(TicketControl.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
         List.of(
             new SecurityCheckConfig(
                 "security_check_1",
-                new Pos(-40.5, -56.0, -13.5, 0, 0),
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
                 new Pos(-37.5, -56.0, -12.5, -90, 0),
                 new PassengerQueueConfig(
@@ -53,7 +55,33 @@ public final class MapModule extends AbstractModule {
                         new Slot(new Pos(-45.5, -56.0, -12.5)),
                         new Slot(new Pos(-46.5, -56.0, -12.5))
                     )
-                )
+                ),
+                new Pos(-40.5, -56.0, -13.5, 0, 0)
+            )
+        ),
+        List.of(
+            new TicketControlConfig(
+                "ticket_control_1",
+                new Pos(-33.5, -56.0, -17.5, -180, 0),
+                new Pos(-32.5, -56.0, -17.5),
+                new PassengerQueueConfig(
+                    null,
+                    "ticket_control_1_queue",
+                    new Pos(-35.5, -56.0, -13.5),
+                    List.of(
+                        new Slot(new Pos(-33.5, -56.0, -16.5)),
+                        new Slot(new Pos(-33.5, -56.0, -15.5)),
+                        new Slot(new Pos(-34.5, -56.0, -15.5)),
+                        new Slot(new Pos(-35.5, -56.0, -15.5)),
+                        new Slot(new Pos(-35.5, -56.0, -14.5)),
+                        new Slot(new Pos(-34.5, -56.0, -14.5)),
+                        new Slot(new Pos(-33.5, -56.0, -14.5)),
+                        new Slot(new Pos(-33.5, -56.0, -13.5)),
+                        new Slot(new Pos(-34.5, -56.0, -13.5))
+                    )
+                ),
+                new Pos(-33.5, -56.0, -19.5),
+                new Pos(-33.3, -55.0, -19.0)
             )
         ),
         new MarketingConfigEntry(

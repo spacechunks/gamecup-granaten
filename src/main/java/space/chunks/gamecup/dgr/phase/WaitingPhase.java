@@ -45,15 +45,5 @@ public class WaitingPhase extends AbstractPhase {
 
   @Override
   public void tick(int currentTick) {
-    if (currentTick % 100 != 0) {
-      return;
-    }
-
-    for (Team team : this.game.teams()) {
-      if (!team.members().isEmpty()) {
-        this.game.phases().enterPhase("active-game");
-        return;
-      }
-    }
   }
 }

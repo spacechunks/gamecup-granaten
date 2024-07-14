@@ -31,6 +31,7 @@ public interface Procedure extends MapObject, StateAware, Named {
   @Nullable
   Animation animation();
 
+  // TODO: it's the start point when a passenger enters the procedure, maybe rename it accordingly
   void createAnimation(@NotNull Passenger passenger);
 
   @Nullable
