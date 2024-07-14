@@ -40,7 +40,7 @@ public class SimpleGroundNodeFollower implements NodeFollower {
     final double dzLook = lookAt.z()-position.z();
 
     // the purpose of these few lines is to slow down entities when they reach their destination
-    final double distSquared = dx * dx+dy * dy+dz * dz;
+    final double distSquared = dx * dx+/*dy * dy+*/dz * dz;
     if (speed > distSquared) {
       speed = distSquared;
     }

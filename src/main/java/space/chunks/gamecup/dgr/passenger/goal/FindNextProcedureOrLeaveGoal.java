@@ -11,6 +11,7 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
  */
 public class FindNextProcedureOrLeaveGoal extends GoalSelector {
   private final Passenger passenger;
+  private int tickDelay;
 
   public FindNextProcedureOrLeaveGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -29,15 +30,22 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
 
     if (this.passenger.task() == null) {
       getEntityCreature().getNavigator().setPathTo(this.passenger.config().leavePosition());
+      this.tickDelay = 5;
     }
   }
 
   @Override
   public void tick(long l) {
+    if (this.tickDelay > 0) {
+      this.tickDelay--;
+    }
   }
 
   @Override
   public boolean shouldEnd() {
+    if (this.tickDelay > 0) {
+      return false;
+    }
     return this.passenger.task() != null || getEntityCreature().getNavigator().isComplete();
   }
 

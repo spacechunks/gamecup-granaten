@@ -29,6 +29,10 @@ public abstract class AbstractBindableMapObject<C extends MapObjectConfigEntry> 
 
   @Override
   public synchronized void bind(@Nullable MapObject target) {
+    if (this.target instanceof Bindable bindable) {
+      bindable.boundObjects().remove(this);
+    }
+
     this.target = target;
 
     if (target instanceof Bindable bindableTarget) {

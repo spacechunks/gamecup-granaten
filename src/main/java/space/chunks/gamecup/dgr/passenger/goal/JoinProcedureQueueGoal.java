@@ -42,7 +42,6 @@ public class JoinProcedureQueueGoal extends GoalSelector {
     }
 
     getEntityCreature().getNavigator().setPathTo(waitingSlot.position());
-
   }
 
   @Override

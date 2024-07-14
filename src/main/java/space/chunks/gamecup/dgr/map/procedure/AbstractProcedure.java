@@ -10,6 +10,8 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.procedure.incident.Incident.SolutionType;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueRegistry;
 
@@ -30,19 +32,21 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   private Pos workPos;
   private Pos exitPos;
   protected Animation animation;
+  private Incident currentIncident;
 
   @Override
   public void config(@NotNull MapObjectConfigEntry config) {
     super.config(config);
 
     ProcedureConfig procedureConfig = (ProcedureConfig) config;
-    this.passengerQueue = this.passengerQueueRegistry.get(this.parent, procedureConfig.queue());
     this.workPos = procedureConfig.workPos();
     this.exitPos = procedureConfig.exitPos();
   }
 
   @Override
   public void handleRegister(@NotNull Map parent) {
+    super.handleRegister(parent);
+
     this.parent = parent;
   }
 
@@ -52,5 +56,32 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
       this.passengerQueue = this.passengerQueueRegistry.get(this.parent, this.config.queue());
     }
     return this.passengerQueue;
+  }
+
+  @Override
+  public void reportIncident(@NotNull Incident incident) {
+    this.currentIncident = incident;
+
+    if (this.animation != null) {
+      Animation newAnimation = incident.replaceProcedureAnimation(this.animation);
+
+      if (newAnimation != null) {
+        this.parent.queueMapObjectUnregister(this.animation, UnregisterReason.INCIDENT_NEW_ANIMATION);
+
+        bind(newAnimation);
+
+        this.parent.queueMapObjectRegister(newAnimation);
+        this.animation = newAnimation;
+      }
+    }
+  }
+
+  @Override
+  public void handleIncidentResolved(@NotNull SolutionType solution) {
+    this.currentIncident = null;
+
+    if (this.animation != null) {
+      this.parent.queueMapObjectUnregister(this.animation, UnregisterReason.INCIDENT_RESOLVED);
+    }
   }
 }

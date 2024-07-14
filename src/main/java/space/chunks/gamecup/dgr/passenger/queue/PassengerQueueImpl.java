@@ -12,6 +12,8 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -22,11 +24,14 @@ public class PassengerQueueImpl implements PassengerQueue {
   private final List<WaitingSlot> waitingSlots;
   private final String name;
 
+  private final Lock slotLock;
+
   @AssistedInject
   public PassengerQueueImpl(@Assisted PassengerQueueConfig config) {
     this.startingPosition = config.startingPosition();
     this.waitingSlots = createSlots(config);
     this.name = config.name();
+    this.slotLock = new ReentrantLock();
   }
 
   private @NotNull List<WaitingSlot> createSlots(@NotNull PassengerQueueConfig config) {
@@ -84,7 +89,7 @@ public class PassengerQueueImpl implements PassengerQueue {
 
   @Getter
   @Accessors(fluent=true)
-  public static class WaitingSlotImpl implements WaitingSlot {
+  public class WaitingSlotImpl implements WaitingSlot {
     private final Pos position;
     private final WaitingSlot leadingSlot;
     private Passenger passenger;
@@ -96,17 +101,32 @@ public class PassengerQueueImpl implements PassengerQueue {
 
     @Override
     public void occupy(@NotNull Passenger passenger) {
-      this.passenger = passenger;
+      try {
+        PassengerQueueImpl.this.slotLock.lock();
+        this.passenger = passenger;
+      } finally {
+        PassengerQueueImpl.this.slotLock.unlock();
+      }
     }
 
     @Override
     public boolean isOccupied() {
-      return this.passenger != null;
+      try {
+        PassengerQueueImpl.this.slotLock.lock();
+        return this.passenger != null;
+      } finally {
+        PassengerQueueImpl.this.slotLock.unlock();
+      }
     }
 
     @Override
     public void free() {
-      this.passenger = null;
+      try {
+        PassengerQueueImpl.this.slotLock.lock();
+        this.passenger = null;
+      } finally {
+        PassengerQueueImpl.this.slotLock.unlock();
+      }
     }
   }
 }

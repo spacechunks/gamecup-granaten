@@ -1,0 +1,47 @@
+package space.chunks.gamecup.dgr.map.procedure.securitycheck;
+
+import org.jetbrains.annotations.NotNull;
+import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.passenger.Passenger;
+
+
+/**
+ * @author Nico_ND1
+ */
+public class SecurityCheckFailedAnimation extends AbstractBindableMapObject<SecurityCheckConfig> implements Animation {
+  protected final SecurityCheck securityCheck;
+  protected final Passenger passenger;
+  private int animationTick;
+
+  public SecurityCheckFailedAnimation(@NotNull SecurityCheck securityCheck, @NotNull Passenger passenger) {
+    this.securityCheck = securityCheck;
+    this.passenger = passenger;
+  }
+
+  @Override
+  protected @NotNull Class<SecurityCheckConfig> configClass() {
+    return SecurityCheckConfig.class;
+  }
+
+  @Override
+  public void handleRegister(@NotNull Map parent) {
+    super.handleRegister(parent);
+  }
+
+  @Override
+  public void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
+    super.handleUnregister(parent, reason);
+  }
+
+  @Override
+  public @NotNull TickResult tick(int currentTick) {
+    return TickResult.CONTINUE;
+  }
+
+  @Override
+  public @NotNull String name() {
+    return super.name() + "_failed_animation";
+  }
+}

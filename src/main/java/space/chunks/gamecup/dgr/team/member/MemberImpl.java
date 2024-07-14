@@ -28,7 +28,7 @@ public class MemberImpl implements Member {
   }
 
   @Override
-  public @Nullable Player player() {
+  public @NotNull Player player() {
     return this.player;
   }
 

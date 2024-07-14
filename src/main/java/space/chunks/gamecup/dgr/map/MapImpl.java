@@ -23,10 +23,12 @@ import space.chunks.gamecup.dgr.map.object.MapObject.UnregisterReason;
 import space.chunks.gamecup.dgr.map.object.Ticking;
 import space.chunks.gamecup.dgr.map.object.Ticking.TickResult;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
+import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.team.Team;
+import space.chunks.gamecup.dgr.team.member.Member;
 
 import java.time.Duration;
 import java.util.Comparator;
@@ -34,6 +36,7 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
+import java.util.function.Consumer;
 
 
 /**
@@ -52,6 +55,7 @@ public class MapImpl implements Map {
   private final TroubleMaker troubleMaker;
 
   private final MapObjectRegistry objects;
+  private final MapObjectTypeRegistry objectTypes;
   private final Queue<MapObject> objectAddQueue;
   private final Queue<MapObjectToUnregister> objectRemoveQueue;
 
@@ -63,10 +67,12 @@ public class MapImpl implements Map {
   public MapImpl(
       @Assisted Team owner,
       GameFactory factory,
-      MapObjectDefaultSetup mapObjectDefaultSetup
+      MapObjectDefaultSetup mapObjectDefaultSetup,
+      MapObjectTypeRegistry objectTypes
   ) {
     this.owner = owner;
     this.objects = factory.createMapObjectRegistry(this);
+    this.objectTypes = objectTypes;
     this.objectAddQueue = new ArrayBlockingQueue<>(100);
     this.objectRemoveQueue = new ArrayBlockingQueue<>(100);
 
@@ -161,6 +167,14 @@ public class MapImpl implements Map {
 
     this.lastTroubleTick = currentTick;
     this.troubleMaker.makeTrouble();
+  }
+
+  @Override
+  public void executeForMembers(@NotNull Consumer<Member> consumer) {
+    for (Member member : owner().members()) {
+      consumer.accept(member);
+    }
+    // TODO: spectators
   }
 
   @Override

@@ -11,6 +11,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
  */
 public record SecurityCheckConfig(
     @NotNull String name,
+    @NotNull Pos workerPos,
     @NotNull Pos workPos,
     @NotNull Pos exitPos,
     @NotNull PassengerQueueConfig queue

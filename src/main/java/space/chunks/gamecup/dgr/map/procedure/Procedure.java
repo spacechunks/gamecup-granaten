@@ -5,7 +5,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Named;
 import space.chunks.gamecup.dgr.map.object.MapObject;
+import space.chunks.gamecup.dgr.map.object.StateAware;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.procedure.incident.Incident.SolutionType;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 
@@ -15,7 +18,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
  *
  * @author Nico_ND1
  */
-public interface Procedure extends MapObject, Named {
+public interface Procedure extends MapObject, StateAware, Named {
   @NotNull
   PassengerQueue passengerQueue();
 
@@ -29,4 +32,11 @@ public interface Procedure extends MapObject, Named {
   Animation animation();
 
   void createAnimation(@NotNull Passenger passenger);
+
+  @Nullable
+  Incident currentIncident();
+
+  void reportIncident(@NotNull Incident incident);
+
+  void handleIncidentResolved(@NotNull SolutionType solution);
 }

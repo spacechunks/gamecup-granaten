@@ -14,11 +14,13 @@ import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntryDefault;
 public final class TestMapObject extends AbstractMapObject<MapObjectConfigEntryDefault> implements MapObject, Ticking {
   @Override
   public void handleRegister(@NotNull Map parent) {
+    super.handleRegister(parent);
     System.out.println("TestMapObject registered");
   }
 
   @Override
   public void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
+    super.handleUnregister(parent, reason);
     System.out.println("TestMapObject unregistered");
   }
 

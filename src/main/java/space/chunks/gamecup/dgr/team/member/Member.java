@@ -16,8 +16,7 @@ public interface Member extends Named {
   @NotNull
   UUID uuid();
 
-  @Nullable
-    // TODO: rethink if can be null (rejoin?)
+  @NotNull
   Player player();
 
   @Nullable

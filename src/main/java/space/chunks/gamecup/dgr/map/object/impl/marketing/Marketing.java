@@ -23,15 +23,15 @@ public class Marketing extends AbstractMapObject<MarketingConfigEntry> {
 
   @Override
   public void handleRegister(@NotNull Map parent) {
+    super.handleRegister(parent);
+
     this.npc = new NPCEntity(UUID.randomUUID(), "Marketing", this.config.skin());
     this.npc.setInstance(parent.instance(), this.config.spawnPosition());
-
-    registerListeners();
   }
 
   @Override
   public void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
-    unregisterListeners();
+    super.handleUnregister(parent, reason);
 
     this.npc.remove();
   }

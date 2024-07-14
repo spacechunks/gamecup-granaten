@@ -45,7 +45,11 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
 
   @Override
   public boolean shouldEnd() {
-    if (Math.random() > 0.2D) {
+    if (!getEntityCreature().getNavigator().isComplete()) {
+      return false;
+    }
+
+    if (Math.random() > 0.09D) {
       return false;
     }
 
@@ -55,6 +59,13 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
 
     if (leadingWaitingSlot == null) {
       if (task.procedure().animation() == null) {
+        System.out.println("We are "+this.waitingSlot+" with "+this.passenger.name()+" and slot "+this.waitingSlot.passenger().name());
+        int i = 0;
+        for (WaitingSlot slot : this.passenger.task().procedure().passengerQueue().waitingSlots()) {
+          System.out.println("I am slot "+(i++)+" "+slot+" "+slot.isOccupied());
+        }
+
+        this.waitingSlot.free();
         task.state(State.MOVE_TO_WORK_POS);
         return true;
       }
