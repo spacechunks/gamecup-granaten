@@ -5,8 +5,8 @@ import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
-import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheckConfig;
-import space.chunks.gamecup.dgr.map.procedure.ticketcontrol.TicketControlConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 
 
 /**

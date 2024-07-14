@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure.ticketcontrol;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
@@ -9,32 +9,32 @@ import net.minestom.server.entity.metadata.villager.VillagerMeta.Type;
 import net.minestom.server.entity.metadata.villager.VillagerMeta.VillagerData;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.procedure.AbstractProcedure;
-import space.chunks.gamecup.dgr.map.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 
 /**
  * @author Nico_ND1
  */
-public class TicketControl extends AbstractProcedure<TicketControlConfig> implements Procedure {
+public class SecurityCheck extends AbstractProcedure<SecurityCheckConfig> implements Procedure {
   protected EntityCreature worker;
 
-  public TicketControl() {
+  public SecurityCheck() {
     this.worker = new EntityCreature(EntityType.VILLAGER);
     this.worker.editEntityMeta(VillagerMeta.class, meta -> {
-      meta.setVillagerData(new VillagerData(Type.PLAINS, Profession.CARTOGRAPHER, Level.MASTER));
+      meta.setVillagerData(new VillagerData(Type.PLAINS, Profession.NITWIT, Level.MASTER));
     });
   }
 
   @Override
-  protected @NotNull Class<TicketControlConfig> configClass() {
-    return TicketControlConfig.class;
+  protected @NotNull Class<SecurityCheckConfig> configClass() {
+    return SecurityCheckConfig.class;
   }
 
   @Override
   public void createAnimation(@NotNull Passenger passenger) {
-    TicketControlAnimation animation = new TicketControlAnimation(this, passenger);
+    SecurityCheckAnimation animation = new SecurityCheckAnimation(this, passenger);
     animation.config(this.config);
     bind(animation);
 

@@ -2,7 +2,7 @@ package space.chunks.gamecup.dgr.passenger.goal;
 
 import net.minestom.server.entity.ai.GoalSelector;
 import org.jetbrains.annotations.NotNull;
-import space.chunks.gamecup.dgr.map.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;

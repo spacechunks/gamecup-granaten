@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure.securitycheck;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;

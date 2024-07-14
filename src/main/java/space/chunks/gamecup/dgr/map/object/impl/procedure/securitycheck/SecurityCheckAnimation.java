@@ -1,11 +1,11 @@
-package space.chunks.gamecup.dgr.map.procedure.securitycheck;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
 import net.minestom.server.entity.Entity.Pose;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 

@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure.securitycheck;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntryDefault;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
-import space.chunks.gamecup.dgr.map.procedure.incident.AbstractIncident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.AbstractIncident;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 

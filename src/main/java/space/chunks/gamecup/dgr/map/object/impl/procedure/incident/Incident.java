@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure.incident;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.incident;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -7,7 +7,7 @@ import space.chunks.gamecup.dgr.map.object.Bindable;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.StateAware;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
-import space.chunks.gamecup.dgr.map.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 
 import java.util.Set;
 

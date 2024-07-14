@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure.ticketcontrol;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol;
 
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 

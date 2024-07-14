@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
-import space.chunks.gamecup.dgr.map.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 
 
 /**

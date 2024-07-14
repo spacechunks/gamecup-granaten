@@ -1,8 +1,8 @@
-package space.chunks.gamecup.dgr.map.procedure.ticketcontrol;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol;
 
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
-import space.chunks.gamecup.dgr.map.procedure.ProcedureConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ProcedureConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
 
 

@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure;
+package space.chunks.gamecup.dgr.map.object.impl.procedure;
 
 import com.google.inject.Inject;
 import lombok.Getter;
@@ -10,8 +10,8 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident.SolutionType;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident.SolutionType;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueRegistry;
 

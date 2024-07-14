@@ -14,11 +14,11 @@ import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupConfig;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
-import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheck;
-import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheckConfig;
-import space.chunks.gamecup.dgr.map.procedure.securitycheck.SecurityCheckFailedIncident;
-import space.chunks.gamecup.dgr.map.procedure.ticketcontrol.TicketControl;
-import space.chunks.gamecup.dgr.map.procedure.ticketcontrol.TicketControlConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheck;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControl;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 

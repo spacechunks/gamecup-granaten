@@ -25,8 +25,8 @@ import space.chunks.gamecup.dgr.map.object.Ticking.TickResult;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
-import space.chunks.gamecup.dgr.map.procedure.incident.TroubleMaker;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
 

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
-import space.chunks.gamecup.dgr.map.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.minestom.pathfinding.SimpleGroundNodeFollower;
 import space.chunks.gamecup.dgr.minestom.pathfinding.SimpleGroundNodeGenerator;

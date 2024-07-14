@@ -4,7 +4,7 @@ import net.minestom.server.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
-import space.chunks.gamecup.dgr.map.procedure.incident.TroubleMaker;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;

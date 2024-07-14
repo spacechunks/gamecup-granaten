@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.procedure;
+package space.chunks.gamecup.dgr.map.object.impl.procedure;
 
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
@@ -7,8 +7,8 @@ import space.chunks.gamecup.dgr.Named;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.StateAware;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident;
-import space.chunks.gamecup.dgr.map.procedure.incident.Incident.SolutionType;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident.SolutionType;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 

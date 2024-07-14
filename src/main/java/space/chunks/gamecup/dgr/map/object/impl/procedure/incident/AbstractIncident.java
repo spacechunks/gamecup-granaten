@@ -1,10 +1,10 @@
-package space.chunks.gamecup.dgr.map.procedure.incident;
+package space.chunks.gamecup.dgr.map.object.impl.procedure.incident;
 
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
-import space.chunks.gamecup.dgr.map.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 
 import java.util.Collections;
 import java.util.Set;
