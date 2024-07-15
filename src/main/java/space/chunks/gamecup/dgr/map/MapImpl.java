@@ -22,11 +22,11 @@ import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject.UnregisterReason;
 import space.chunks.gamecup.dgr.map.object.Ticking;
 import space.chunks.gamecup.dgr.map.object.Ticking.TickResult;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
 
@@ -95,7 +95,7 @@ public class MapImpl implements Map {
 
     for (MapObject mapObject : mapObjects) {
       if (mapObject instanceof Ticking ticking) {
-        TickResult tickResult = ticking.tick(currentTick);
+        TickResult tickResult = ticking.tick(this, currentTick);
 
         if (tickResult == TickResult.UNREGISTER) {
           queueMapObjectUnregister(mapObject);

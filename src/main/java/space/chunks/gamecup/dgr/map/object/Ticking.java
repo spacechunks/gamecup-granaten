@@ -1,6 +1,7 @@
 package space.chunks.gamecup.dgr.map.object;
 
 import org.jetbrains.annotations.NotNull;
+import space.chunks.gamecup.dgr.map.Map;
 
 
 /**
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface Ticking {
   @NotNull
-  TickResult tick(int currentTick);
+  TickResult tick(@NotNull Map map, int currentTick);
 
   default int priority() {
     return defaultPriority();

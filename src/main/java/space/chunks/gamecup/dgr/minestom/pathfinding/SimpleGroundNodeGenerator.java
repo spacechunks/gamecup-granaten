@@ -54,6 +54,11 @@ public class SimpleGroundNodeGenerator implements NodeGenerator {
   }
 
   private PNode createWalk(Instance instance, Point point, BoundingBox boundingBox, double cost, PNode start, Point goal, Set<PNode> closed) {
+    Block pointBlock = instance.getBlock(point.add(0, -1, 0));
+    if (pointBlock == Block.LIGHT_GRAY_WOOL) {
+      cost *= 0.9;
+    }
+
     var n = newNode(start, cost, point, goal);
     if (closed.contains(n)) {
       return null;

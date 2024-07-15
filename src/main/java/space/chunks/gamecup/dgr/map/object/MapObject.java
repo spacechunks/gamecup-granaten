@@ -10,8 +10,6 @@ import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
  * Interface for all objects that can be present in the map. This may include entities, blocks, markers, etc.
  * <p>
  * A map object can be registered in {@link space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry}.
- * <p>
- * All map objects that don't implement {@link ShoppingPhasePersistent} will be unregistered whenever the {@link space.chunks.gamecup.dgr.phase.ShoppingPhase} starts.
  * </p>
  *
  * @author Nico_ND1

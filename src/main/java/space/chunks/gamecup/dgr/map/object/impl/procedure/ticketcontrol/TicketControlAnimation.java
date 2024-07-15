@@ -35,7 +35,7 @@ public class TicketControlAnimation extends AbstractBindableMapObject<TicketCont
   }
 
   @Override
-  public @NotNull TickResult tick(int currentTick) {
+  public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     if (this.animationTick < 28 || this.animationTick > 64) {
       this.ticketControl.worker.lookAt(this.passenger.entityUnsafe());
     } else {
@@ -67,7 +67,6 @@ public class TicketControlAnimation extends AbstractBindableMapObject<TicketCont
       }
       case 200 -> {
         if (Math.random() > 0.8D) {
-          Map map = this.passenger.map();
           Incident incident = (Incident) map.objectTypes().create("ticket_control_failed_incident");
           incident.bind(this.ticketControl);
           map.queueMapObjectRegister(incident);

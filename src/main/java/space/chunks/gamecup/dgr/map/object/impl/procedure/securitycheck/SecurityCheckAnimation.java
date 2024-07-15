@@ -28,7 +28,7 @@ public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCh
   }
 
   @Override
-  public @NotNull TickResult tick(int currentTick) {
+  public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     if (this.animationTick < 20) {
       this.securityCheck.worker.lookAt(this.passenger.entityUnsafe());
     }
@@ -42,7 +42,6 @@ public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCh
       }
       case 35 -> {
         if (Math.random() > 0.8D) {
-          Map map = this.passenger.map();
           Incident incident = (Incident) map.objectTypes().create("security_check_failed_incident");
           incident.bind(this.securityCheck);
           map.queueMapObjectRegister(incident);

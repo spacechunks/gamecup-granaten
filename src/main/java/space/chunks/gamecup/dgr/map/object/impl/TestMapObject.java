@@ -25,7 +25,7 @@ public final class TestMapObject extends AbstractMapObject<MapObjectConfigEntryD
   }
 
   @Override
-  public @NotNull TickResult tick(int currentTick) {
+  public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     System.out.println("TestMapObject ticked @ "+currentTick);
     return TickResult.CONTINUE;
   }

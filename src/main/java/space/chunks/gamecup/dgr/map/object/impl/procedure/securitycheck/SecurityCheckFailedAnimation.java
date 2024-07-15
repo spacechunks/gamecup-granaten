@@ -36,7 +36,7 @@ public class SecurityCheckFailedAnimation extends AbstractBindableMapObject<Secu
   }
 
   @Override
-  public @NotNull TickResult tick(int currentTick) {
+  public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     return TickResult.CONTINUE;
   }
 
