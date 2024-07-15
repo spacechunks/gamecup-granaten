@@ -8,11 +8,12 @@ import space.chunks.gamecup.dgr.debug.EnterPhaseCommand;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.MapImpl;
 import space.chunks.gamecup.dgr.map.MapModule;
-import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
-import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMakerImpl;
+import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
+import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistryImpl;
+import space.chunks.gamecup.dgr.minestom.npc.NPCEntityDebugCommand;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.SpawnPassengersCommand;
@@ -58,6 +59,7 @@ public final class GameModule extends AbstractModule {
     Multibinder<Command> commandsBinder = Multibinder.newSetBinder(binder(), Command.class);
     commandsBinder.addBinding().to(EnterPhaseCommand.class);
     commandsBinder.addBinding().to(SpawnPassengersCommand.class);
+    commandsBinder.addBinding().to(NPCEntityDebugCommand.class);
 
     bind(Game.class).to(GameImpl.class).asEagerSingleton();
     bind(GameTickTask.class);

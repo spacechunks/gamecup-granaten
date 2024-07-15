@@ -1,6 +1,5 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
-import net.minestom.server.entity.Entity.Pose;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
@@ -35,10 +34,8 @@ public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCh
 
     switch (this.animationTick) {
       case 10 -> {
-        this.passenger.entityUnsafe().setPose(Pose.SWIMMING);
       }
       case 30 -> {
-        this.passenger.entityUnsafe().setPose(Pose.STANDING);
       }
       case 35 -> {
         if (Math.random() > 0.8D) {

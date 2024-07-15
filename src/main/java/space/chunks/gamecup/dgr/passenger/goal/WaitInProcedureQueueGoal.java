@@ -16,6 +16,7 @@ import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 public class WaitInProcedureQueueGoal extends GoalSelector {
   private final Passenger passenger;
   private WaitingSlot waitingSlot;
+  private boolean firstTickDone; // we skip the randomizer in the first tick, to prevent standing still
 
   public WaitInProcedureQueueGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -37,6 +38,8 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
     Procedure procedure = task.procedure();
     PassengerQueue passengerQueue = procedure.passengerQueue();
     this.waitingSlot = passengerQueue.findWaitingSlot(this.passenger);
+
+    this.firstTickDone = false;
   }
 
   @Override
@@ -49,9 +52,10 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
       return false;
     }
 
-    if (Math.random() > 0.09D) {
+    if (this.firstTickDone && Math.random() > 0.09D) {
       return false;
     }
+    this.firstTickDone = true;
 
     WaitingSlot leadingWaitingSlot = this.waitingSlot.leadingSlot();
     PassengerTask task = this.passenger.task();

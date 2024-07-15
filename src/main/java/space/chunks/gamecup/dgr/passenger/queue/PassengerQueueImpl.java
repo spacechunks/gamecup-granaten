@@ -63,23 +63,36 @@ public class PassengerQueueImpl implements PassengerQueue {
 
   @Override
   public @Nullable WaitingSlot occupyNextSlot(@NotNull Passenger passenger) {
-    for (WaitingSlot waitingSlot : this.waitingSlots) {
-      if (waitingSlot.isOccupied()) {
-        continue;
-      }
+    try {
+      this.slotLock.lock();
 
-      waitingSlot.occupy(passenger);
-      return waitingSlot;
+      for (WaitingSlot waitingSlot : this.waitingSlots) {
+        if (waitingSlot.isOccupied()) {
+          continue;
+        }
+
+        waitingSlot.occupy(passenger);
+        return waitingSlot;
+      }
+    } finally {
+      this.slotLock.unlock();
     }
+
     return null;
   }
 
   @Override
   public @NotNull WaitingSlot findWaitingSlot(@NotNull Passenger passenger) {
-    return this.waitingSlots.stream()
-        .filter(slot -> passenger.equals(slot.passenger()))
-        .findAny()
-        .orElseThrow(() -> new IllegalStateException("Passenger is not waiting in this queue"));
+    try {
+      this.slotLock.lock();
+
+      return this.waitingSlots.stream()
+          .filter(slot -> passenger.equals(slot.passenger()))
+          .findAny()
+          .orElseThrow(() -> new IllegalStateException("Passenger is not waiting in this queue"));
+    } finally {
+      this.slotLock.unlock();
+    }
   }
 
   @Override
