@@ -57,7 +57,7 @@ public class LuggageClaimAnimation extends AbstractBindableMapObject<LuggageClai
       }
 
       Luggage luggage = lineEntry.luggage();
-      if (luggage == null && occupant.task().state() == State.WAIT_IN_QUEUE) {
+      if (luggage == null && occupant.task().state() == State.WAIT_IN_QUEUE && Math.random() > 0.1D) {
         luggage = spawnLuggage(map, i);
         lineEntry.luggage(luggage);
       }
