@@ -11,11 +11,11 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
  * @author Nico_ND1
  */
 public class SecurityCheckFailedAnimation extends AbstractBindableMapObject<SecurityCheckConfig> implements Animation {
-  protected final SecurityCheck securityCheck;
+  protected final SecurityCheckProcedure securityCheck;
   protected final Passenger passenger;
   private int animationTick;
 
-  public SecurityCheckFailedAnimation(@NotNull SecurityCheck securityCheck, @NotNull Passenger passenger) {
+  public SecurityCheckFailedAnimation(@NotNull SecurityCheckProcedure securityCheck, @NotNull Passenger passenger) {
     this.securityCheck = securityCheck;
     this.passenger = passenger;
   }

@@ -28,7 +28,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
       return;
     }
 
-    SecurityCheck securityCheck = (SecurityCheck) boundTarget();
+    SecurityCheckProcedure securityCheck = (SecurityCheckProcedure) boundTarget();
     assert securityCheck != null;
     SecurityCheckFailedAnimation animation = (SecurityCheckFailedAnimation) securityCheck.animation();
     assert animation != null;
@@ -48,7 +48,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
       return;
     }
 
-    SecurityCheck securityCheck = (SecurityCheck) boundTarget();
+    SecurityCheckProcedure securityCheck = (SecurityCheckProcedure) boundTarget();
     assert securityCheck != null;
     SecurityCheckFailedAnimation animation = (SecurityCheckFailedAnimation) securityCheck.animation();
     assert animation != null;
@@ -91,7 +91,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
     addListener(EventListener.of(PlayerEntityInteractEvent.class, event -> handleEntityInteract(parent, event)));
     addListener(EventListener.of(EntityAttackEvent.class, event -> handleEntityAttack(parent, event)));
 
-    SecurityCheck securityCheck = (SecurityCheck) boundTarget();
+    SecurityCheckProcedure securityCheck = (SecurityCheckProcedure) boundTarget();
     assert securityCheck != null;
     SecurityCheckFailedAnimation animation = (SecurityCheckFailedAnimation) securityCheck.animation();
     assert animation != null;

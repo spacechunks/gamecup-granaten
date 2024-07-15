@@ -18,13 +18,13 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
  * @author Nico_ND1
  */
 public class TicketControlAnimation extends AbstractBindableMapObject<TicketControlConfig> implements Animation {
-  protected final TicketControl ticketControl;
+  protected final TicketControlProcedure ticketControl;
   protected final Passenger passenger;
   private int animationTick;
 
   private ItemEntity itemEntity;
 
-  public TicketControlAnimation(@NotNull TicketControl ticketControl, @NotNull Passenger passenger) {
+  public TicketControlAnimation(@NotNull TicketControlProcedure ticketControl, @NotNull Passenger passenger) {
     this.ticketControl = ticketControl;
     this.passenger = passenger;
   }

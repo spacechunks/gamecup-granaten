@@ -24,10 +24,10 @@ import java.util.List;
 public class LuggageClaimAnimation extends AbstractBindableMapObject<LuggageClaimConfig> implements Animation {
   private static final int TICKS_PER_STEP = 30;
 
-  private final LuggageClaim luggageClaim;
+  private final LuggageClaimProcedure luggageClaim;
   private final List<Luggage> luggage;
 
-  public LuggageClaimAnimation(LuggageClaim luggageClaim) {
+  public LuggageClaimAnimation(LuggageClaimProcedure luggageClaim) {
     this.luggageClaim = luggageClaim;
     this.luggage = new ArrayList<>();
   }

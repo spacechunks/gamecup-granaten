@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Getter
 @Accessors(fluent=true)
-public class LuggageClaim extends AbstractProcedure<LuggageClaimConfig> implements Procedure {
+public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig> implements Procedure {
   private List<LuggageClaimLineEntry> line;
 
   @Override

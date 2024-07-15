@@ -17,10 +17,10 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 /**
  * @author Nico_ND1
  */
-public class TicketControl extends AbstractProcedure<TicketControlConfig> implements Procedure {
+public class TicketControlProcedure extends AbstractProcedure<TicketControlConfig> implements Procedure {
   protected EntityCreature worker;
 
-  public TicketControl() {
+  public TicketControlProcedure() {
     this.worker = new EntityCreature(EntityType.VILLAGER);
     this.worker.editEntityMeta(VillagerMeta.class, meta -> {
       meta.setVillagerData(new VillagerData(Type.PLAINS, Profession.CARTOGRAPHER, Level.MASTER));

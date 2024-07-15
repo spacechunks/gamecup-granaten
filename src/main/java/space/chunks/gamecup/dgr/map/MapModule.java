@@ -15,12 +15,12 @@ import space.chunks.gamecup.dgr.map.object.impl.flightboard.FlightMonitorConfig;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.Marketing;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry.Level;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaim;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheck;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControl;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
@@ -45,12 +45,12 @@ public final class MapModule extends AbstractModule {
 
     MapBinder<String, MapObject> mapObjectTypeBinder = MapBinder.newMapBinder(binder(), String.class, MapObject.class);
     mapObjectTypeBinder.addBinding("test").to(TestMapObject.class);
-    mapObjectTypeBinder.addBinding("security_check").to(SecurityCheck.class);
+    mapObjectTypeBinder.addBinding("security_check").to(SecurityCheckProcedure.class);
     mapObjectTypeBinder.addBinding("security_check_failed_incident").to(SecurityCheckFailedIncident.class);
-    mapObjectTypeBinder.addBinding("ticket_control").to(TicketControl.class);
+    mapObjectTypeBinder.addBinding("ticket_control").to(TicketControlProcedure.class);
     mapObjectTypeBinder.addBinding("flight_radar").to(FlightRadarImpl.class);
     mapObjectTypeBinder.addBinding("flight_monitor").to(FlightMonitor.class);
-    mapObjectTypeBinder.addBinding("luggage_claim").to(LuggageClaim.class);
+    mapObjectTypeBinder.addBinding("luggage_claim").to(LuggageClaimProcedure.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(

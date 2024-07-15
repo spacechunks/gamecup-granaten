@@ -17,10 +17,10 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 /**
  * @author Nico_ND1
  */
-public class SecurityCheck extends AbstractProcedure<SecurityCheckConfig> implements Procedure {
+public class SecurityCheckProcedure extends AbstractProcedure<SecurityCheckConfig> implements Procedure {
   protected EntityCreature worker;
 
-  public SecurityCheck() {
+  public SecurityCheckProcedure() {
     this.worker = new EntityCreature(EntityType.VILLAGER);
     this.worker.editEntityMeta(VillagerMeta.class, meta -> {
       meta.setVillagerData(new VillagerData(Type.PLAINS, Profession.NITWIT, Level.MASTER));
