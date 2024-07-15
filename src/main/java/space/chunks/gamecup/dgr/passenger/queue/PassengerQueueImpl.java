@@ -66,19 +66,33 @@ public class PassengerQueueImpl implements PassengerQueue {
     try {
       this.slotLock.lock();
 
-      for (WaitingSlot waitingSlot : this.waitingSlots) {
-        if (waitingSlot.isOccupied()) {
-          continue;
-        }
-
-        waitingSlot.occupy(passenger);
-        return waitingSlot;
+      WaitingSlot availableSlot = findNextNotOccupied(this.waitingSlots.getLast());
+      if (availableSlot != null && availableSlot.tryOccupy(passenger)) {
+        return availableSlot;
       }
     } finally {
       this.slotLock.unlock();
     }
 
     return null;
+  }
+
+  private @Nullable WaitingSlot findNextNotOccupied(@NotNull WaitingSlot current) {
+    WaitingSlot leadingSlot = current.leadingSlot();
+    if (leadingSlot == null) {
+      if (current.isOccupied()) {
+        return null;
+      }
+      return current;
+    }
+
+    if (leadingSlot.isOccupied()) {
+      if (current.isOccupied()) {
+        return null;
+      }
+      return current;
+    }
+    return findNextNotOccupied(leadingSlot);
   }
 
   @Override
@@ -113,20 +127,24 @@ public class PassengerQueueImpl implements PassengerQueue {
     }
 
     @Override
-    public void occupy(@NotNull Passenger passenger) {
+    public boolean isOccupied() {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        this.passenger = passenger;
+        return this.passenger != null;
       } finally {
         PassengerQueueImpl.this.slotLock.unlock();
       }
     }
 
     @Override
-    public boolean isOccupied() {
+    public boolean tryOccupy(@NotNull Passenger passenger) {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        return this.passenger != null;
+        if (this.passenger == null) {
+          this.passenger = passenger;
+          return true;
+        }
+        return false;
       } finally {
         PassengerQueueImpl.this.slotLock.unlock();
       }

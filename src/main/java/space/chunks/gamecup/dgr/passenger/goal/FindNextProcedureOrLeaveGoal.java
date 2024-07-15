@@ -3,7 +3,10 @@ package space.chunks.gamecup.dgr.passenger.goal;
 import net.minestom.server.entity.ai.GoalSelector;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.object.MapObject.UnregisterReason;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 
 
 /**
@@ -28,10 +31,16 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
     System.out.println("Start FindNextProcedureOrLeaveGoal");
     this.passenger.findNextTask();
 
-    if (this.passenger.task() == null) {
+    PassengerTask task = this.passenger.task();
+    if (task == null) {
       getEntityCreature().getNavigator().setPathTo(this.passenger.config().leavePosition());
-      this.tickDelay = 5;
+    } else {
+      Procedure procedure = task.procedure();
+      PassengerQueue passengerQueue = procedure.passengerQueue();
+      getEntityCreature().getNavigator().setPathTo(passengerQueue.startingPosition());
     }
+
+    this.tickDelay = 5;
   }
 
   @Override
@@ -46,7 +55,7 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
     if (this.tickDelay > 0) {
       return false;
     }
-    return this.passenger.task() != null || getEntityCreature().getNavigator().isComplete();
+    return getEntityCreature().getNavigator().isComplete();
   }
 
   @Override

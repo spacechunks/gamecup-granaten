@@ -34,10 +34,6 @@ public class SecurityCheck extends AbstractProcedure<SecurityCheckConfig> implem
 
   @Override
   public void createAnimation(@NotNull Passenger passenger) {
-    if (this.animation != null) {
-      throw new IllegalStateException();
-    }
-
     SecurityCheckAnimation animation = new SecurityCheckAnimation(this, passenger);
     animation.config(this.config);
     bind(animation);

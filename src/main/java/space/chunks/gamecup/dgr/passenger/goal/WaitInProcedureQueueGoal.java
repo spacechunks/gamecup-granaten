@@ -2,6 +2,7 @@ package space.chunks.gamecup.dgr.passenger.goal;
 
 import net.minestom.server.entity.ai.GoalSelector;
 import org.jetbrains.annotations.NotNull;
+import space.chunks.gamecup.dgr.map.object.impl.animation.DummyAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
@@ -69,6 +70,8 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
           System.out.println("I am slot "+(i++)+" "+slot+" "+slot.isOccupied());
         }
 
+        task.procedure().animation(new DummyAnimation()); // reserve animation slot while we move to work pos
+
         this.waitingSlot.free();
         task.state(State.MOVE_TO_WORK_POS);
         return true;
@@ -76,15 +79,12 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
       return false;
     }
 
-    if (leadingWaitingSlot.isOccupied()) {
-      return false;
+    if (leadingWaitingSlot.tryOccupy(this.passenger)) {
+      this.waitingSlot.free();
+      this.waitingSlot = leadingWaitingSlot;
+
+      getEntityCreature().getNavigator().setPathTo(leadingWaitingSlot.position());
     }
-
-    this.waitingSlot.free();
-    leadingWaitingSlot.occupy(passenger);
-    this.waitingSlot = leadingWaitingSlot;
-
-    getEntityCreature().getNavigator().setPathTo(leadingWaitingSlot.position());
     return false;
   }
 

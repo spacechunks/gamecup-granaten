@@ -2,6 +2,7 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure;
 
 import com.google.inject.Inject;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +32,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   private PassengerQueue passengerQueue;
   private Pos workPos;
   private Pos exitPos;
+  @Setter
   protected Animation animation;
   private Incident currentIncident;
 

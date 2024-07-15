@@ -40,7 +40,7 @@ public interface PassengerQueue extends Named {
 
     boolean isOccupied();
 
-    void occupy(@NotNull Passenger passenger);
+    boolean tryOccupy(@NotNull Passenger passenger);
 
     void free();
 
