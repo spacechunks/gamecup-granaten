@@ -72,7 +72,7 @@ public class SimpleGroundNodeGenerator implements NodeGenerator {
 
   @Override
   public boolean canMoveTowards(@NotNull Instance instance, @NotNull Point start, @NotNull Point end, @NotNull BoundingBox boundingBox) {
-    return instance.getBlock(end) == Block.AIR;
+    return instance.getBlock(end) == Block.AIR && instance.getBlock(end.add(0, 1, 0)) == Block.AIR;
   }
 
   private PNode newNode(PNode current, double cost, Point point, Point goal) {

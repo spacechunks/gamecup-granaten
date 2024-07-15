@@ -57,7 +57,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
       return false;
     }
 
-    if (this.firstTickDone && Math.random() > 0.09D) {
+    if (this.firstTickDone && Math.random() > 0.223D) {
       return false;
     }
     this.firstTickDone = true;

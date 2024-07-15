@@ -48,7 +48,7 @@ public class SpawnPassengersCommand extends Command {
     Player player = (Player) commandSender;
 
     this.game.findTeam(player).ifPresentOrElse(team -> {
-      PassengerConfig config = new PassengerConfig(player.getPosition(), player.getPosition().add(20, 0, 0), Destination.LEAVING, new String[]{"security_check_1", "ticket_control_1"});
+      PassengerConfig config = new PassengerConfig(player.getPosition(), player.getPosition().add(20, 0, 0), Destination.LEAVING, new String[]{"ticket_control_1"});
       Passenger passenger = this.factory.createPassenger(config);
 
       Map map = team.map();
