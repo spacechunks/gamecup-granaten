@@ -31,7 +31,17 @@ public class SpawnPassengersCommand extends Command {
   }
 
   private void executeForIncoming(CommandSender commandSender, CommandContext commandContext) {
+    Player player = (Player) commandSender;
 
+    this.game.findTeam(player).ifPresentOrElse(team -> {
+      PassengerConfig config = new PassengerConfig(player.getPosition(), player.getPosition(), Destination.ARRIVING, new String[]{"luggage_claim_1"});
+      Passenger passenger = this.factory.createPassenger(config);
+
+      Map map = team.map();
+      map.queueMapObjectRegister(passenger);
+
+      player.sendMessage("Queued passenger spawn!");
+    }, () -> player.sendMessage("You are not in a team."));
   }
 
   private void executeForOutgoing(CommandSender commandSender, CommandContext commandContext) {

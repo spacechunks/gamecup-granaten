@@ -2,6 +2,7 @@ package space.chunks.gamecup.dgr.passenger.queue;
 
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 import java.util.List;
@@ -26,6 +27,11 @@ public final class PassengerQueueMirror implements PassengerQueue {
   @Override
   public @NotNull List<WaitingSlot> waitingSlots() {
     return this.queueSupplier.get().waitingSlots();
+  }
+
+  @Override
+  public @NotNull WaitingSlot createSlot(@NotNull Pos position, @Nullable WaitingSlot leadingSlot) {
+    return this.queueSupplier.get().createSlot(position, leadingSlot);
   }
 
   @Override

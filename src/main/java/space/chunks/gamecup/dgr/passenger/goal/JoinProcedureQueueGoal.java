@@ -38,9 +38,11 @@ public class JoinProcedureQueueGoal extends GoalSelector {
     WaitingSlot waitingSlot = passengerQueue.occupyNextSlot(this.passenger);
     if (waitingSlot == null) {
       this.passenger.map().queueMapObjectUnregister(this.passenger);
+      System.out.println("???");
       return;
     }
 
+    System.out.println("move to " + waitingSlot + " : " + waitingSlot.position());
     getEntityCreature().getNavigator().setPathTo(waitingSlot.position());
   }
 

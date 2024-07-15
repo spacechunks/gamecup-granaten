@@ -6,6 +6,7 @@ import space.chunks.gamecup.dgr.flight.FlightRadarConfig;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.impl.flightboard.FlightMonitorConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
@@ -31,6 +32,7 @@ public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
     createMarketing(map);
     createFlightRadars(map);
     createFlightMonitors(map);
+    createLuggageClaims(map);
   }
 
   private void createTicketControls(@NotNull Map map) {
@@ -63,6 +65,13 @@ public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
     for (FlightMonitorConfig flightMonitorConfig : this.config.flightMonitors()) {
       MapObject flightMonitor = this.registry.create("flight_monitor", flightMonitorConfig);
       map.queueMapObjectRegister(flightMonitor);
+    }
+  }
+
+  private void createLuggageClaims(@NotNull Map map) {
+    for (LuggageClaimConfig luggageClaimConfig : this.config.luggageClaims()) {
+      MapObject luggageClaim = this.registry.create("luggage_claim", luggageClaimConfig);
+      map.queueMapObjectRegister(luggageClaim);
     }
   }
 }

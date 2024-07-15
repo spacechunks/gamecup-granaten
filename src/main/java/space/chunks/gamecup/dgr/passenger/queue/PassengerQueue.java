@@ -23,6 +23,9 @@ public interface PassengerQueue extends Named {
   @NotNull
   List<WaitingSlot> waitingSlots();
 
+  @NotNull
+  WaitingSlot createSlot(@NotNull Pos position, @Nullable WaitingSlot leadingSlot);
+
   boolean isFull();
 
   @Nullable
@@ -36,7 +39,7 @@ public interface PassengerQueue extends Named {
     Pos position();
 
     @Nullable
-    Passenger passenger();
+    Passenger occupant();
 
     boolean isOccupied();
 
@@ -46,5 +49,8 @@ public interface PassengerQueue extends Named {
 
     @Nullable
     WaitingSlot leadingSlot();
+
+    @NotNull
+    WaitingSlot leadingSlot(@NotNull WaitingSlot leadingSlot);
   }
 }

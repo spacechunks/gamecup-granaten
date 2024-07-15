@@ -43,4 +43,8 @@ public interface Procedure extends MapObject, StateAware, Named {
   void reportIncident(@NotNull Incident incident);
 
   void handleIncidentResolved(@NotNull SolutionType solution);
+
+  default boolean allowQueueToMoveUp() {
+    return true;
+  }
 }

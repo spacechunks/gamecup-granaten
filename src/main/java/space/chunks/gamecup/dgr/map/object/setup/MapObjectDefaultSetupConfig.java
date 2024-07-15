@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.flight.FlightRadarConfig;
 import space.chunks.gamecup.dgr.map.object.impl.flightboard.FlightMonitorConfig;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 
@@ -18,6 +19,7 @@ public record MapObjectDefaultSetupConfig(
     @NotNull List<TicketControlConfig> ticketControls,
     @NotNull MarketingConfigEntry marketing,
     @NotNull List<FlightRadarConfig> flightRadars,
-    @NotNull List<FlightMonitorConfig> flightMonitors
+    @NotNull List<FlightMonitorConfig> flightMonitors,
+    @NotNull List<LuggageClaimConfig> luggageClaims
 ) {
 }

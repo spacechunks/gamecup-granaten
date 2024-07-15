@@ -9,8 +9,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -23,6 +25,7 @@ public class PassengerQueueImpl implements PassengerQueue {
   private final Pos startingPosition;
   private final List<WaitingSlot> waitingSlots;
   private final String name;
+  private final SlotOccupyStrategy slotOccupyStrategy;
 
   private final Lock slotLock;
 
@@ -31,6 +34,8 @@ public class PassengerQueueImpl implements PassengerQueue {
     this.startingPosition = config.startingPosition();
     this.waitingSlots = createSlots(config);
     this.name = config.name();
+    this.slotOccupyStrategy = config.slotOccupyStrategy();
+
     this.slotLock = new ReentrantLock();
   }
 
@@ -57,6 +62,13 @@ public class PassengerQueueImpl implements PassengerQueue {
   }
 
   @Override
+  public @NotNull WaitingSlot createSlot(@NotNull Pos position, @Nullable WaitingSlot leadingSlot) {
+    WaitingSlot waitingSlot = new WaitingSlotImpl(position, leadingSlot);
+    this.waitingSlots.add(waitingSlot);
+    return waitingSlot;
+  }
+
+  @Override
   public boolean isFull() {
     return this.waitingSlots.stream().allMatch(WaitingSlot::isOccupied);
   }
@@ -66,9 +78,24 @@ public class PassengerQueueImpl implements PassengerQueue {
     try {
       this.slotLock.lock();
 
-      WaitingSlot availableSlot = findNextNotOccupied(this.waitingSlots.getLast());
-      if (availableSlot != null && availableSlot.tryOccupy(passenger)) {
-        return availableSlot;
+      switch (this.slotOccupyStrategy) {
+        case RANDOM -> {
+          List<WaitingSlot> slotsCopy = new ArrayList<>(this.waitingSlots);
+          Collections.shuffle(slotsCopy);
+
+          for (WaitingSlot waitingSlot : slotsCopy) {
+            if (waitingSlot.tryOccupy(passenger)) {
+              return waitingSlot;
+            }
+          }
+        }
+        case LAST_EMPTY -> {
+          WaitingSlot lastSlot = this.waitingSlots.getLast();
+          WaitingSlot availableSlot = findNextNotOccupied(lastSlot, lastSlot);
+          if (availableSlot != null && availableSlot.tryOccupy(passenger)) {
+            return availableSlot;
+          }
+        }
       }
     } finally {
       this.slotLock.unlock();
@@ -77,7 +104,14 @@ public class PassengerQueueImpl implements PassengerQueue {
     return null;
   }
 
-  private @Nullable WaitingSlot findNextNotOccupied(@NotNull WaitingSlot current) {
+  private @Nullable WaitingSlot findNextNotOccupied(@NotNull WaitingSlot initiatingSlot, @NotNull WaitingSlot current) {
+    if (current == initiatingSlot) {
+      if (current.isOccupied()) {
+        return null;
+      }
+      return current;
+    }
+
     WaitingSlot leadingSlot = current.leadingSlot();
     if (leadingSlot == null) {
       if (current.isOccupied()) {
@@ -92,7 +126,7 @@ public class PassengerQueueImpl implements PassengerQueue {
       }
       return current;
     }
-    return findNextNotOccupied(leadingSlot);
+    return findNextNotOccupied(initiatingSlot, leadingSlot);
   }
 
   @Override
@@ -101,7 +135,7 @@ public class PassengerQueueImpl implements PassengerQueue {
       this.slotLock.lock();
 
       return this.waitingSlots.stream()
-          .filter(slot -> passenger.equals(slot.passenger()))
+          .filter(slot -> passenger.equals(slot.occupant()))
           .findAny()
           .orElseThrow(() -> new IllegalStateException("Passenger is not waiting in this queue"));
     } finally {
@@ -118,10 +152,10 @@ public class PassengerQueueImpl implements PassengerQueue {
   @Accessors(fluent=true)
   public class WaitingSlotImpl implements WaitingSlot {
     private final Pos position;
-    private final WaitingSlot leadingSlot;
-    private Passenger passenger;
+    private WaitingSlot leadingSlot;
+    private Passenger occupant;
 
-    WaitingSlotImpl(Pos position, WaitingSlot leadingSlot) {
+    WaitingSlotImpl(@NotNull Pos position, @Nullable WaitingSlot leadingSlot) {
       this.position = position;
       this.leadingSlot = leadingSlot;
     }
@@ -130,7 +164,7 @@ public class PassengerQueueImpl implements PassengerQueue {
     public boolean isOccupied() {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        return this.passenger != null;
+        return this.occupant != null;
       } finally {
         PassengerQueueImpl.this.slotLock.unlock();
       }
@@ -140,8 +174,8 @@ public class PassengerQueueImpl implements PassengerQueue {
     public boolean tryOccupy(@NotNull Passenger passenger) {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        if (this.passenger == null) {
-          this.passenger = passenger;
+        if (this.occupant == null) {
+          this.occupant = passenger;
           return true;
         }
         return false;
@@ -154,10 +188,16 @@ public class PassengerQueueImpl implements PassengerQueue {
     public void free() {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        this.passenger = null;
+        this.occupant = null;
       } finally {
         PassengerQueueImpl.this.slotLock.unlock();
       }
+    }
+
+    @Override
+    public @NotNull WaitingSlot leadingSlot(@NotNull WaitingSlot leadingSlot) {
+      this.leadingSlot = leadingSlot;
+      return this;
     }
   }
 }

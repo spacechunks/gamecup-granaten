@@ -16,6 +16,9 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident.Solu
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueRegistry;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
 
 /**
  * @author Nico_ND1
@@ -26,7 +29,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   @Inject
   private GameFactory factory;
   @Inject
-  private PassengerQueueRegistry passengerQueueRegistry;
+  protected PassengerQueueRegistry passengerQueueRegistry;
 
   protected Map parent;
   private PassengerQueue passengerQueue;
@@ -35,6 +38,8 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   @Setter
   protected Animation animation;
   private Incident currentIncident;
+
+  private final Lock editLock = new ReentrantLock();
 
   @Override
   public void config(@NotNull MapObjectConfigEntry config) {
@@ -54,10 +59,19 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
 
   @Override
   public @NotNull PassengerQueue passengerQueue() {
-    if (this.passengerQueue == null) {
-      this.passengerQueue = this.passengerQueueRegistry.get(this.parent, this.config.queue());
+    try {
+      this.editLock.lock();
+      if (this.passengerQueue == null) {
+        this.passengerQueue = createPassengerQueue();
+      }
+      return this.passengerQueue;
+    } finally {
+      this.editLock.unlock();
     }
-    return this.passengerQueue;
+  }
+
+  protected @NotNull PassengerQueue createPassengerQueue() {
+    return this.passengerQueueRegistry.get(this.parent, this.config.queue());
   }
 
   @Override

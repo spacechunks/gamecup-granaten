@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.PlayerSkin;
+import net.minestom.server.utils.Direction;
 import space.chunks.gamecup.dgr.flight.FlightRadarConfig;
 import space.chunks.gamecup.dgr.flight.FlightRadarConfig.DestinationConfig;
 import space.chunks.gamecup.dgr.flight.FlightRadarImpl;
@@ -14,6 +15,8 @@ import space.chunks.gamecup.dgr.map.object.impl.flightboard.FlightMonitorConfig;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.Marketing;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry.Level;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaim;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheck;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
@@ -27,6 +30,7 @@ import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
 
 import java.util.List;
 
@@ -46,6 +50,7 @@ public final class MapModule extends AbstractModule {
     mapObjectTypeBinder.addBinding("ticket_control").to(TicketControl.class);
     mapObjectTypeBinder.addBinding("flight_radar").to(FlightRadarImpl.class);
     mapObjectTypeBinder.addBinding("flight_monitor").to(FlightMonitor.class);
+    mapObjectTypeBinder.addBinding("luggage_claim").to(LuggageClaim.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
@@ -62,7 +67,8 @@ public final class MapModule extends AbstractModule {
                         new Slot(new Pos(-44.5, -56.0, -12.5)),
                         new Slot(new Pos(-45.5, -56.0, -12.5)),
                         new Slot(new Pos(-46.5, -56.0, -12.5))
-                    )
+                    ),
+                    SlotOccupyStrategy.LAST_EMPTY
                 ),
                 new Pos(-40.5, -56.0, -13.5, 0, 0)
             )
@@ -86,7 +92,8 @@ public final class MapModule extends AbstractModule {
                         new Slot(new Pos(-33.5, -56.0, -14.5)),
                         new Slot(new Pos(-33.5, -56.0, -13.5)),
                         new Slot(new Pos(-34.5, -56.0, -13.5))
-                    )
+                    ),
+                    SlotOccupyStrategy.LAST_EMPTY
                 ),
                 new Pos(-33.5, -56.0, -19.5),
                 new Pos(-33.3, -55.0, -19.0)
@@ -120,7 +127,7 @@ public final class MapModule extends AbstractModule {
                             new Pos(-22.5, -56.0, -24.5, -180, 0)
                         },
                         new String[]{
-                            "security_check_1", "ticket_control_1"
+                            "security_check_1", "ticket_control_1", "luggage_claim_1"
                         }
                     )
                 )
@@ -130,6 +137,20 @@ public final class MapModule extends AbstractModule {
             new FlightMonitorConfig(
                 "flight_monitor_1",
                 new Pos(-7.1, -48.0, -10.5, 90, 30)
+            )
+        ),
+        List.of(
+            new LuggageClaimConfig(
+                "luggage_claim_1",
+                new PassengerQueueConfig(
+                    null,
+                    "luggage_claim_1_queue",
+                    new Pos(0.5, -56.0, -5.5),
+                    List.of(),
+                    SlotOccupyStrategy.RANDOM
+                ),
+                new Pos(1, -56, -4),
+                Direction.SOUTH, Direction.EAST
             )
         )
     ));
