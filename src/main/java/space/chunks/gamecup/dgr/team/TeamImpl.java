@@ -1,8 +1,6 @@
 package space.chunks.gamecup.dgr.team;
 
-import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
-import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.team.member.Member;
 
@@ -21,14 +19,15 @@ public final class TeamImpl implements Team {
 
   private final String name;
   private final Set<Member> members;
+  private final AtomicInteger money;
+  private final AtomicInteger passengersMoved;
   private Map map;
-
-  @Inject
-  private Game game;
 
   public TeamImpl() {
     this.name = "Team#"+ID_COUNT.incrementAndGet();
     this.members = new HashSet<>();
+    this.money = new AtomicInteger();
+    this.passengersMoved = new AtomicInteger();
   }
 
   @Override
@@ -58,6 +57,31 @@ public final class TeamImpl implements Team {
   @Override
   public void removeMember(@NotNull UUID uuid) {
     this.members.removeIf(member -> member.uuid().equals(uuid));
+  }
+
+  @Override
+  public int money() {
+    return this.money.get();
+  }
+
+  @Override
+  public void addMoney(int money) {
+    this.money.addAndGet(money);
+  }
+
+  @Override
+  public boolean removeMoney(int money) {
+    return this.money.updateAndGet(value -> value-money >= 0 ? value-money : value) != money;
+  }
+
+  @Override
+  public int passengersMoved() {
+    return this.passengersMoved.get();
+  }
+
+  @Override
+  public void addPassengerMoved() {
+    this.passengersMoved.addAndGet(1);
   }
 
   @Override

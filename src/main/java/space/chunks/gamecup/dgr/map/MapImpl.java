@@ -125,7 +125,7 @@ public class MapImpl implements Map {
   }
 
   private boolean handlePreAdd(@NotNull MapObject mapObjectToAdd) {
-    MapObjectPreRegisterEvent preRegisterEvent = new MapObjectPreRegisterEvent(mapObjectToAdd);
+    MapObjectPreRegisterEvent preRegisterEvent = new MapObjectPreRegisterEvent(this, mapObjectToAdd);
     MinecraftServer.getGlobalEventHandler().call(preRegisterEvent);
     return !preRegisterEvent.isCancelled();
   }
@@ -138,7 +138,7 @@ public class MapImpl implements Map {
       }
     }
 
-    MapObjectPostRegisterEvent registerEvent = new MapObjectPostRegisterEvent(addedMapObject);
+    MapObjectPostRegisterEvent registerEvent = new MapObjectPostRegisterEvent(this, addedMapObject);
     MinecraftServer.getGlobalEventHandler().call(registerEvent);
   }
 
@@ -151,7 +151,7 @@ public class MapImpl implements Map {
       bindable.boundObjects().clear();
     }
 
-    MapObjectUnregisterEvent unregisterEvent = new MapObjectUnregisterEvent(mapObject, removedMapObject.reason());
+    MapObjectUnregisterEvent unregisterEvent = new MapObjectUnregisterEvent(this, mapObject, removedMapObject.reason());
     MinecraftServer.getGlobalEventHandler().call(unregisterEvent);
   }
 

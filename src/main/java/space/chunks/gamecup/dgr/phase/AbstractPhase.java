@@ -64,5 +64,9 @@ public abstract class AbstractPhase implements Phase {
 
   public void addListener(@NotNull EventListener<?> listener) {
     this.listeners.add(listener);
+
+    if (this.active) {
+      MinecraftServer.getGlobalEventHandler().addListener(listener);
+    }
   }
 }

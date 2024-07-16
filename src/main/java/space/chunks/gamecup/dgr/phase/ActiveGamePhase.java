@@ -14,11 +14,14 @@ import net.minestom.server.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.map.event.MapObjectUnregisterEvent;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.team.Team;
+import space.chunks.gamecup.dgr.team.TeamMapObjectUnregisterListener;
 import space.chunks.gamecup.dgr.team.member.Member;
+import space.chunks.gamecup.dgr.team.member.scoreboard.MemberScoreboard;
 
 import java.util.Objects;
 
@@ -81,9 +84,13 @@ public class ActiveGamePhase extends AbstractPhase {
   protected void handleEnter_(@Nullable Phase previousPhase) {
     for (Team team : this.game.teams()) {
       for (Member member : team.members()) {
-        member.player().sendMessage("Teleporting...");
+        member.player().sendMessage("Game is starting...");
         member.player().setInstance(team.map().instance(), new Pos(-47.5, -56.0, -10.5));
+
+        team.map().queueMapObjectRegister(new MemberScoreboard(member));
       }
+
+      addListener(EventListener.of(MapObjectUnregisterEvent.class, new TeamMapObjectUnregisterListener(team)));
     }
   }
 

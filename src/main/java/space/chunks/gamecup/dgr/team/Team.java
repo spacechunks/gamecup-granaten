@@ -30,4 +30,14 @@ public interface Team extends Named {
   void addMember(@NotNull Member member);
 
   void removeMember(@NotNull UUID uuid);
+
+  int money();
+
+  void addMoney(int money);
+
+  boolean removeMoney(int money);
+
+  int passengersMoved();
+
+  void addPassengerMoved();
 }

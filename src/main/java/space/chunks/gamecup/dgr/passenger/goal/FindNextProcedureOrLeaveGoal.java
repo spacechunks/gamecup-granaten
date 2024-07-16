@@ -65,7 +65,7 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
   @Override
   public void end() {
     if (this.passenger.task() == null) {
-      this.passenger.map().queueMapObjectUnregister(this.passenger, UnregisterReason.PASSENGER_NO_PROCEDURE_TARGET);
+      this.passenger.map().queueMapObjectUnregister(this.passenger, UnregisterReason.PASSENGER_LEFT_HAPPY);
     }
   }
 }

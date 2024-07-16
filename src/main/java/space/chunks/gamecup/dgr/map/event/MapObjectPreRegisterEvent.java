@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minestom.server.event.trait.CancellableEvent;
+import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 
 
@@ -18,6 +19,7 @@ import space.chunks.gamecup.dgr.map.object.MapObject;
 @Setter
 @Accessors(fluent=true)
 public class MapObjectPreRegisterEvent implements MapObjectEvent, CancellableEvent {
+  private final Map map;
   private final MapObject mapObject;
   private boolean cancelled;
 
