@@ -3,9 +3,12 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.Player.Hand;
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.entity.EntityAttackEvent;
 import net.minestom.server.event.player.PlayerEntityInteractEvent;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -29,9 +32,12 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
     }
 
     SecurityCheckProcedure securityCheck = (SecurityCheckProcedure) boundTarget();
-    assert securityCheck != null;
-    SecurityCheckFailedAnimation animation = (SecurityCheckFailedAnimation) securityCheck.animation();
-    assert animation != null;
+    if (securityCheck == null) {
+      return;
+    }
+    if (!(securityCheck.animation() instanceof SecurityCheckFailedAnimation animation)) {
+      return;
+    }
     Passenger passenger = animation.passenger;
     // TODO: better (and null-safe) approach to getting affected passenger(s)
 
@@ -39,6 +45,10 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
       passenger.entity().async(entity -> {
         event.getPlayer().addPassenger(entity);
         entity.setGlowing(false);
+      });
+
+      securityCheck.gate.editEntityMeta(ItemDisplayMeta.class, meta -> {
+        meta.setItemStack(ItemStack.of(Material.WHITE_CARPET).withCustomModelData(1));
       });
     }
   }
@@ -49,23 +59,25 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
     }
 
     SecurityCheckProcedure securityCheck = (SecurityCheckProcedure) boundTarget();
-    assert securityCheck != null;
-    SecurityCheckFailedAnimation animation = (SecurityCheckFailedAnimation) securityCheck.animation();
-    assert animation != null;
+    if (securityCheck == null) {
+      return;
+    }
+    if (!(securityCheck.animation() instanceof SecurityCheckFailedAnimation animation)) {
+      return;
+    }
     Passenger passenger = animation.passenger;
 
     if (event.getTarget().equals(passenger.entityUnsafe())) {
       player.removePassenger(passenger.entityUnsafe());
       passenger.entity().async(entity -> {
-        System.out.println(entity.getVelocity());
-        entity.setVelocity(entity.getVelocity().mul(1, 0.5, 1));
+        entity.setVelocity(player.getPosition().direction().mul(18).withY(y -> y * 0.2));
       });
 
       MinecraftServer.getSchedulerManager().scheduleTask(() -> {
         resolve(SolutionType.RESOLVED);
         parent.queueMapObjectUnregister(passenger, UnregisterReason.INCIDENT_RESOLVED);
         parent.queueMapObjectUnregister(this, UnregisterReason.INCIDENT_RESOLVED);
-      }, TaskSchedule.tick(10), TaskSchedule.stop());
+      }, TaskSchedule.tick(15), TaskSchedule.stop());
     }
   }
 
@@ -99,6 +111,9 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
 
     passenger.entity().async(entity -> {
       entity.setGlowing(true);
+    });
+    securityCheck.gate.editEntityMeta(ItemDisplayMeta.class, meta -> {
+      meta.setItemStack(ItemStack.of(Material.WHITE_CARPET).withCustomModelData(2));
     });
 
     parent.executeForMembers(member -> {

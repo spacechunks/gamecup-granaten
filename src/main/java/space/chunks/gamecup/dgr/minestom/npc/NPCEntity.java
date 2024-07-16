@@ -10,6 +10,7 @@ import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.metadata.PlayerMeta;
 import net.minestom.server.entity.pathfinding.Navigator;
+import net.minestom.server.entity.pathfinding.PPath.PathState;
 import net.minestom.server.network.packet.server.play.PlayerInfoRemovePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket.Action;
@@ -86,8 +87,8 @@ public class NPCEntity extends EntityCreature {
 
   public boolean setPathTo(@NotNull Point point) {
     boolean b = getNavigator().setPathTo(point);
-    if (!b) {
-      new NullPointerException().printStackTrace();
+    if (!b && getNavigator().getState() != PathState.FOLLOWING) {
+      new NullPointerException(getNavigator().getState().toString()+" to "+point).printStackTrace();
     }
     return b;
   }
@@ -113,7 +114,7 @@ public class NPCEntity extends EntityCreature {
         System.out.println("Best effort path for "+this.username+" @ "+getPosition());
       }
       case INVALID -> {
-        System.out.println("Invalid path for "+this.username+" @ "+getPosition());
+        //System.out.println("Invalid path for "+this.username+" @ "+getPosition());
       }
     }
     return navigator.getPathPosition() != null;

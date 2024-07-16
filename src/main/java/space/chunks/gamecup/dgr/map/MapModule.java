@@ -15,11 +15,13 @@ import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitorConf
 import space.chunks.gamecup.dgr.map.object.impl.marketing.Marketing;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry.Level;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.PassControlProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlProcedure;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
@@ -45,12 +47,13 @@ public final class MapModule extends AbstractModule {
 
     MapBinder<String, MapObject> mapObjectTypeBinder = MapBinder.newMapBinder(binder(), String.class, MapObject.class);
     mapObjectTypeBinder.addBinding("test").to(TestMapObject.class);
-    mapObjectTypeBinder.addBinding("security_check").to(SecurityCheckProcedure.class);
+    mapObjectTypeBinder.addBinding(Procedure.SECURITY_CHECK).to(SecurityCheckProcedure.class);
     mapObjectTypeBinder.addBinding("security_check_failed_incident").to(SecurityCheckFailedIncident.class);
-    mapObjectTypeBinder.addBinding("ticket_control").to(TicketControlProcedure.class);
+    mapObjectTypeBinder.addBinding(Procedure.TICKET_CONTROL).to(TicketControlProcedure.class);
+    mapObjectTypeBinder.addBinding(Procedure.PASS_CONTROL).to(PassControlProcedure.class);
     mapObjectTypeBinder.addBinding("flight_radar").to(FlightRadarImpl.class);
     mapObjectTypeBinder.addBinding("flight_monitor").to(FlightMonitor.class);
-    mapObjectTypeBinder.addBinding("luggage_claim").to(LuggageClaimProcedure.class);
+    mapObjectTypeBinder.addBinding(Procedure.LUGGAGE_CLAIM).to(LuggageClaimProcedure.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
@@ -72,6 +75,24 @@ public final class MapModule extends AbstractModule {
                 ),
                 new Pos(-40.5, -56.0, -13.5, 0, 0),
                 new Pos(-41.5, -55.5, -12.5, -180, 0)
+            ),
+            new SecurityCheckConfig(
+                "security_check_2",
+                new Pos(-41.5, -56.0, -8.5, -90, 0),
+                new Pos(-37.5, -56.0, -8.5, -90, 0),
+                new PassengerQueueConfig(
+                    null,
+                    "security_check_2_queue",
+                    new Pos(-47.5, -56.0, -8.5),
+                    List.of(
+                        new Slot(new Pos(-44.5, -56.0, -8.5)),
+                        new Slot(new Pos(-45.5, -56.0, -8.5)),
+                        new Slot(new Pos(-46.5, -56.0, -8.5))
+                    ),
+                    SlotOccupyStrategy.LAST_EMPTY
+                ),
+                new Pos(-40.5, -56.0, -9.5, 0, 0),
+                new Pos(-41.5, -55.5, -8.5, -180, 0)
             )
         ),
         List.of(
@@ -98,6 +119,30 @@ public final class MapModule extends AbstractModule {
                 ),
                 new Pos(-33.5, -56.0, -19.5),
                 new Pos(-33.3, -55.0, -19.0)
+            ),
+            new TicketControlConfig(
+                "ticket_control_2",
+                new Pos(-31.5, -56.0, -17.5, -180, 0),
+                new Pos(-30.5, -56.0, -17.5),
+                new PassengerQueueConfig(
+                    null,
+                    "ticket_control_1_queue",
+                    new Pos(-33.5, -56.0, -13.5),
+                    List.of(
+                        new Slot(new Pos(-31.5, -56.0, -16.5)),
+                        new Slot(new Pos(-31.5, -56.0, -15.5)),
+                        new Slot(new Pos(-32.5, -56.0, -15.5)),
+                        new Slot(new Pos(-33.5, -56.0, -15.5)),
+                        new Slot(new Pos(-33.5, -56.0, -14.5)),
+                        new Slot(new Pos(-32.5, -56.0, -14.5)),
+                        new Slot(new Pos(-31.5, -56.0, -14.5)),
+                        new Slot(new Pos(-31.5, -56.0, -13.5)),
+                        new Slot(new Pos(-32.5, -56.0, -13.5))
+                    ),
+                    SlotOccupyStrategy.LAST_EMPTY
+                ),
+                new Pos(-31.5, -56.0, -19.5),
+                new Pos(-31.3, -55.0, -19.0)
             )
         ),
         new MarketingConfigEntry(
@@ -126,9 +171,6 @@ public final class MapModule extends AbstractModule {
                         new Pos[]{
                             new Pos(-22.5, -56.0, -24.5, -180, 0),
                             new Pos(-22.5, -56.0, -24.5, -180, 0)
-                        },
-                        new String[]{
-                            "security_check_1", "ticket_control_1"
                         }
                     ),
                     new DestinationConfig(
@@ -144,9 +186,6 @@ public final class MapModule extends AbstractModule {
                         new Pos[]{
                             new Pos(9.5, -56.0, -24.5, -180, 0),
                             new Pos(9.5, -56.0, 3.5, 0, 0)
-                        },
-                        new String[]{
-                            "luggage_claim_1"
                         }
                     )
                 )

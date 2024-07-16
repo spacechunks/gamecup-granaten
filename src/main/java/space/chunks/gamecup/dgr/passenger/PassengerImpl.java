@@ -1,18 +1,21 @@
 package space.chunks.gamecup.dgr.passenger;
 
+import com.google.inject.Inject;
 import com.google.inject.assistedinject.Assisted;
 import com.google.inject.assistedinject.AssistedInject;
 import lombok.extern.log4j.Log4j2;
+import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.PlayerSkin;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import net.minestom.server.thread.Acquirable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.minestom.pathfinding.SimpleGroundNodeFollower;
 import space.chunks.gamecup.dgr.minestom.pathfinding.SimpleGroundNodeGenerator;
@@ -23,6 +26,7 @@ import space.chunks.gamecup.dgr.passenger.goal.ProceedGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WaitInProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WorkGoal;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTaskBuilder;
 
 import java.util.ArrayDeque;
 import java.util.List;
@@ -44,10 +48,13 @@ public class PassengerImpl implements Passenger {
   private final Destination destination;
   private final String name;
   private final Queue<PassengerTask> taskQueue;
+  private final ItemStack baggage;
 
   private Map map;
   private PassengerTask task;
+
   private int patience;
+  private int lastShownPatience;
 
   @AssistedInject
   public PassengerImpl(
@@ -64,19 +71,21 @@ public class PassengerImpl implements Passenger {
     ));
     this.npc.getNavigator().setNodeGenerator(SimpleGroundNodeGenerator::new);
     this.npc.getNavigator().setNodeFollower(() -> new SimpleGroundNodeFollower(this.npc));
+    this.npc.setCustomNameVisible(true);
+
+    if (Math.random() < config.baggageChance()) {
+      this.baggage = ItemStack.of(Material.PAPER);
+    } else {
+      this.baggage = null;
+    }
 
     this.destination = config.destination();
-    this.taskQueue = new ArrayDeque<>(config.procedures().length);
-    queueTasks(config);
-
-    log.info("Created passenger {} with config: {}", this.name, config);
+    this.taskQueue = new ArrayDeque<>();
   }
 
-  public void queueTasks(@NotNull PassengerConfig config) {
-    for (String procedureName : config.procedures()) {
-      PassengerTask task = new PassengerTask(procedureName);
-      this.taskQueue.add(task);
-    }
+  @Inject
+  public void queueTasks(@NotNull PassengerTaskBuilder taskBuilder) {
+    this.taskQueue.addAll(taskBuilder.createTasks(this));
   }
 
   @Override
@@ -129,8 +138,11 @@ public class PassengerImpl implements Passenger {
     }
 
     this.task = this.taskQueue.poll();
-    Procedure procedure = (Procedure) map().objects().find(this.task.procedureName()).orElseThrow(() -> new NullPointerException("Procedure not found: "+this.task.procedureName()));
-    this.task.procedure(procedure);
+  }
+
+  @Override
+  public @Nullable ItemStack baggage() {
+    return this.baggage;
   }
 
   @Override
@@ -149,18 +161,31 @@ public class PassengerImpl implements Passenger {
         ),
         List.of()
     );
-
-    log.info("Registered passenger {} at {}", this.name, this.spawnPosition);
+    if (this.baggage != null && this.destination == Destination.LEAVING) {
+      this.npc.setItemInOffHand(this.baggage);
+    }
   }
 
   @Override
   public void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
     this.npc.remove();
-    log.info("Unregistered passenger {} because {}", this.name, reason);
   }
 
   @Override
   public @NotNull String name() {
     return this.name;
+  }
+
+  @Override
+  public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
+    if (this.patience != this.lastShownPatience) {
+      this.npc.setCustomName(Component.text("Patience: ").append(Component.text(this.patience)));
+      this.lastShownPatience = this.patience;
+    }
+
+    if (Math.random() > 0.9) {
+      this.patience++;
+    }
+    return TickResult.CONTINUE;
   }
 }

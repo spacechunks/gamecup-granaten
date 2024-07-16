@@ -23,8 +23,7 @@ public record FlightRadarConfig(
       int baseCreateDelayMin,
       int baseCreateDelayMax,
       @NotNull Pos[] spawnPositions,
-      @NotNull Pos[] leavePositions,
-      @NotNull String[] procedures
+      @NotNull Pos[] leavePositions
   ) {
     public int randomDelay() {
       return (int) (Math.random() * (baseCreateDelayMax()-baseCreateDelayMin())+baseCreateDelayMin());

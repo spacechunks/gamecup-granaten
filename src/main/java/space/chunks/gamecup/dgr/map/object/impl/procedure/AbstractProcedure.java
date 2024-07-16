@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.GameFactory;
+import space.chunks.gamecup.dgr.map.Groupable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
@@ -25,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 @Getter
 @Accessors(fluent=true)
-public abstract class AbstractProcedure<C extends ProcedureConfig> extends AbstractBindableMapObject<C> implements Procedure {
+public abstract class AbstractProcedure<C extends ProcedureConfig> extends AbstractBindableMapObject<C> implements Procedure, Groupable {
   @Inject
   private GameFactory factory;
   @Inject
@@ -58,10 +59,9 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   }
 
   @Override
-  public @NotNull PassengerQueue passengerQueue() {
+  public synchronized @NotNull PassengerQueue passengerQueue() {
     try {
       this.editLock.lock();
-      System.out.println(this.passengerQueue);
       if (this.passengerQueue == null) {
         this.passengerQueue = createPassengerQueue();
       }
@@ -77,28 +77,40 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
 
   @Override
   public void reportIncident(@NotNull Incident incident) {
-    this.currentIncident = incident;
+    try {
+      this.editLock.lock();
 
-    if (this.animation != null) {
-      Animation newAnimation = incident.replaceProcedureAnimation(this.animation);
+      this.currentIncident = incident;
 
-      if (newAnimation != null) {
-        this.parent.queueMapObjectUnregister(this.animation, UnregisterReason.INCIDENT_NEW_ANIMATION);
+      if (this.animation != null) {
+        Animation newAnimation = incident.replaceProcedureAnimation(this.animation);
 
-        bind(newAnimation);
+        if (newAnimation != null) {
+          this.parent.queueMapObjectUnregister(this.animation, UnregisterReason.INCIDENT_NEW_ANIMATION);
 
-        this.parent.queueMapObjectRegister(newAnimation);
-        this.animation = newAnimation;
+          bind(newAnimation);
+
+          this.parent.queueMapObjectRegister(newAnimation);
+          this.animation = newAnimation;
+        }
       }
+    } finally {
+      this.editLock.unlock();
     }
   }
 
   @Override
   public void handleIncidentResolved(@NotNull SolutionType solution) {
-    this.currentIncident = null;
+    try {
+      this.editLock.lock();
 
-    if (this.animation != null) {
-      this.parent.queueMapObjectUnregister(this.animation, UnregisterReason.INCIDENT_RESOLVED);
+      this.currentIncident = null;
+
+      if (this.animation != null) {
+        this.parent.queueMapObjectUnregister(this.animation, UnregisterReason.INCIDENT_RESOLVED);
+      }
+    } finally {
+      this.editLock.unlock();
     }
   }
 }

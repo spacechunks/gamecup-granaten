@@ -16,7 +16,11 @@ public final class GameTickTask implements Runnable {
   }
 
   @Override
-  public void run() {
+  public synchronized void run() {
     this.game.tick(this.currentTick++);
+  }
+
+  public synchronized int currentTick() {
+    return this.currentTick;
   }
 }

@@ -47,4 +47,10 @@ public interface Procedure extends MapObject, StateAware, Named {
   default boolean allowQueueToMoveUp() {
     return true;
   }
+
+  String SECURITY_CHECK = "security_check";
+  String TICKET_CONTROL = "ticket_control";
+  String LUGGAGE_CLAIM = "luggage_claim";
+  String PASS_CONTROL = "pass_control";
+  String SEAT = "seat";
 }

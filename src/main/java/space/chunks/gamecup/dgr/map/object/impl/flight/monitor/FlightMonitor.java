@@ -53,7 +53,7 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
     }
 
     List<Flight> flights = new ArrayList<>();
-    for (FlightRadar flightRadar : map.objects().allOf(FlightRadar.class)) {
+    for (FlightRadar flightRadar : map.objects().allOfType(FlightRadar.class)) {
       flights.addAll(flightRadar.flights());
     }
     flights.sort(Comparator.comparingInt(Flight::targetFinishTick));

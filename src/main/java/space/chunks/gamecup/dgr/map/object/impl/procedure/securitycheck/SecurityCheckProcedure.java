@@ -76,4 +76,9 @@ public class SecurityCheckProcedure extends AbstractProcedure<SecurityCheckConfi
     super.handleTargetUnregister(parent);
     this.animation = null;
   }
+
+  @Override
+  public @NotNull String group() {
+    return Procedure.SECURITY_CHECK;
+  }
 }

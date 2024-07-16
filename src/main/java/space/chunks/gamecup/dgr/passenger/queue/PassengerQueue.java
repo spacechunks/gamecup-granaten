@@ -23,6 +23,12 @@ public interface PassengerQueue extends Named {
   @NotNull
   List<WaitingSlot> waitingSlots();
 
+  default int size() {
+    return (int) waitingSlots().stream()
+        .filter(WaitingSlot::isOccupied)
+        .count();
+  }
+
   @NotNull
   WaitingSlot createSlot(@NotNull Pos position, @Nullable WaitingSlot leadingSlot);
 

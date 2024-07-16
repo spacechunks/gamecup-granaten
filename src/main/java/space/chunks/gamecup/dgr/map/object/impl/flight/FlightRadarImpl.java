@@ -3,9 +3,10 @@ package space.chunks.gamecup.dgr.map.object.impl.flight;
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.GameFactory;
-import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
+import space.chunks.gamecup.dgr.GameTickTask;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
+import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.PassengerConfig;
@@ -29,6 +30,8 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
 
   @Inject
   private GameFactory factory;
+  @Inject
+  private GameTickTask tickTask;
 
   @Inject
   public FlightRadarImpl() {
@@ -61,6 +64,21 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
     } finally {
       this.flightsLock.unlock();
     }
+  }
+
+  @Override
+  public void forceCreate(@NotNull Destination destination) {
+    DestinationConfig destinationConfig = this.config.destinations().stream()
+        .filter(dc -> dc.destination() == destination)
+        .findAny()
+        .orElseThrow(() -> new NullPointerException("Destination not found: "+destination));
+
+    int currentTick = this.tickTask.currentTick();
+    int randomDelay = destinationConfig.randomDelay();
+    int passengerCount = destinationConfig.randomPassengers();
+    Flight flight = new FlightImpl(destinationConfig, passengerCount, currentTick, randomDelay / 3);
+    this.flights.add(flight);
+    this.destinationDelays.put(destinationConfig.destination(), currentTick+randomDelay);
   }
 
   @Override
@@ -105,7 +123,7 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
             config.randomSpawnPosition(),
             config.randomLeavePosition(),
             config.destination(),
-            config.procedures()
+            0.75
         ));
 
         map.queueMapObjectRegister(passenger);

@@ -12,6 +12,6 @@ public record PassengerConfig(
     @NotNull Pos spawnPosition,
     @NotNull Pos leavePosition,
     @NotNull Destination destination,
-    @NotNull String[] procedures
+    double baggageChance
 ) {
 }

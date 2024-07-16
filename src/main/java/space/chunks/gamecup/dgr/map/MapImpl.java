@@ -36,7 +36,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
-import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
@@ -157,7 +156,7 @@ public class MapImpl implements Map {
   }
 
   private void testTroubleMaker(int currentTick) {
-    int incidents = objects().allOf(Incident.class).size();
+    int incidents = objects().allOfType(Incident.class).size();
     if (incidents >= MAX_CONCURRENT_INCIDENTS) {
       return;
     }

@@ -8,6 +8,7 @@ import space.chunks.gamecup.dgr.debug.EnterPhaseCommand;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.MapImpl;
 import space.chunks.gamecup.dgr.map.MapModule;
+import space.chunks.gamecup.dgr.map.object.impl.flight.ForceFlightCommand;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMakerImpl;
@@ -60,6 +61,7 @@ public final class GameModule extends AbstractModule {
     commandsBinder.addBinding().to(EnterPhaseCommand.class);
     commandsBinder.addBinding().to(SpawnPassengersCommand.class);
     commandsBinder.addBinding().to(NPCEntityDebugCommand.class);
+    commandsBinder.addBinding().to(ForceFlightCommand.class);
 
     bind(Game.class).to(GameImpl.class).asEagerSingleton();
     bind(GameTickTask.class);

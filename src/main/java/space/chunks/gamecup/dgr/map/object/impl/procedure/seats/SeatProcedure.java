@@ -19,4 +19,9 @@ public class SeatProcedure extends AbstractProcedure<SeatProcedureConfig> implem
   public void createAnimation(@NotNull Passenger passenger) {
 
   }
+
+  @Override
+  public @NotNull String group() {
+    return Procedure.SEAT;
+  }
 }

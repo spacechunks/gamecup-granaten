@@ -58,6 +58,8 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
     return passengerQueue;
   }
 
+  private int y = 0;
+
   private void recursiveLineDiscover(
       Pos startPos, Pos currentPos, Block blockToTest,
       Direction lastDirection, Direction waitingDirection,
@@ -73,6 +75,12 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
       }
 
       this.line.add(new LuggageClaimLineEntry(currentPos, lastDirection, waitingSlot, null));
+
+      /*
+      Uncomment to visualize the line:
+      instance.setBlock(currentPos.add(0, 2+(this.y++), 0), Block.RED_CONCRETE);
+      instance.setBlock(currentPos.add(waitingDirection.normalX(), waitingDirection.normalY(), waitingDirection.normalZ()).add(0, 2+(this.y), 0), Block.BLUE_CONCRETE);
+      */
 
       if (currentPos.add(lastDirection.normalX(), lastDirection.normalY(), lastDirection.normalZ()).equals(startPos)) {
         waitingSlot.leadingSlot(this.line.getFirst().waitingSlot());
@@ -116,5 +124,10 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
   @Override
   public boolean allowQueueToMoveUp() {
     return false;
+  }
+
+  @Override
+  public @NotNull String group() {
+    return Procedure.LUGGAGE_CLAIM;
   }
 }

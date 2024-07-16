@@ -38,7 +38,7 @@ public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCh
       case 30 -> {
       }
       case 35 -> {
-        if (Math.random() > 0.8D) {
+        if (Math.random() > 0.7769D) {
           Incident incident = (Incident) map.objectTypes().create("security_check_failed_incident");
           incident.bind(this.securityCheck);
           map.queueMapObjectRegister(incident);

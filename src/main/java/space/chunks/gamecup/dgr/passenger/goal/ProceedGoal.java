@@ -31,7 +31,6 @@ public class ProceedGoal extends GoalSelector {
     Procedure procedure = task.procedure();
 
     this.passenger.setPathTo(procedure.exitPos());
-    System.out.println("move to exit pos: " + procedure.exitPos());
   }
 
   @Override

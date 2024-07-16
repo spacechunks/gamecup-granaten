@@ -12,7 +12,6 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
-import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 
 
 /**
@@ -56,14 +55,13 @@ public class TicketControlProcedure extends AbstractProcedure<TicketControlConfi
   }
 
   @Override
-  protected @NotNull PassengerQueue createPassengerQueue() {
-    System.out.println("createPassengerQueeu!");
-    return super.createPassengerQueue();
-  }
-
-  @Override
   public void handleTargetUnregister(@NotNull Map parent) {
     super.handleTargetUnregister(parent);
     this.animation = null;
+  }
+
+  @Override
+  public @NotNull String group() {
+    return Procedure.TICKET_CONTROL;
   }
 }
