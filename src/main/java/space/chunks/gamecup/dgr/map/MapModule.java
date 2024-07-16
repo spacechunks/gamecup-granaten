@@ -26,6 +26,7 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.Security
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.PassControlProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.trash.Trash;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
@@ -58,6 +59,7 @@ public final class MapModule extends AbstractModule {
     mapObjectTypeBinder.addBinding(Procedure.LUGGAGE_CLAIM).to(LuggageClaimProcedure.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
     mapObjectTypeBinder.addBinding("seat").to(SeatProcedure.class);
+    mapObjectTypeBinder.addBinding("trash").to(Trash.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
         List.of(

@@ -35,6 +35,8 @@ public interface Passenger extends MapObject, Ticking {
 
   int patience();
 
+  void losePatience();
+
   @NotNull
   Destination destination();
 

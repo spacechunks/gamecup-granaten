@@ -23,6 +23,7 @@ import space.chunks.gamecup.dgr.passenger.goal.FindNextProcedureOrLeaveGoal;
 import space.chunks.gamecup.dgr.passenger.goal.JoinProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.goal.MoveToWorkPosGoal;
 import space.chunks.gamecup.dgr.passenger.goal.ProceedGoal;
+import space.chunks.gamecup.dgr.passenger.goal.ProduceTrashGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WaitInProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WorkGoal;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
@@ -81,6 +82,8 @@ public class PassengerImpl implements Passenger {
 
     this.destination = config.destination();
     this.taskQueue = new ArrayDeque<>();
+
+    this.patience = 10;
   }
 
   @Inject
@@ -121,6 +124,13 @@ public class PassengerImpl implements Passenger {
   }
 
   @Override
+  public void losePatience() {
+    if (this.patience > 0) {
+      this.patience--;
+    }
+  }
+
+  @Override
   public @NotNull Destination destination() {
     return this.destination;
   }
@@ -154,7 +164,7 @@ public class PassengerImpl implements Passenger {
         List.of(
             new FindNextProcedureOrLeaveGoal(this),
             new JoinProcedureQueueGoal(this),
-            new WaitInProcedureQueueGoal(this),
+            new ProduceTrashGoal(this), new WaitInProcedureQueueGoal(this),
             new MoveToWorkPosGoal(this),
             new WorkGoal(this),
             new ProceedGoal(this)

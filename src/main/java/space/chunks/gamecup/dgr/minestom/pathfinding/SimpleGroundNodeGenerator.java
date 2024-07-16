@@ -72,7 +72,12 @@ public class SimpleGroundNodeGenerator implements NodeGenerator {
 
   @Override
   public boolean canMoveTowards(@NotNull Instance instance, @NotNull Point start, @NotNull Point end, @NotNull BoundingBox boundingBox) {
-    return instance.getBlock(end) == Block.AIR && instance.getBlock(end.add(0, 1, 0)) == Block.AIR && instance.getBlock(end.sub(0, 1, 0)) != Block.AIR;
+    return isNotARealBlock(instance, end) && isNotARealBlock(instance, end.add(0, 1, 0)) && !isNotARealBlock(instance, end.sub(0, 1, 0));
+  }
+
+  private boolean isNotARealBlock(@NotNull Instance instance, @NotNull Point point) {
+    Block block = instance.getBlock(point);
+    return block == Block.AIR || !block.registry().isSolid();
   }
 
   private PNode newNode(PNode current, double cost, Point point, Point goal) {

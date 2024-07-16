@@ -18,6 +18,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
   private final Passenger passenger;
   private WaitingSlot waitingSlot;
   private boolean firstTickDone; // we skip the randomizer in the first tick, to prevent standing still
+  private int animationTick;
 
   public WaitInProcedureQueueGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -43,6 +44,10 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
 
   @Override
   public void tick(long l) {
+    this.animationTick++;
+    if (this.animationTick % 20 == 0) {
+      this.passenger.losePatience();
+    }
   }
 
   @Override
