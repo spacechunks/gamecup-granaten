@@ -2,6 +2,7 @@ package space.chunks.gamecup.dgr.minestom.npc;
 
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Point;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.GameMode;
@@ -29,6 +30,9 @@ import java.util.UUID;
 public class NPCEntity extends EntityCreature {
   private final String username;
   private final PlayerSkin skin;
+
+  private Point pathTarget;
+  private int pathTargetInvalidTries;
 
   public NPCEntity(@NotNull UUID uuid, @NotNull String username, @NotNull PlayerSkin skin) {
     super(EntityType.PLAYER, uuid);
@@ -90,6 +94,9 @@ public class NPCEntity extends EntityCreature {
     if (!b && getNavigator().getState() != PathState.FOLLOWING) {
       new NullPointerException(getNavigator().getState().toString()+" to "+point).printStackTrace();
     }
+
+    this.pathTarget = point;
+    this.pathTargetInvalidTries = 0;
     return b;
   }
 
@@ -99,22 +106,26 @@ public class NPCEntity extends EntityCreature {
       return getPosition().sameBlock(navigator.getGoalPosition());
     }
     switch (navigator.getState()) {
-      case CALCULATING -> {
-      }
-      case FOLLOWING -> {
-      }
-      case TERMINATING -> {
-      }
-      case TERMINATED -> {
-        System.out.println("Terminated path for "+this.username+" @ "+getPosition());
-      }
-      case COMPUTED -> {
+      case CALCULATING, FOLLOWING, COMPUTED -> {
+        return false;
       }
       case BEST_EFFORT -> {
         System.out.println("Best effort path for "+this.username+" @ "+getPosition());
       }
       case INVALID -> {
-        //System.out.println("Invalid path for "+this.username+" @ "+getPosition());
+        if (this.pathTargetInvalidTries++ < 5) {
+          getNavigator().setPathTo(this.pathTarget);
+        } else {
+          if (this.pathTarget != null) {
+            teleport(new Pos(this.pathTarget));
+          }
+
+          getNavigator().reset();
+          this.pathTargetInvalidTries = 0;
+          this.pathTarget = null;
+        }
+
+        System.out.println("Invalid path for "+this.username+" @ "+getPosition()+" to "+this.pathTarget+" with tries "+this.pathTargetInvalidTries);
       }
     }
     return navigator.getPathPosition() != null;

@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.GameFactory;
 import space.chunks.gamecup.dgr.map.Groupable;
 import space.chunks.gamecup.dgr.map.Map;
@@ -59,7 +60,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   }
 
   @Override
-  public synchronized @NotNull PassengerQueue passengerQueue() {
+  public synchronized @Nullable PassengerQueue passengerQueue() {
     try {
       this.editLock.lock();
       if (this.passengerQueue == null) {
@@ -71,7 +72,10 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
     }
   }
 
-  protected @NotNull PassengerQueue createPassengerQueue() {
+  protected @Nullable PassengerQueue createPassengerQueue() {
+    if (this.config.queue() == null) {
+      return null;
+    }
     return this.passengerQueueRegistry.get(this.parent, this.config.queue());
   }
 

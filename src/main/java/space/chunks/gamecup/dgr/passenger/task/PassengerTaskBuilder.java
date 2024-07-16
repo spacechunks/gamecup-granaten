@@ -29,7 +29,7 @@ public final class PassengerTaskBuilder {
     tasks.add(new PassengerTask(passenger, Procedure.SECURITY_CHECK));
     tasks.add(new PassengerTask(passenger, Procedure.TICKET_CONTROL));
     if (Math.random() > 0.32322135325421D) {
-      //tasks.add(new PassengerTask(passenger, Procedure.SEAT));
+      tasks.add(new PassengerTask(passenger, Procedure.SEAT));
     }
   }
 

@@ -18,6 +18,8 @@ import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry.L
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckProcedure;
@@ -55,6 +57,7 @@ public final class MapModule extends AbstractModule {
     mapObjectTypeBinder.addBinding("flight_monitor").to(FlightMonitor.class);
     mapObjectTypeBinder.addBinding(Procedure.LUGGAGE_CLAIM).to(LuggageClaimProcedure.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
+    mapObjectTypeBinder.addBinding("seat").to(SeatProcedure.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
         List.of(
@@ -210,6 +213,14 @@ public final class MapModule extends AbstractModule {
                 ),
                 new Pos(1, -56, -4),
                 Direction.SOUTH, Direction.EAST
+            )
+        ),
+        List.of(
+            new SeatConfig(
+                "seat_1",
+                new Pos(-17.5, -56.0, -1.5, 90, 0),
+                new Pos(-15.5, -55.5, -1.5, -90, 0),
+                null
             )
         )
     ));

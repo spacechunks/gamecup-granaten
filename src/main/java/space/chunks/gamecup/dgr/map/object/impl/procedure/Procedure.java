@@ -19,7 +19,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
  * @author Nico_ND1
  */
 public interface Procedure extends MapObject, StateAware, Named {
-  @NotNull
+  @Nullable
   PassengerQueue passengerQueue();
 
   @NotNull

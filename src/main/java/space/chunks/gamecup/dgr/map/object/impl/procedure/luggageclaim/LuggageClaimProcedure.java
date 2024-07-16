@@ -112,12 +112,12 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
   }
 
   @Override
-  public Pos workPos() {
+  public @NotNull Pos workPos() {
     return super.workPos();
   }
 
   @Override
-  public Pos exitPos() {
+  public @NotNull Pos exitPos() {
     return super.exitPos();
   }
 

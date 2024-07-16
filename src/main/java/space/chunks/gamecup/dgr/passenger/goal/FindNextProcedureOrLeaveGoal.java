@@ -7,6 +7,7 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
 
 /**
@@ -36,7 +37,12 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
     } else {
       Procedure procedure = task.procedure();
       PassengerQueue passengerQueue = procedure.passengerQueue();
-      this.passenger.setPathTo(passengerQueue.startingPosition());
+      if (passengerQueue != null) {
+        this.passenger.setPathTo(passengerQueue.startingPosition());
+      } else {
+        task.state(State.MOVE_TO_WORK_POS);
+        System.out.println("MOVE TO WORK YO");
+      }
     }
 
     this.tickDelay = 5;
@@ -54,7 +60,7 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
     if (this.tickDelay > 0) {
       return false;
     }
-    return this.passenger.entityUnsafe().isPathComplete();
+    return this.passenger.task() != null || this.passenger.entityUnsafe().isPathComplete();
   }
 
   @Override

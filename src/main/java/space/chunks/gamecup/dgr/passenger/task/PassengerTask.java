@@ -48,6 +48,15 @@ public final class PassengerTask {
         .filter(mapObject -> mapObject instanceof Procedure)
         .map(Procedure.class::cast)
         .min((o1, o2) -> {
+          if (o1.passengerQueue() == null) {
+            if (o1.animation() == null) {
+              return -1;
+            } else if (o2.animation() == null) {
+              return 1;
+            }
+            return 0;
+          }
+
           int o1QueueSize = o1.passengerQueue().size();
           int o2QueueSize = o2.passengerQueue().size();
           if (o1QueueSize == o2QueueSize || Math.abs(o1QueueSize-o2QueueSize) < 2) {
