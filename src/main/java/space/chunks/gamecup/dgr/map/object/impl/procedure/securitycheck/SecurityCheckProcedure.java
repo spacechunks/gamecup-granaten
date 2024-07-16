@@ -14,7 +14,9 @@ import net.minestom.server.entity.metadata.villager.VillagerMeta.VillagerData;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
@@ -48,13 +50,14 @@ public class SecurityCheckProcedure extends AbstractProcedure<SecurityCheckConfi
   }
 
   @Override
-  public void createAnimation(@NotNull Passenger passenger) {
+  public @Nullable Animation createAnimation(@NotNull Passenger passenger) {
     SecurityCheckAnimation animation = new SecurityCheckAnimation(this, passenger);
     animation.config(this.config);
     bind(animation);
 
     this.parent.queueMapObjectRegister(animation);
     this.animation = animation;
+    return this.animation;
   }
 
   @Override

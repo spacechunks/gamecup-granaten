@@ -71,7 +71,7 @@ public final class GameImpl implements Game {
 
   @Inject
   public void registerTickTask(@NotNull GameTickTask task) {
-    MinecraftServer.getSchedulerManager().scheduleTask(task, TaskSchedule.tick(1), TaskSchedule.tick(1));
+    MinecraftServer.getSchedulerManager().scheduleTask(task, TaskSchedule.seconds(5), TaskSchedule.tick(1));
     log.info("Scheduled tick task");
   }
 

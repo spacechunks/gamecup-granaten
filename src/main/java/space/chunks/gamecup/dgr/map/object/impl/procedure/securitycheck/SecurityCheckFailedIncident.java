@@ -89,7 +89,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
   @Override
   public @Nullable Animation replaceProcedureAnimation(@Nullable Animation currentAnimation) {
     if (currentAnimation instanceof SecurityCheckAnimation scAnimation) {
-      return new SecurityCheckFailedAnimation(scAnimation.securityCheck, scAnimation.passenger);
+      return new SecurityCheckFailedAnimation(scAnimation.contextId(), scAnimation.securityCheck, scAnimation.passenger);
     } else if (currentAnimation != null) {
       throw new IllegalStateException("The current animation is not a SecurityCheckAnimation");
     }

@@ -2,20 +2,23 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+
+import java.util.UUID;
 
 
 /**
  * @author Nico_ND1
  */
-public class SecurityCheckFailedAnimation extends AbstractBindableMapObject<SecurityCheckConfig> implements Animation {
+public class SecurityCheckFailedAnimation extends AbstractAnimation<SecurityCheckConfig> implements Animation {
   protected final SecurityCheckProcedure securityCheck;
   protected final Passenger passenger;
   private int animationTick;
 
-  public SecurityCheckFailedAnimation(@NotNull SecurityCheckProcedure securityCheck, @NotNull Passenger passenger) {
+  public SecurityCheckFailedAnimation(@NotNull UUID contextId, @NotNull SecurityCheckProcedure securityCheck, @NotNull Passenger passenger) {
+    super(contextId);
     this.securityCheck = securityCheck;
     this.passenger = passenger;
   }
@@ -42,6 +45,6 @@ public class SecurityCheckFailedAnimation extends AbstractBindableMapObject<Secu
 
   @Override
   public @NotNull String name() {
-    return super.name() + "_failed_animation";
+    return super.name()+"_failed_animation";
   }
 }

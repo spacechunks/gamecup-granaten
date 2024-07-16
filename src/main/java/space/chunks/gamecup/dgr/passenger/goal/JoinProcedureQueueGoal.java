@@ -33,13 +33,15 @@ public class JoinProcedureQueueGoal extends GoalSelector {
     assert task != null;
     Procedure procedure = task.procedure();
     PassengerQueue passengerQueue = procedure.passengerQueue();
-    WaitingSlot waitingSlot = passengerQueue.occupyNextSlot(this.passenger);
-    if (waitingSlot == null) {
-      this.passenger.map().queueMapObjectUnregister(this.passenger);
-      return;
-    }
+    if (passengerQueue != null) {
+      WaitingSlot waitingSlot = passengerQueue.occupyNextSlot(this.passenger);
+      if (waitingSlot == null) {
+        this.passenger.map().queueMapObjectUnregister(this.passenger);
+        return;
+      }
 
-    this.passenger.setPathTo(waitingSlot.position());
+      this.passenger.setPathTo(waitingSlot.position());
+    }
   }
 
   @Override
@@ -55,6 +57,11 @@ public class JoinProcedureQueueGoal extends GoalSelector {
   public void end() {
     PassengerTask task = this.passenger.task();
     assert task != null;
-    task.state(State.WAIT_IN_QUEUE);
+    Procedure procedure = task.procedure();
+    if (procedure.passengerQueue() == null) {
+      task.state(State.MOVE_TO_WORK_POS);
+    } else {
+      task.state(State.WAIT_IN_QUEUE);
+    }
   }
 }

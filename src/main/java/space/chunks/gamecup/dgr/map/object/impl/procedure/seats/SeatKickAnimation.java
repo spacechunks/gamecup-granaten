@@ -3,7 +3,7 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.seats;
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.passenger.Passenger;
@@ -12,7 +12,7 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 /**
  * @author Nico_ND1
  */
-public class SeatKickAnimation extends AbstractBindableMapObject<SeatConfig> implements Animation {
+public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements Animation {
   private final SeatProcedure seat;
   private final Passenger sittingPassenger;
   private final Passenger kickingPassenger;
@@ -54,14 +54,15 @@ public class SeatKickAnimation extends AbstractBindableMapObject<SeatConfig> imp
       case 40 -> {
         this.sittingPassenger.entityUnsafe().lookAt(this.kickingPassenger.entityUnsafe());
       }
-      case 55 -> {
+      case 48 -> {
         this.kickingPassenger.entityUnsafe().swingMainHand();
       }
-      case 58 -> {
+      case 50 -> {
         this.seat.entity.removePassenger(this.sittingPassenger.entityUnsafe());
+        //this.sittingPassenger.entityUnsafe().setVelocity(this.kickingPassenger.entityUnsafe().getPosition().direction().mul(13).withY(y -> y * 0.65D));
         this.sittingPassenger.entityUnsafe().teleport(this.config.workPos());
       }
-      case 60 -> {
+      case 64 -> {
         map.queueMapObjectUnregister(this);
         this.seat.animation(null);
         this.seat.createAnimation(this.kickingPassenger);

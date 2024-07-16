@@ -165,8 +165,8 @@ public final class MapModule extends AbstractModule {
                         Destination.LEAVING,
                         3,
                         2, 5,
+                        20 * 5,
                         20 * 20,
-                        20 * 30,
                         new Pos[]{
                             new Pos(-48.5, -56.0, -8.5, -90, 0), new Pos(-48.5, -56.0, -7.5, -90, 0),
                             new Pos(-48.5, -56.0, -13.5, -90, 0), new Pos(-48.5, -56.0, -12.5, -90, 0)
@@ -178,10 +178,10 @@ public final class MapModule extends AbstractModule {
                     ),
                     new DestinationConfig(
                         Destination.ARRIVING,
-                        2,
+                        3,
                         2, 5,
+                        20 * 5,
                         20 * 20,
-                        20 * 30,
                         new Pos[]{
                             new Pos(27.5, -56.0, -13.5, 90, 0), new Pos(27.5, -56.0, -12.5, 90, 0),
                             new Pos(27.5, -56.0, -8.5, 90, 0), new Pos(27.5, -56.0, -7.5, 90, 0),
@@ -219,7 +219,7 @@ public final class MapModule extends AbstractModule {
             new SeatConfig(
                 "seat_1",
                 new Pos(-17.5, -56.0, -1.5, 90, 0),
-                new Pos(-15.5, -55.5, -1.5, -90, 0),
+                new Pos(-15.5, -57.5, -1.5, 90, 0),
                 null
             )
         )

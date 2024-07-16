@@ -8,7 +8,7 @@ import net.minestom.server.item.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * @author Nico_ND1
  */
-public class LuggageClaimAnimation extends AbstractBindableMapObject<LuggageClaimConfig> implements Animation {
+public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig> implements Animation {
   private static final int TICKS_PER_STEP = 30;
 
   private final LuggageClaimProcedure luggageClaim;
@@ -99,11 +99,20 @@ public class LuggageClaimAnimation extends AbstractBindableMapObject<LuggageClai
 
     LuggageClaimLineEntry fromEntry = this.luggageClaim.line().get(luggage.currentLineEntryIndex);
     int nextLineIndex = (luggage.currentLineEntryIndex+1) % this.luggageClaim.line().size();
-    LuggageClaimLineEntry targetEntry = this.luggageClaim.line().get(nextLineIndex);
+    LuggageClaimLineEntry nextEntry = this.luggageClaim.line().get(nextLineIndex);
 
-    Vec step = new Vec(targetEntry.direction().normalX(), 0, targetEntry.direction().normalZ()).div(TICKS_PER_STEP).mul(luggage.step);
+    Vec step = new Vec(nextEntry.direction().normalX(), 0, nextEntry.direction().normalZ()).div(TICKS_PER_STEP).mul(luggage.step);
     Pos newPos = fromEntry.pos().add(step).add(0.5, 1, 0.5);
     luggage.entity.teleport(newPos);
+
+    if (luggage.currentToTargetLineDistance() <= 3) {
+      LuggageClaimLineEntry targetEntry = this.luggageClaim.line().get(luggage.targetLineEntryIndex);
+      WaitingSlot waitingSlot = targetEntry.waitingSlot();
+      Passenger occupant = waitingSlot.occupant();
+      if (occupant != null) {
+        occupant.entityUnsafe().lookAt(luggage.entity);
+      }
+    }
     return false;
   }
 
@@ -140,7 +149,7 @@ public class LuggageClaimAnimation extends AbstractBindableMapObject<LuggageClai
     return entryIndex;
   }
 
-  public static class Luggage {
+  public class Luggage {
     private final ItemEntity entity;
     private final int targetLineEntryIndex;
     private int currentLineEntryIndex;
@@ -155,6 +164,15 @@ public class LuggageClaimAnimation extends AbstractBindableMapObject<LuggageClai
 
     private void remove() {
       this.entity.remove();
+    }
+
+    private int currentToTargetLineDistance() {
+      // find the distance between the indexes targetLineEntryIndex and currentLineEntryIndex in the list luggageClaim.line
+      // the distance is the number of entries that need to be passed to reach the targetLineEntryIndex from the currentLineEntryIndex
+      // the distance is always positive and can be calculated by the following formula:
+      // (targetLineEntryIndex - currentLineEntryIndex + line.size()) % line.size()
+      // the + line.size() is to ensure that the result is positive
+      return Math.abs((this.targetLineEntryIndex-this.currentLineEntryIndex)) % LuggageClaimAnimation.this.luggageClaim.line().size();
     }
   }
 }

@@ -9,6 +9,7 @@ import net.minestom.server.entity.metadata.villager.VillagerMeta.Type;
 import net.minestom.server.entity.metadata.villager.VillagerMeta.VillagerData;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
@@ -33,13 +34,14 @@ public class TicketControlProcedure extends AbstractProcedure<TicketControlConfi
   }
 
   @Override
-  public void createAnimation(@NotNull Passenger passenger) {
+  public @NotNull Animation createAnimation(@NotNull Passenger passenger) {
     TicketControlAnimation animation = new TicketControlAnimation(this, passenger);
     animation.config(this.config);
     bind(animation);
 
     this.parent.queueMapObjectRegister(animation);
     this.animation = animation;
+    return this.animation;
   }
 
   @Override

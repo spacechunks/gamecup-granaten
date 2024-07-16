@@ -2,9 +2,12 @@ package space.chunks.gamecup.dgr.passenger.goal;
 
 import net.minestom.server.entity.ai.GoalSelector;
 import org.jetbrains.annotations.NotNull;
+import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+
+import java.util.UUID;
 
 
 /**
@@ -12,6 +15,7 @@ import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
  */
 public class WorkGoal extends GoalSelector {
   private final Passenger passenger;
+  private UUID workAnimationId;
 
   public WorkGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -30,7 +34,10 @@ public class WorkGoal extends GoalSelector {
     assert task != null;
     Procedure procedure = task.procedure();
 
-    procedure.createAnimation(this.passenger);
+    Animation animation = procedure.createAnimation(this.passenger);
+    if (animation != null) {
+      this.workAnimationId = animation.contextId();
+    }
   }
 
   @Override
@@ -42,7 +49,11 @@ public class WorkGoal extends GoalSelector {
     PassengerTask task = this.passenger.task();
     assert task != null;
     Procedure procedure = task.procedure();
-    return procedure.animation() == null;
+    Animation animation = procedure.animation();
+    if (animation != null) {
+      return !animation.contextId().equals(this.workAnimationId);
+    }
+    return true;
   }
 
   @Override

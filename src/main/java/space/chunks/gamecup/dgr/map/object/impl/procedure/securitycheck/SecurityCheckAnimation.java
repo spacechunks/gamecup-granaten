@@ -2,7 +2,7 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.passenger.Passenger;
@@ -11,7 +11,7 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 /**
  * @author Nico_ND1
  */
-public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCheckConfig> implements Animation {
+public class SecurityCheckAnimation extends AbstractAnimation<SecurityCheckConfig> implements Animation {
   protected final SecurityCheckProcedure securityCheck;
   protected final Passenger passenger;
   private int animationTick;
@@ -38,7 +38,7 @@ public class SecurityCheckAnimation extends AbstractBindableMapObject<SecurityCh
       case 30 -> {
       }
       case 35 -> {
-        if (Math.random() > 0.7769D) {
+        if (Math.random() > 0.92D) {
           Incident incident = (Incident) map.objectTypes().create("security_check_failed_incident");
           incident.bind(this.securityCheck);
           map.queueMapObjectRegister(incident);

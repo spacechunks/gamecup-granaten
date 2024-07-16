@@ -7,6 +7,7 @@ import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.Direction;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
@@ -107,8 +108,8 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
   }
 
   @Override
-  public void createAnimation(@NotNull Passenger passenger) {
-
+  public @Nullable Animation createAnimation(@NotNull Passenger passenger) {
+    return this.animation;
   }
 
   @Override

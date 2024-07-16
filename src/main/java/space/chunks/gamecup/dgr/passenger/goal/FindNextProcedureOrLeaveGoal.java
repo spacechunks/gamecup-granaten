@@ -41,7 +41,6 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
         this.passenger.setPathTo(passengerQueue.startingPosition());
       } else {
         task.state(State.MOVE_TO_WORK_POS);
-        System.out.println("MOVE TO WORK YO");
       }
     }
 

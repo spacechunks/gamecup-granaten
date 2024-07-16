@@ -3,8 +3,11 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.seats;
 import com.google.inject.Inject;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.metadata.other.ArmorStandMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
@@ -20,9 +23,11 @@ public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Proc
 
   @Inject
   public SeatProcedure() {
-    this.entity = new Entity(EntityType.ARROW);
-    this.entity.setNoGravity(true);
-    this.entity.setInvisible(true);
+    this.entity = new Entity(EntityType.ARMOR_STAND);
+    this.entity.editEntityMeta(ArmorStandMeta.class, meta -> {
+      meta.setInvisible(true);
+      meta.setHasNoGravity(true);
+    });
   }
 
   @Override
@@ -31,8 +36,10 @@ public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Proc
   }
 
   @Override
-  public void createAnimation(@NotNull Passenger passenger) {
+  public @Nullable Animation createAnimation(@NotNull Passenger passenger) {
     if (this.animation instanceof SeatSitAnimation sitAnimation) {
+      this.parent.queueMapObjectUnregister(this.animation);
+
       SeatKickAnimation animation = new SeatKickAnimation(this, sitAnimation.passenger, passenger);
       animation.config(this.config);
       bind(animation);
@@ -52,12 +59,19 @@ public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Proc
       this.parent.queueMapObjectRegister(animation);
       this.animation = animation;
     }
+    return this.animation;
   }
 
   @Override
   public void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
     this.entity.setInstance(parent.instance(), this.config.seatPos());
+  }
+
+  @Override
+  public void handleTargetUnregister(@NotNull Map parent) {
+    super.handleTargetUnregister(parent);
+    this.animation = null;
   }
 
   @Override

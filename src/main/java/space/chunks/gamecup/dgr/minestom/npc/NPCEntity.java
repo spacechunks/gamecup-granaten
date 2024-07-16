@@ -11,7 +11,6 @@ import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.metadata.PlayerMeta;
 import net.minestom.server.entity.pathfinding.Navigator;
-import net.minestom.server.entity.pathfinding.PPath.PathState;
 import net.minestom.server.network.packet.server.play.PlayerInfoRemovePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket.Action;
@@ -91,10 +90,6 @@ public class NPCEntity extends EntityCreature {
 
   public boolean setPathTo(@NotNull Point point) {
     boolean b = getNavigator().setPathTo(point);
-    if (!b && getNavigator().getState() != PathState.FOLLOWING) {
-      new NullPointerException(getNavigator().getState().toString()+" to "+point).printStackTrace();
-    }
-
     this.pathTarget = point;
     this.pathTargetInvalidTries = 0;
     return b;
@@ -123,9 +118,11 @@ public class NPCEntity extends EntityCreature {
           getNavigator().reset();
           this.pathTargetInvalidTries = 0;
           this.pathTarget = null;
+          return true;
         }
 
-        System.out.println("Invalid path for "+this.username+" @ "+getPosition()+" to "+this.pathTarget+" with tries "+this.pathTargetInvalidTries);
+        //System.out.println("Invalid path for "+this.username+" @ "+getPosition()+" to "+this.pathTarget+" with tries "+this.pathTargetInvalidTries);
+        // TODO: Fix
       }
     }
     return navigator.getPathPosition() != null;

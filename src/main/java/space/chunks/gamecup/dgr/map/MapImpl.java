@@ -192,6 +192,7 @@ public class MapImpl implements Map {
     instanceManager.registerInstance(this.instance);
     this.instance.enableAutoChunkLoad(true);
     this.instance.loadChunk(0, 0);
+    this.instance.setTimeRate(0);
   }
 
   @Override

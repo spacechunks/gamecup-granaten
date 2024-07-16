@@ -7,7 +7,7 @@ import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
@@ -17,7 +17,7 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 /**
  * @author Nico_ND1
  */
-public class TicketControlAnimation extends AbstractBindableMapObject<TicketControlConfig> implements Animation {
+public class TicketControlAnimation extends AbstractAnimation<TicketControlConfig> implements Animation {
   protected final TicketControlProcedure ticketControl;
   protected final Passenger passenger;
   private int animationTick;

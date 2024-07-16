@@ -2,7 +2,7 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.seats;
 
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
-import space.chunks.gamecup.dgr.map.object.AbstractBindableMapObject;
+import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
@@ -10,7 +10,7 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 /**
  * @author Nico_ND1
  */
-public class SeatSitAnimation extends AbstractBindableMapObject<SeatConfig> implements Animation {
+public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements Animation {
   protected final SeatProcedure seat;
   protected final Passenger passenger;
   private int animationTick;
@@ -27,7 +27,7 @@ public class SeatSitAnimation extends AbstractBindableMapObject<SeatConfig> impl
 
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
-    if (this.animationTick++ > 200) {
+    if (this.animationTick++ == 200) {
       this.seat.entity.removePassenger(this.passenger.entityUnsafe());
       this.passenger.entityUnsafe().teleport(this.config.workPos());
       return TickResult.UNREGISTER;
@@ -39,6 +39,7 @@ public class SeatSitAnimation extends AbstractBindableMapObject<SeatConfig> impl
   public synchronized void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
     this.seat.entity.addPassenger(this.passenger.entityUnsafe());
+    this.passenger.entityUnsafe().lookAt(this.config.workPos().withY(y -> y+1.1));
   }
 
   @Override
