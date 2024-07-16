@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.flight;
+package space.chunks.gamecup.dgr.map.object.impl.flight;
 
 import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;

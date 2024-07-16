@@ -1,6 +1,7 @@
 package space.chunks.gamecup.dgr.minestom.npc;
 
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.GameMode;
@@ -8,6 +9,7 @@ import net.minestom.server.entity.Player;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.entity.attribute.Attribute;
 import net.minestom.server.entity.metadata.PlayerMeta;
+import net.minestom.server.entity.pathfinding.Navigator;
 import net.minestom.server.network.packet.server.play.PlayerInfoRemovePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket;
 import net.minestom.server.network.packet.server.play.PlayerInfoUpdatePacket.Action;
@@ -80,5 +82,40 @@ public class NPCEntity extends EntityCreature {
     player.sendPacket(infoRemovePacket);
 
     super.updateOldViewer(player);
+  }
+
+  public boolean setPathTo(@NotNull Point point) {
+    boolean b = getNavigator().setPathTo(point);
+    if (!b) {
+      new NullPointerException().printStackTrace();
+    }
+    return b;
+  }
+
+  public boolean isPathComplete() {
+    Navigator navigator = getNavigator();
+    if (navigator.getGoalPosition() != null) {
+      return getPosition().sameBlock(navigator.getGoalPosition());
+    }
+    switch (navigator.getState()) {
+      case CALCULATING -> {
+      }
+      case FOLLOWING -> {
+      }
+      case TERMINATING -> {
+      }
+      case TERMINATED -> {
+        System.out.println("Terminated path for "+this.username+" @ "+getPosition());
+      }
+      case COMPUTED -> {
+      }
+      case BEST_EFFORT -> {
+        System.out.println("Best effort path for "+this.username+" @ "+getPosition());
+      }
+      case INVALID -> {
+        System.out.println("Invalid path for "+this.username+" @ "+getPosition());
+      }
+    }
+    return navigator.getPathPosition() != null;
   }
 }

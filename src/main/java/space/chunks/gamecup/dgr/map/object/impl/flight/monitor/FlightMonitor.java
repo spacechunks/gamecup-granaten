@@ -1,4 +1,4 @@
-package space.chunks.gamecup.dgr.map.object.impl.flightboard;
+package space.chunks.gamecup.dgr.map.object.impl.flight.monitor;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.Style;
@@ -8,8 +8,8 @@ import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
 import net.minestom.server.entity.metadata.display.TextDisplayMeta;
 import org.jetbrains.annotations.NotNull;
-import space.chunks.gamecup.dgr.flight.Flight;
-import space.chunks.gamecup.dgr.flight.FlightRadar;
+import space.chunks.gamecup.dgr.map.object.impl.flight.Flight;
+import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadar;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;

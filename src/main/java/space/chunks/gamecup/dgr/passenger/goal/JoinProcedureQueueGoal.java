@@ -29,8 +29,6 @@ public class JoinProcedureQueueGoal extends GoalSelector {
 
   @Override
   public void start() {
-    System.out.println("Start JoinProcedureQueueGoal");
-
     PassengerTask task = this.passenger.task();
     assert task != null;
     Procedure procedure = task.procedure();
@@ -38,12 +36,10 @@ public class JoinProcedureQueueGoal extends GoalSelector {
     WaitingSlot waitingSlot = passengerQueue.occupyNextSlot(this.passenger);
     if (waitingSlot == null) {
       this.passenger.map().queueMapObjectUnregister(this.passenger);
-      System.out.println("???");
       return;
     }
 
-    System.out.println("move to " + waitingSlot + " : " + waitingSlot.position());
-    getEntityCreature().getNavigator().setPathTo(waitingSlot.position());
+    this.passenger.setPathTo(waitingSlot.position());
   }
 
   @Override
@@ -52,7 +48,7 @@ public class JoinProcedureQueueGoal extends GoalSelector {
 
   @Override
   public boolean shouldEnd() {
-    return getEntityCreature().getNavigator().isComplete();
+    return this.passenger.entityUnsafe().isPathComplete();
   }
 
   @Override

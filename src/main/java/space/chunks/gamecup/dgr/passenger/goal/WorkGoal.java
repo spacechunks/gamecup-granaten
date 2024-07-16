@@ -26,7 +26,6 @@ public class WorkGoal extends GoalSelector {
 
   @Override
   public void start() {
-    System.out.println("Start WorkGoal");
     PassengerTask task = this.passenger.task();
     assert task != null;
     Procedure procedure = task.procedure();

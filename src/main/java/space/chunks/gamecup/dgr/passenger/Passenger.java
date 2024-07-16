@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr.passenger;
 
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.thread.Acquirable;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +26,10 @@ public interface Passenger extends MapObject {
 
   @NotNull
   NPCEntity entityUnsafe();
+
+  default boolean setPathTo(@NotNull Point point) {
+    return entityUnsafe().setPathTo(point);
+  }
 
   int patience();
 

@@ -32,8 +32,6 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
 
   @Override
   public void start() {
-    System.out.println("Start WaitInProcedureQueueGoal");
-
     PassengerTask task = this.passenger.task();
     assert task != null;
     Procedure procedure = task.procedure();
@@ -53,7 +51,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
       return true;
     }
 
-    if (!getEntityCreature().getNavigator().isComplete()) {
+    if (!this.passenger.entityUnsafe().isPathComplete()) {
       return false;
     }
 
@@ -85,7 +83,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
       this.waitingSlot.free();
       this.waitingSlot = leadingWaitingSlot;
 
-      getEntityCreature().getNavigator().setPathTo(leadingWaitingSlot.position());
+      this.passenger.setPathTo(leadingWaitingSlot.position());
     }
     return false;
   }

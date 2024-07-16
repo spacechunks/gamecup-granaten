@@ -43,6 +43,9 @@ public class TicketControlAnimation extends AbstractBindableMapObject<TicketCont
     }
 
     switch (this.animationTick) {
+      case 3 -> {
+        this.passenger.entityUnsafe().lookAt(this.ticketControl.worker);
+      }
       case 10 -> {
         NPCEntity passengerEntity = this.passenger.entityUnsafe();
         passengerEntity.swingMainHand();

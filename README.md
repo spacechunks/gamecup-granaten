@@ -48,3 +48,5 @@ When they select the next machine to work on they walk to the start of the Passe
 up. If there is no one in queue they go to the work position of the machine. Their they play an animation, f.e.
 giving their luggage or going through a security scan. After they are done they walk to the exit of the machine and
 proceed with the next. If it was their last machine they go to their destination and leave.
+
+## Commands

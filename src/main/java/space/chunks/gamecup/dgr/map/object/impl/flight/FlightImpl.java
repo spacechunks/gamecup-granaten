@@ -1,7 +1,7 @@
-package space.chunks.gamecup.dgr.flight;
+package space.chunks.gamecup.dgr.map.object.impl.flight;
 
 import org.jetbrains.annotations.NotNull;
-import space.chunks.gamecup.dgr.flight.FlightRadarConfig.DestinationConfig;
+import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
 
 
 /**

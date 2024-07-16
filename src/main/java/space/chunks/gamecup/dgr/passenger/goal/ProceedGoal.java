@@ -26,12 +26,12 @@ public class ProceedGoal extends GoalSelector {
 
   @Override
   public void start() {
-    System.out.println("Start ProceedGoal");
     PassengerTask task = this.passenger.task();
     assert task != null;
     Procedure procedure = task.procedure();
 
-    getEntityCreature().getNavigator().setPathTo(procedure.exitPos());
+    this.passenger.setPathTo(procedure.exitPos());
+    System.out.println("move to exit pos: " + procedure.exitPos());
   }
 
   @Override
@@ -40,7 +40,7 @@ public class ProceedGoal extends GoalSelector {
 
   @Override
   public boolean shouldEnd() {
-    return getEntityCreature().getNavigator().isComplete();
+    return this.passenger.entityUnsafe().isPathComplete();
   }
 
   @Override

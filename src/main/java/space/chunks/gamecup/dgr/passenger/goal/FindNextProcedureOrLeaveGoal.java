@@ -28,16 +28,15 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
 
   @Override
   public void start() {
-    System.out.println("Start FindNextProcedureOrLeaveGoal");
     this.passenger.findNextTask();
 
     PassengerTask task = this.passenger.task();
     if (task == null) {
-      getEntityCreature().getNavigator().setPathTo(this.passenger.config().leavePosition());
+      this.passenger.setPathTo(this.passenger.config().leavePosition());
     } else {
       Procedure procedure = task.procedure();
       PassengerQueue passengerQueue = procedure.passengerQueue();
-      getEntityCreature().getNavigator().setPathTo(passengerQueue.startingPosition());
+      this.passenger.setPathTo(passengerQueue.startingPosition());
     }
 
     this.tickDelay = 5;
@@ -55,7 +54,7 @@ public class FindNextProcedureOrLeaveGoal extends GoalSelector {
     if (this.tickDelay > 0) {
       return false;
     }
-    return getEntityCreature().getNavigator().isComplete();
+    return this.passenger.entityUnsafe().isPathComplete();
   }
 
   @Override

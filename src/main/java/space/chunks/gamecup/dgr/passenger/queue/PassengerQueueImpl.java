@@ -91,7 +91,7 @@ public class PassengerQueueImpl implements PassengerQueue {
         }
         case LAST_EMPTY -> {
           WaitingSlot lastSlot = this.waitingSlots.getLast();
-          WaitingSlot availableSlot = findNextNotOccupied(lastSlot, lastSlot);
+          WaitingSlot availableSlot = findNextNotOccupied(false, lastSlot, lastSlot);
           if (availableSlot != null && availableSlot.tryOccupy(passenger)) {
             return availableSlot;
           }
@@ -104,8 +104,8 @@ public class PassengerQueueImpl implements PassengerQueue {
     return null;
   }
 
-  private @Nullable WaitingSlot findNextNotOccupied(@NotNull WaitingSlot initiatingSlot, @NotNull WaitingSlot current) {
-    if (current == initiatingSlot) {
+  private @Nullable WaitingSlot findNextNotOccupied(boolean initiated, @NotNull WaitingSlot initiatingSlot, @NotNull WaitingSlot current) {
+    if (initiated && current == initiatingSlot) {
       if (current.isOccupied()) {
         return null;
       }
@@ -126,7 +126,7 @@ public class PassengerQueueImpl implements PassengerQueue {
       }
       return current;
     }
-    return findNextNotOccupied(initiatingSlot, leadingSlot);
+    return findNextNotOccupied(true, initiatingSlot, leadingSlot);
   }
 
   @Override

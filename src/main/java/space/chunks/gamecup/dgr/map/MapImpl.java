@@ -27,6 +27,7 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
+import space.chunks.gamecup.dgr.minestom.instance.ChunkLoadingInstance;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
 
@@ -35,6 +36,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
 
@@ -186,7 +188,9 @@ public class MapImpl implements Map {
   public void load() {
     InstanceManager instanceManager = MinecraftServer.getInstanceManager();
     String worldPath = "template/maps/game";
-    this.instance = instanceManager.createInstanceContainer(DimensionType.OVERWORLD, new AnvilLoader(worldPath));
+    this.instance = new ChunkLoadingInstance(DimensionType.OVERWORLD, new AnvilLoader(worldPath));
+    //this.instance = instanceManager.createInstanceContainer(DimensionType.OVERWORLD, new AnvilLoader(worldPath));
+    instanceManager.registerInstance(this.instance);
     this.instance.enableAutoChunkLoad(true);
     this.instance.loadChunk(0, 0);
   }

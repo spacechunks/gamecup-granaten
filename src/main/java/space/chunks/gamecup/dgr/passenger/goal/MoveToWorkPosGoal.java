@@ -27,12 +27,11 @@ public class MoveToWorkPosGoal extends GoalSelector {
 
   @Override
   public void start() {
-    System.out.println("Start MoveToWorkPosGoal");
     PassengerTask task = this.passenger.task();
     assert task != null;
 
     Procedure procedure = task.procedure();
-    getEntityCreature().getNavigator().setPathTo(procedure.workPos());
+    this.passenger.setPathTo(procedure.workPos());
   }
 
   @Override
@@ -41,7 +40,7 @@ public class MoveToWorkPosGoal extends GoalSelector {
 
   @Override
   public boolean shouldEnd() {
-    return getEntityCreature().getNavigator().isComplete();
+    return this.passenger.entityUnsafe().isPathComplete();
   }
 
   @Override

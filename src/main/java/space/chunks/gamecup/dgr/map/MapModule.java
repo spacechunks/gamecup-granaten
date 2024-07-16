@@ -5,23 +5,23 @@ import com.google.inject.multibindings.MapBinder;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.utils.Direction;
-import space.chunks.gamecup.dgr.flight.FlightRadarConfig;
-import space.chunks.gamecup.dgr.flight.FlightRadarConfig.DestinationConfig;
-import space.chunks.gamecup.dgr.flight.FlightRadarImpl;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.impl.TestMapObject;
-import space.chunks.gamecup.dgr.map.object.impl.flightboard.FlightMonitor;
-import space.chunks.gamecup.dgr.map.object.impl.flightboard.FlightMonitorConfig;
+import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig;
+import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
+import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarImpl;
+import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitor;
+import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitorConfig;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.Marketing;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry.Level;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlProcedure;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
@@ -70,7 +70,8 @@ public final class MapModule extends AbstractModule {
                     ),
                     SlotOccupyStrategy.LAST_EMPTY
                 ),
-                new Pos(-40.5, -56.0, -13.5, 0, 0)
+                new Pos(-40.5, -56.0, -13.5, 0, 0),
+                new Pos(-41.5, -55.5, -12.5, -180, 0)
             )
         ),
         List.of(
@@ -115,9 +116,9 @@ public final class MapModule extends AbstractModule {
                     new DestinationConfig(
                         Destination.LEAVING,
                         3,
-                        3, 10,
+                        2, 5,
                         20 * 20,
-                        20 * 50,
+                        20 * 30,
                         new Pos[]{
                             new Pos(-48.5, -56.0, -8.5, -90, 0), new Pos(-48.5, -56.0, -7.5, -90, 0),
                             new Pos(-48.5, -56.0, -13.5, -90, 0), new Pos(-48.5, -56.0, -12.5, -90, 0)
@@ -127,7 +128,25 @@ public final class MapModule extends AbstractModule {
                             new Pos(-22.5, -56.0, -24.5, -180, 0)
                         },
                         new String[]{
-                            "security_check_1", "ticket_control_1", "luggage_claim_1"
+                            "security_check_1", "ticket_control_1"
+                        }
+                    ),
+                    new DestinationConfig(
+                        Destination.ARRIVING,
+                        2,
+                        2, 5,
+                        20 * 20,
+                        20 * 30,
+                        new Pos[]{
+                            new Pos(27.5, -56.0, -13.5, 90, 0), new Pos(27.5, -56.0, -12.5, 90, 0),
+                            new Pos(27.5, -56.0, -8.5, 90, 0), new Pos(27.5, -56.0, -7.5, 90, 0),
+                        },
+                        new Pos[]{
+                            new Pos(9.5, -56.0, -24.5, -180, 0),
+                            new Pos(9.5, -56.0, 3.5, 0, 0)
+                        },
+                        new String[]{
+                            "luggage_claim_1"
                         }
                     )
                 )
@@ -142,6 +161,7 @@ public final class MapModule extends AbstractModule {
         List.of(
             new LuggageClaimConfig(
                 "luggage_claim_1",
+                new Pos(0.5, -56.0, -7.5, 180, 0),
                 new PassengerQueueConfig(
                     null,
                     "luggage_claim_1_queue",

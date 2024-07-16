@@ -12,6 +12,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
  */
 public record LuggageClaimConfig(
     @NotNull String name,
+    @NotNull Pos exitPos,
     @NotNull PassengerQueueConfig queue,
     @NotNull Pos lineStartPos,
     @NotNull Direction lineStartDiscoverInitDirection,
@@ -19,11 +20,6 @@ public record LuggageClaimConfig(
 ) implements ProcedureConfig {
   @Override
   public @NotNull Pos workPos() {
-    return Pos.ZERO;
-  }
-
-  @Override
-  public @NotNull Pos exitPos() {
     return Pos.ZERO;
   }
 }

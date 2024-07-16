@@ -61,6 +61,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   public @NotNull PassengerQueue passengerQueue() {
     try {
       this.editLock.lock();
+      System.out.println(this.passengerQueue);
       if (this.passengerQueue == null) {
         this.passengerQueue = createPassengerQueue();
       }

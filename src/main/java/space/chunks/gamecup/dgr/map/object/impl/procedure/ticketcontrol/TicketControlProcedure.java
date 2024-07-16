@@ -12,6 +12,7 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 
 
 /**
@@ -52,6 +53,12 @@ public class TicketControlProcedure extends AbstractProcedure<TicketControlConfi
   public void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
     super.handleUnregister(parent, reason);
     this.worker.remove();
+  }
+
+  @Override
+  protected @NotNull PassengerQueue createPassengerQueue() {
+    System.out.println("createPassengerQueeu!");
+    return super.createPassengerQueue();
   }
 
   @Override
