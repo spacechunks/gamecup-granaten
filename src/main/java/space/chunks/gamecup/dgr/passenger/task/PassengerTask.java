@@ -60,9 +60,9 @@ public final class PassengerTask {
           int o1QueueSize = o1.passengerQueue().size();
           int o2QueueSize = o2.passengerQueue().size();
           if (o1QueueSize == 0) {
-            return 1;
-          } else if (o2QueueSize == 0) {
             return -1;
+          } else if (o2QueueSize == 0) {
+            return 1;
           }
 
           if (o1QueueSize == o2QueueSize || Math.abs(o1QueueSize-o2QueueSize) < 2) {
