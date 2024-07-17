@@ -1,8 +1,11 @@
 package space.chunks.gamecup.dgr.map.object.upgradable.upgrader;
 
 import com.google.inject.Inject;
+import net.kyori.adventure.text.Component;
+import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.metadata.display.TextDisplayMeta;
 import net.minestom.server.entity.metadata.other.AllayMeta;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.PlayerEntityInteractEvent;
@@ -21,6 +24,7 @@ import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
  */
 public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements MapObject, Ticking {
   private final EntityCreature entity;
+  private final Entity textEntity;
   private boolean dancing;
 
   @Inject
@@ -33,6 +37,9 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
     this.entity.editEntityMeta(AllayMeta.class, meta -> {
       meta.setCanDuplicate(false);
     });
+
+    this.textEntity = new Entity(EntityType.TEXT_DISPLAY);
+    this.textEntity.setNoGravity(true);
 
     addListener(EventListener.of(PlayerEntityInteractEvent.class, this::handleInteract));
   }
@@ -57,6 +64,13 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
     }
 
     int currentLevel = upgradeHolder.currentLevel();
+
+    if (currentTick % 20 == 0) {
+      this.textEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
+        meta.setText(Component.text("Level: "+upgradeHolder.currentLevel()));
+      });
+    }
+
     if (currentLevel+1 > upgradeHolder.maxLevel()) {
       return TickResult.CONTINUE;
     }
@@ -80,12 +94,14 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   public synchronized void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
     this.entity.setInstance(parent.instance(), this.config.spawnPosition());
+    this.textEntity.setInstance(parent.instance(), this.config.spawnPosition().add(0, 1, 0))
   }
 
   @Override
   public synchronized void handleUnregister(@NotNull Map parent, @NotNull UnregisterReason reason) {
     super.handleUnregister(parent, reason);
     this.entity.remove();
+    this.textEntity.remove();
   }
 
   @Override
