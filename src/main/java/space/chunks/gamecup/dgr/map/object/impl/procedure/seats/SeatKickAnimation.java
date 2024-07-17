@@ -58,7 +58,7 @@ public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements 
         this.kickingPassenger.entityUnsafe().swingMainHand();
       }
       case 50 -> {
-        this.seat.entity.removePassenger(this.sittingPassenger.entityUnsafe());
+        this.seat.seat.removePassenger(this.sittingPassenger.entityUnsafe());
         //this.sittingPassenger.entityUnsafe().setVelocity(this.kickingPassenger.entityUnsafe().getPosition().direction().mul(13).withY(y -> y * 0.65D));
       }
       case 51 -> {

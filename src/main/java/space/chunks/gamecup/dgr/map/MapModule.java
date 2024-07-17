@@ -1,10 +1,11 @@
 package space.chunks.gamecup.dgr.map;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.MapBinder;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.utils.Direction;
+import space.chunks.gamecup.dgr.AbstractGameModule;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.impl.TestMapObject;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig;
@@ -18,8 +19,9 @@ import space.chunks.gamecup.dgr.map.object.impl.marketing.MarketingConfigEntry.L
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimProcedure;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatScanner;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatScannerConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckFailedIncident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckProcedure;
@@ -33,10 +35,13 @@ import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupConfig;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
+import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentities;
+import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentitiesConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -44,10 +49,13 @@ import java.util.Map;
 /**
  * @author Nico_ND1
  */
-public final class MapModule extends AbstractModule {
+public final class MapModule extends AbstractGameModule {
   @Override
   protected void configure() {
     bind(MapObjectTypeRegistry.class).to(MapObjectTypeRegistryImpl.class).asEagerSingleton();
+
+    bindConfig(PassengerIdentitiesConfig.class, new File("template/config/passenger_identities.json"));
+    bind(PassengerIdentities.class).asEagerSingleton();
 
     MapBinder<String, MapObject> mapObjectTypeBinder = MapBinder.newMapBinder(binder(), String.class, MapObject.class);
     mapObjectTypeBinder.addBinding("test").to(TestMapObject.class);
@@ -60,6 +68,7 @@ public final class MapModule extends AbstractModule {
     mapObjectTypeBinder.addBinding(Procedure.LUGGAGE_CLAIM).to(LuggageClaimProcedure.class);
     mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
     mapObjectTypeBinder.addBinding("seat").to(SeatProcedure.class);
+    mapObjectTypeBinder.addBinding("seat_scanner").to(SeatScanner.class);
     mapObjectTypeBinder.addBinding("trash").to(Trash.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
@@ -226,12 +235,10 @@ public final class MapModule extends AbstractModule {
             )
         ),
         List.of(
-            new SeatConfig(
-                "seat_1",
-                Map.of(),
-                new Pos(-17.5, -56.0, -1.5, 90, 0),
-                new Pos(-15.5, -57.5, -1.5, 90, 0),
-                null
+            new SeatScannerConfig(
+                "seat_scanner_1",
+                new Vec(-17, -56, -27),
+                new Vec(13, -56, 5)
             )
         )
     ));

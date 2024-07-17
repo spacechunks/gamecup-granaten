@@ -48,7 +48,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
       });
 
       securityCheck.gate.editEntityMeta(ItemDisplayMeta.class, meta -> {
-        meta.setItemStack(ItemStack.of(Material.WHITE_CARPET).withCustomModelData(1));
+        meta.setItemStack(ItemStack.of(Material.PAPER).withCustomModelData(1));
       });
     }
   }
@@ -113,7 +113,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
       entity.setGlowing(true);
     });
     securityCheck.gate.editEntityMeta(ItemDisplayMeta.class, meta -> {
-      meta.setItemStack(ItemStack.of(Material.WHITE_CARPET).withCustomModelData(2));
+      meta.setItemStack(ItemStack.of(Material.PAPER).withCustomModelData(2));
     });
 
     parent.executeForMembers(member -> {

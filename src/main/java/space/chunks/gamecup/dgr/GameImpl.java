@@ -9,6 +9,9 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import space.chunks.gamecup.dgr.goal.FixedHappyPassengersGameGoal;
+import space.chunks.gamecup.dgr.goal.GameGoal;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.phase.WaitingPhase;
 import space.chunks.gamecup.dgr.phase.handler.PhaseHandler;
@@ -26,12 +29,14 @@ import java.util.Set;
 @Accessors(fluent=true)
 @Log4j2
 public final class GameImpl implements Game {
+  private final GameGoal goal;
   private final PhaseHandler phases;
   private final List<Map> maps;
   private final List<Team> teams;
 
   @Inject
   public GameImpl(@NotNull PhaseHandler phases, @NotNull GameConfig config, @NotNull GameFactory factory, @NotNull Provider<Team> teamProvider) {
+    this.goal = new FixedHappyPassengersGameGoal(this, 500, new int[]{100, 200, 300, 400, 450});
     this.phases = phases;
 
     log.info("Init game with config: {}", config);
@@ -67,6 +72,14 @@ public final class GameImpl implements Game {
     log.info("Launching game, entering waiting phase");
 
     this.phases.enterPhase(WaitingPhase.class);
+  }
+
+  @Override
+  public void end(@Nullable Team winnerTeam, @NotNull EndReason reason) {
+    phases().enterPhase("end");
+    for (Map map : maps()) {
+      map.executeForMembers(member -> member.player().sendMessage("Game ended! Winner: "+winnerTeam+". Reason: "+reason));
+    }
   }
 
   @Inject

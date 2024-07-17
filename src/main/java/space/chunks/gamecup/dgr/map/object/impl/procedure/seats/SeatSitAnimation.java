@@ -32,7 +32,7 @@ public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements A
     }
 
     if (this.animationTick++ == 200) {
-      this.seat.entity.removePassenger(this.passenger.entityUnsafe());
+      this.seat.seat.removePassenger(this.passenger.entityUnsafe());
       this.passenger.entityUnsafe().teleport(this.config.workPos());
       return TickResult.UNREGISTER;
     }
@@ -42,7 +42,7 @@ public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements A
   @Override
   public synchronized void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
-    this.seat.entity.addPassenger(this.passenger.entityUnsafe());
+    this.seat.seat.addPassenger(this.passenger.entityUnsafe());
     this.passenger.entityUnsafe().lookAt(this.config.workPos().withY(y -> y+1.1));
   }
 

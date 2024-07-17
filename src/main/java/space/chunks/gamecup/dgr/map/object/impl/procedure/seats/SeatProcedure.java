@@ -1,9 +1,15 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.seats;
 
 import com.google.inject.Inject;
+import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta.DisplayContext;
 import net.minestom.server.entity.metadata.other.ArmorStandMeta;
+import net.minestom.server.instance.block.Block;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
@@ -19,14 +25,22 @@ import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
  * @author Nico_ND1
  */
 public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Procedure {
-  protected final Entity entity;
+  protected final Entity seatModel;
+  protected final Entity seat;
 
   @Inject
   public SeatProcedure() {
-    this.entity = new Entity(EntityType.ARMOR_STAND);
-    this.entity.editEntityMeta(ArmorStandMeta.class, meta -> {
+    this.seat = new Entity(EntityType.ARMOR_STAND);
+    this.seat.editEntityMeta(ArmorStandMeta.class, meta -> {
       meta.setInvisible(true);
       meta.setHasNoGravity(true);
+    });
+
+    this.seatModel = new Entity(EntityType.ITEM_DISPLAY);
+    this.seatModel.setNoGravity(true);
+    this.seatModel.editEntityMeta(ItemDisplayMeta.class, meta -> {
+      meta.setDisplayContext(DisplayContext.HEAD);
+      meta.setItemStack(ItemStack.of(Material.PAPER).withCustomModelData(8));
     });
   }
 
@@ -65,7 +79,18 @@ public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Proc
   @Override
   public void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
-    this.entity.setInstance(parent.instance(), this.config.seatPos());
+    this.seat.setInstance(parent.instance(), this.config.seatPos());
+    parent.instance().setBlock(this.config.seatPos().sub(0.5, -1.5, 0.5), Block.BARRIER);
+
+    Pos seatModelPos = this.config.seatPos().sub(0, 1.5, 0);
+    seatModelPos.withYaw(switch (this.config.direction()) {
+      case NORTH -> 180;
+      case EAST -> 270;
+      case SOUTH -> 0;
+      case WEST -> 90;
+      default -> throw new IllegalStateException("Unexpected value: "+this.config.direction());
+    });
+    this.seatModel.setInstance(parent.instance(), seatModelPos);
   }
 
   @Override

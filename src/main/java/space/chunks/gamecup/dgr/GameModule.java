@@ -1,6 +1,5 @@
 package space.chunks.gamecup.dgr;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import net.minestom.server.command.builder.Command;
@@ -36,7 +35,7 @@ import space.chunks.gamecup.dgr.team.member.MemberImpl;
 /**
  * @author Nico_ND1
  */
-public final class GameModule extends AbstractModule {
+public final class GameModule extends AbstractGameModule {
   @Override
   protected void configure() {
     install(new MapModule());

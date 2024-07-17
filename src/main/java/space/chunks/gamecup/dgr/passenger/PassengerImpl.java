@@ -7,13 +7,11 @@ import lombok.extern.log4j.Log4j2;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityCreature;
-import net.minestom.server.entity.PlayerSkin;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.thread.Acquirable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
@@ -26,13 +24,14 @@ import space.chunks.gamecup.dgr.passenger.goal.ProceedGoal;
 import space.chunks.gamecup.dgr.passenger.goal.ProduceTrashGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WaitInProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WorkGoal;
+import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentities;
+import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentity;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTaskBuilder;
 
 import java.util.ArrayDeque;
 import java.util.List;
 import java.util.Queue;
-import java.util.UUID;
 
 
 /**
@@ -40,18 +39,16 @@ import java.util.UUID;
  */
 @Log4j2
 public class PassengerImpl implements Passenger {
-  private static final String[] RANDOM_NAMES = {"Olaf", "Bernhard", "Marlon", "Hans", "Klaus", "Günther", "Hans"};
   public static final ItemStack[] BAGGAGE_ITEMS = {
-      ItemStack.of(Material.WHITE_CARPET).withCustomModelData(4),
-      ItemStack.of(Material.WHITE_CARPET).withCustomModelData(5)
+      ItemStack.of(Material.PAPER).withCustomModelData(4),
+      ItemStack.of(Material.PAPER).withCustomModelData(5)
   };
 
   private final PassengerConfig config;
-  private final Game game;
+  private final PassengerIdentity identity;
   private final NPCEntity npc;
   private final Pos spawnPosition;
   private final Destination destination;
-  private final String name;
   private final Queue<PassengerTask> taskQueue;
   private final ItemStack baggage;
 
@@ -63,17 +60,13 @@ public class PassengerImpl implements Passenger {
 
   @AssistedInject
   public PassengerImpl(
-      Game game,
+      PassengerIdentities identities,
       @Assisted PassengerConfig config
   ) {
     this.config = config;
-    this.game = game;
-    this.name = RANDOM_NAMES[(int) (Math.random() * RANDOM_NAMES.length)];
+    this.identity = identities.random(this);
     this.spawnPosition = config.spawnPosition();
-    this.npc = new NPCEntity(UUID.randomUUID(), this.name, new PlayerSkin(
-        "ewogICJ0aW1lc3RhbXAiIDogMTcyMDkwODE0OTgzOCwKICAicHJvZmlsZUlkIiA6ICI0NmNhODkyZTY4ODA0YThmYjFkYzkwYjg0ZTY5ZjVmZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJPbG8xNjA2IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2QyMTI2MzZiN2JkZDk3MTcxOTdlY2EwNmM2ZmExNWY1ZGY1Mzg5YjAxMTVkZmYxZjFhYTc5NWZhM2I2Y2Y5YjciCiAgICB9CiAgfQp9",
-        "mICpZGBww7LAsWApc/YHeR46/bqe7xGOPBF07+nLJF0PuupKpGftogtncuchnWSV6yakF3fQy1JVKGwJEQCjzUpUHzIzph8zmN2zZJkSKpWB3MJF5BxTrItSKtYPwoOz27XMtnkPdqsjmcQrjkaZtRJ4JJpIqntwTf9wb8+lNh9YqdwH5xkBFUwJjaAKQrmmOJLrwt04uOt/Vb78EgwXUpF4Ij4wo0b/ATVeyXVx8pOOs5ChaDKzncXv+wXgyoT16A6NikyPthpRgTw5nQX6Y/m28irf4YMqZUlQGitRoQ/zm31JdLe12zplpaeKUvTjX96MkwZxMyA7FaFhVF1Mko7Qwafxh+sXAh3SDnlbRdK7qimYz8XcUWf3KxI6R25Iv42sp8IbxTioiLq4U4Jxg8fdFPzXmwqnZO42WXFAXD5F841+MAEJ5BieCMolpMuC9R2JMHXSSmrU2j3OlsOs5F6YZK7g+mmImItPElDOxY+eekY4IZnVwXQR9e138cqZPjPEDqMMMZgOriZ9ErvsNYl/BxOT3DpFUeYOepMD+lGbr308e/aln1ERgr8O73OJ9idLVMIXD7Vghc6UAZ7eGfipD+ODvRegoYkZ+tP0sl34QZ3Jv0IPFjgT2+s4UMJ0q10IAcbMu84WETkct04RUEE68C2bG/nCOLYi0ZWoKJk="
-    ));
+    this.npc = new NPCEntity(this.identity.uuid(), this.identity.name(), this.identity.skin());
     this.npc.getNavigator().setNodeGenerator(SimpleGroundNodeGenerator::new);
     this.npc.getNavigator().setNodeFollower(() -> new SimpleGroundNodeFollower(this.npc));
     this.npc.setCustomNameVisible(true);
@@ -102,6 +95,11 @@ public class PassengerImpl implements Passenger {
   @Override
   public @NotNull PassengerConfig config() {
     return this.config;
+  }
+
+  @Override
+  public @NotNull PassengerIdentity identity() {
+    return this.identity;
   }
 
   @Override
@@ -187,7 +185,7 @@ public class PassengerImpl implements Passenger {
 
   @Override
   public @NotNull String name() {
-    return this.name;
+    return this.identity.name();
   }
 
   @Override

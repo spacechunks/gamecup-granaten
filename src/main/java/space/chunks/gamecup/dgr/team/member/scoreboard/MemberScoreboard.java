@@ -23,6 +23,7 @@ import space.chunks.gamecup.dgr.team.member.Member;
  */
 public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefault> implements MapObject {
   private final Member member;
+  private Team focusedTeam;
   private Map parent;
   protected Sidebar sidebar;
 
@@ -32,8 +33,15 @@ public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefa
     addListener(EventListener.of(ForceUpdateEvent.class, this::handleForceUpdate));
   }
 
+  private @Nullable Team focusedTeam() {
+    if (this.focusedTeam == null) {
+      return this.member.team();
+    }
+    return this.focusedTeam;
+  }
+
   private void handleForceUpdate(ForceUpdateEvent event) {
-    if (event.team == this.member.team()) {
+    if (event.team == focusedTeam()) {
       updateSidebar();
     }
   }
@@ -70,7 +78,7 @@ public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefa
   }
 
   public void updateSidebar() {
-    Team team = this.member.team();
+    Team team = focusedTeam();
     this.sidebar.updateLineContent("money_1", Component.text("Money:").color(NamedTextColor.GRAY));
     this.sidebar.updateLineContent("money_2", Component.text(team == null ? "/" : Integer.toString(team.money())).color(NamedTextColor.GOLD));
 

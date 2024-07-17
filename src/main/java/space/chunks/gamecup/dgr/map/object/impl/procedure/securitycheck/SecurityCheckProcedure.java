@@ -39,7 +39,7 @@ public class SecurityCheckProcedure extends AbstractProcedure<SecurityCheckConfi
     this.gate.setNoGravity(true);
     this.gate.editEntityMeta(ItemDisplayMeta.class, meta -> {
       meta.setDisplayContext(DisplayContext.NONE);
-      meta.setItemStack(ItemStack.of(Material.WHITE_CARPET).withCustomModelData(1));
+      meta.setItemStack(ItemStack.of(Material.PAPER).withCustomModelData(1));
       meta.setScale(new Vec(1.3));
     });
   }

@@ -10,6 +10,7 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.Ticking;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
+import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentity;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 
 
@@ -19,6 +20,9 @@ import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 public interface Passenger extends MapObject, Ticking {
   @NotNull
   PassengerConfig config();
+
+  @NotNull
+  PassengerIdentity identity();
 
   @NotNull
   Map map();
