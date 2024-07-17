@@ -15,6 +15,8 @@ import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident.SolutionType;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueRegistry;
 
@@ -32,6 +34,8 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   private GameFactory factory;
   @Inject
   protected PassengerQueueRegistry passengerQueueRegistry;
+  @Inject
+  protected UpgradeHolderRegistry upgradeHolderRegistry;
 
   protected Map parent;
   private PassengerQueue passengerQueue;
@@ -40,7 +44,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   @Setter
   protected Animation animation;
   private Incident currentIncident;
-  private int currentLevel;
+  private UpgradeHolder upgradeHolder;
 
   private final Lock editLock = new ReentrantLock();
 
@@ -120,21 +124,15 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   }
 
   @Override
-  public int maxLevel() {
-    return this.config.maxLevel();
-  }
-
-  @Override
-  public java.util.@NotNull Map<String, Double[]> levelPerks() {
-    return this.config.levelPerks();
-  }
-
-  @Override
-  public boolean upgrade() {
-    if (currentLevel() == maxLevel()) {
-      return false;
+  public @NotNull UpgradeHolder upgradeHolder() {
+    try {
+      this.editLock.lock();
+      if (this.upgradeHolder == null) {
+        this.upgradeHolder = this.upgradeHolderRegistry.holder(this, this.config);
+      }
+      return this.upgradeHolder;
+    } finally {
+      this.editLock.unlock();
     }
-    this.currentLevel++;
-    return true;
   }
 }

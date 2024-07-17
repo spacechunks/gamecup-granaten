@@ -13,7 +13,7 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.team.Team;
 
-import java.util.Optional;
+import java.util.Set;
 
 
 /**
@@ -27,8 +27,8 @@ public class ProcedureDebugCommand extends Command {
     super("procedures");
     this.game = game;
 
-    addSyntax(this::executeInfo, ArgumentType.String("name").setSuggestionCallback(this::suggestName));
-    addSyntax(this::executeUpgrade, ArgumentType.String("name").setSuggestionCallback(this::suggestName), ArgumentType.Literal("upgrade"));
+    addSyntax(this::executeInfo, ArgumentType.String("group").setSuggestionCallback(this::suggestName));
+    addSyntax(this::executeUpgrade, ArgumentType.String("group").setSuggestionCallback(this::suggestName), ArgumentType.Literal("upgrade"));
   }
 
   private void executeInfo(CommandSender commandSender, CommandContext commandContext) {
@@ -36,14 +36,13 @@ public class ProcedureDebugCommand extends Command {
     Team team = this.game.findTeam(player).orElseThrow();
     Map map = team.map();
 
-    Optional<MapObject> optionalMapObject = map.objects().find(commandContext.get("name"));
-    if (optionalMapObject.isEmpty()) {
-      player.sendMessage("Unknown procedure");
+    Set<MapObject> mapObjects = map.objects().allOfGroup(commandContext.get("group"));
+    if (mapObjects.isEmpty()) {
+      player.sendMessage("Unknown group");
       return;
     }
 
-    Procedure procedure = (Procedure) optionalMapObject.get();
-    player.sendMessage("Procedure: "+procedure.name());
+    Procedure procedure = (Procedure) mapObjects.iterator().next();
     player.sendMessage("Level: "+procedure.currentLevel()+"/"+procedure.maxLevel());
   }
 
@@ -52,13 +51,13 @@ public class ProcedureDebugCommand extends Command {
     Team team = this.game.findTeam(player).orElseThrow();
     Map map = team.map();
 
-    Optional<MapObject> optionalMapObject = map.objects().find(commandContext.get("name"));
-    if (optionalMapObject.isEmpty()) {
-      player.sendMessage("Unknown procedure");
+    Set<MapObject> mapObjects = map.objects().allOfGroup(commandContext.get("group"));
+    if (mapObjects.isEmpty()) {
+      player.sendMessage("Unknown group");
       return;
     }
 
-    Procedure procedure = (Procedure) optionalMapObject.get();
+    Procedure procedure = (Procedure) mapObjects.iterator().next();
     boolean upgrade = procedure.upgrade();
     player.sendMessage("Upgraded: "+upgrade);
   }
@@ -68,7 +67,7 @@ public class ProcedureDebugCommand extends Command {
     Team team = this.game.findTeam(player).orElseThrow();
     Map map = team.map();
     for (Procedure procedure : map.objects().allOfType(Procedure.class)) {
-      suggestion.addEntry(new SuggestionEntry(procedure.name()));
+      suggestion.addEntry(new SuggestionEntry(procedure.group()));
     }
   }
 }

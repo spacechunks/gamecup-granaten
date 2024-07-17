@@ -4,6 +4,7 @@ import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Named;
+import space.chunks.gamecup.dgr.map.Groupable;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.StateAware;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
@@ -19,7 +20,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
  *
  * @author Nico_ND1
  */
-public interface Procedure extends MapObject, Upgradable, StateAware, Named {
+public interface Procedure extends MapObject, Upgradable, StateAware, Named, Groupable {
   @Nullable
   PassengerQueue passengerQueue();
 

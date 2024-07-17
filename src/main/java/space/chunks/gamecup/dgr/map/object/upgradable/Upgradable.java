@@ -3,30 +3,30 @@ package space.chunks.gamecup.dgr.map.object.upgradable;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 
-import java.util.Map;
-
 
 /**
  * @author Nico_ND1
  */
 public interface Upgradable extends MapObject {
   @NotNull
-  Map<String, Double[]> levelPerks();
+  UpgradeHolder upgradeHolder();
 
   default double getCurrentPerkValue(@NotNull String key, double defaultValue) {
-    Double[] values = levelPerks().get(key);
-    if (values == null) {
-      return defaultValue;
-    }
-    return values[currentLevel()];
+    return upgradeHolder().getCurrentPerkValue(key, defaultValue);
   }
 
-  int currentLevel();
+  default int currentLevel() {
+    return upgradeHolder().currentLevel();
+  }
 
-  int maxLevel();
+  default int maxLevel() {
+    return upgradeHolder().maxLevel();
+  }
 
   /**
    * Returns false, if the current level is the maximum level.
    */
-  boolean upgrade();
+  default boolean upgrade() {
+    return upgradeHolder().upgrade();
+  }
 }

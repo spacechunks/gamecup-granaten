@@ -14,8 +14,7 @@ import java.util.Map;
  */
 public record SeatConfig(
     @NotNull String name,
-    int maxLevel,
-    @NotNull Map<String, Double[]> levelPerks,
+    @Nullable Map<String, Double[]> levelPerks,
     @NotNull Pos workPos,
     @NotNull Pos seatPos,
     @Nullable PassengerQueueConfig queue
