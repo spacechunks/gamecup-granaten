@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class PassengerIdentities {
   public @NotNull PassengerIdentity random() {
-
+    return null;
   }
 
   public void free(@NotNull PassengerIdentity identity) {
