@@ -4,13 +4,14 @@ import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.ItemEntity;
 import net.minestom.server.item.ItemStack;
-import net.minestom.server.item.Material;
+import net.minestom.server.utils.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
@@ -58,7 +59,12 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
 
       Luggage luggage = lineEntry.luggage();
       if (luggage == null && occupant.task().state() == State.WAIT_IN_QUEUE && Math.random() > 0.25D) {
-        luggage = spawnLuggage(map, i);
+        ItemStack item = occupant.baggage();
+        if (item == null) {
+          item = PassengerImpl.BAGGAGE_ITEMS[(int) (Math.random() * PassengerImpl.BAGGAGE_ITEMS.length)];
+        }
+
+        luggage = spawnLuggage(item, map, i);
         lineEntry.luggage(luggage);
 
         occupant.entityUnsafe().lookAt(lineEntry.pos().withY(y -> y+1.5));
@@ -101,7 +107,11 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     int nextLineIndex = (luggage.currentLineEntryIndex+1) % this.luggageClaim.line().size();
     LuggageClaimLineEntry nextEntry = this.luggageClaim.line().get(nextLineIndex);
 
-    Vec step = new Vec(nextEntry.direction().normalX(), 0, nextEntry.direction().normalZ()).div(TICKS_PER_STEP).mul(luggage.step);
+    Direction direction = nextEntry.direction();
+    if (nextLineIndex == 0) {
+      direction = fromEntry.direction();
+    }
+    Vec step = new Vec(direction.normalX(), 0, direction.normalZ()).div(TICKS_PER_STEP).mul(luggage.step);
     Pos newPos = fromEntry.pos().add(step).add(0.5, 1, 0.5);
     luggage.entity.teleport(newPos);
 
@@ -116,14 +126,14 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     return false;
   }
 
-  private @Nullable Luggage spawnLuggage(@NotNull Map map, int owningEntryIndex) {
+  private @Nullable Luggage spawnLuggage(@NotNull ItemStack item, @NotNull Map map, int owningEntryIndex) {
     Integer lineEntryIndex = tryFindSpawnLineEntryIndex();
     if (lineEntryIndex == null) {
       return null;
     }
 
     LuggageClaimLineEntry lineEntry = this.luggageClaim.line().get(lineEntryIndex);
-    ItemEntity itemEntity = new ItemEntity(ItemStack.of(Material.ACACIA_BOAT));
+    ItemEntity itemEntity = new ItemEntity(item);
     itemEntity.setInstance(map.instance(), lineEntry.pos().add(0.5, 1, 0.5));
     itemEntity.setPickable(false);
 

@@ -27,6 +27,10 @@ public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements A
 
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
+    if (this.animationTick <= 30 && (this.animationTick % 10) == 0) {
+      this.passenger.entityUnsafe().lookAt(this.config.workPos().withY(y -> y+1.1));
+    }
+
     if (this.animationTick++ == 200) {
       this.seat.entity.removePassenger(this.passenger.entityUnsafe());
       this.passenger.entityUnsafe().teleport(this.config.workPos());

@@ -56,8 +56,7 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
     instance.loadChunk(lineStartPos);
     recursiveLineDiscover(lineStartPos, lineStartPos, instance.getBlock(lineStartPos), lineStartDiscorverInitDirection, lineStartWaitingDirection, passengerQueue, null);
     Collections.shuffle(passengerQueue.waitingSlots());
-    return passengerQueue;
-  }
+    return passengerQueue;  }
 
   private int y = 0;
 
@@ -81,7 +80,9 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
       Uncomment to visualize the line:
       instance.setBlock(currentPos.add(0, 2+(this.y++), 0), Block.RED_CONCRETE);
       instance.setBlock(currentPos.add(waitingDirection.normalX(), waitingDirection.normalY(), waitingDirection.normalZ()).add(0, 2+(this.y), 0), Block.BLUE_CONCRETE);
+      instance.setBlock(currentPos.add(lastDirection.normalX(), lastDirection.normalY(), lastDirection.normalZ()).add(0, 3+(this.y), 0), Block.YELLOW_CONCRETE);
       */
+
 
       if (currentPos.add(lastDirection.normalX(), lastDirection.normalY(), lastDirection.normalZ()).equals(startPos)) {
         waitingSlot.leadingSlot(this.line.getFirst().waitingSlot());

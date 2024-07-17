@@ -41,6 +41,10 @@ import java.util.UUID;
 @Log4j2
 public class PassengerImpl implements Passenger {
   private static final String[] RANDOM_NAMES = {"Olaf", "Bernhard", "Marlon", "Hans", "Klaus", "Günther", "Hans"};
+  public static final ItemStack[] BAGGAGE_ITEMS = {
+      ItemStack.of(Material.WHITE_CARPET).withCustomModelData(4),
+      ItemStack.of(Material.WHITE_CARPET).withCustomModelData(5)
+  };
 
   private final PassengerConfig config;
   private final Game game;
@@ -75,7 +79,7 @@ public class PassengerImpl implements Passenger {
     this.npc.setCustomNameVisible(true);
 
     if (Math.random() < config.baggageChance()) {
-      this.baggage = ItemStack.of(Material.PAPER);
+      this.baggage = BAGGAGE_ITEMS[(int) (Math.random() * BAGGAGE_ITEMS.length)];
     } else {
       this.baggage = null;
     }

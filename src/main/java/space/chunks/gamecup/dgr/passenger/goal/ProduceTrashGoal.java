@@ -73,9 +73,7 @@ public class ProduceTrashGoal extends GoalSelector {
       targetPos = new Pos(targetPos.blockX(), targetPos.blockY(), targetPos.blockZ());
 
       if (map.instance().getBlock(targetPos) == Block.AIR) {
-        MapObject mapObject = map.objectTypes().create("trash", new TrashConfig("trash_"+Math.random(), Block.REDSTONE_WIRE
-            .withProperty("east", "none").withProperty("north", "none").withProperty("south", "none").withProperty("west", "none"),
-            targetPos));
+        MapObject mapObject = map.objectTypes().create("trash", new TrashConfig("trash_"+Math.random(), Block.NETHER_SPROUTS, targetPos));
         map.queueMapObjectRegister(mapObject);
       }
     }

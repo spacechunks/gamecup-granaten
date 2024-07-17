@@ -32,26 +32,26 @@ public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements 
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     switch (this.animationTick) {
-      case 3 -> {
+      case 3, 5 -> {
         this.kickingPassenger.entityUnsafe().lookAt(this.sittingPassenger.entityUnsafe());
       }
       case 10, 12, 14, 16, 17, 20 -> {
         this.kickingPassenger.entityUnsafe().lookAt(fuzzleHeadPosition());
       }
-      case 13 -> {
+      case 13, 15 -> {
         this.sittingPassenger.entityUnsafe().lookAt(this.kickingPassenger.entityUnsafe());
       }
       case 30 -> {
         NPCEntity kickingPassenger = this.kickingPassenger.entityUnsafe();
         Pos pos = kickingPassenger.getPosition().add(0, kickingPassenger.getEyeHeight(), 0);
-        this.sittingPassenger.entityUnsafe().lookAt(pos.withYaw(yaw -> yaw-30));
+        this.sittingPassenger.entityUnsafe().lookAt(pos.withYaw(yaw -> yaw-60));
       }
       case 35 -> {
         NPCEntity kickingPassenger = this.kickingPassenger.entityUnsafe();
         Pos pos = kickingPassenger.getPosition().add(0, kickingPassenger.getEyeHeight(), 0);
-        this.sittingPassenger.entityUnsafe().lookAt(pos.withYaw(yaw -> yaw+30));
+        this.sittingPassenger.entityUnsafe().lookAt(pos.withYaw(yaw -> yaw+20));
       }
-      case 40 -> {
+      case 40, 42 -> {
         this.sittingPassenger.entityUnsafe().lookAt(this.kickingPassenger.entityUnsafe());
       }
       case 48 -> {
@@ -60,6 +60,8 @@ public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements 
       case 50 -> {
         this.seat.entity.removePassenger(this.sittingPassenger.entityUnsafe());
         //this.sittingPassenger.entityUnsafe().setVelocity(this.kickingPassenger.entityUnsafe().getPosition().direction().mul(13).withY(y -> y * 0.65D));
+      }
+      case 51 -> {
         this.sittingPassenger.entityUnsafe().teleport(this.config.workPos());
       }
       case 64 -> {
