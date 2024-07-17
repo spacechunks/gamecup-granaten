@@ -4,10 +4,15 @@ import com.google.inject.Inject;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.sound.Sound.Source;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
+import net.minestom.server.event.player.PlayerBlockBreakEvent;
 import net.minestom.server.event.player.PlayerBlockInteractEvent;
+import net.minestom.server.event.trait.CancellableEvent;
+import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
 import net.minestom.server.potion.Potion;
 import net.minestom.server.potion.PotionEffect;
@@ -33,6 +38,7 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
 
   public Trash() {
     addListener(EventListener.of(PlayerBlockInteractEvent.class, this::handleInteract));
+    addListener(EventListener.of(PlayerBlockBreakEvent.class, this::handleBreak));
   }
 
   @Override
@@ -56,19 +62,27 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
   }
 
   private void handleInteract(PlayerBlockInteractEvent event) {
+    handleInteract(event.getPlayer(), event.getInstance(), event.getBlockPosition(), event);
+  }
+
+  private void handleBreak(PlayerBlockBreakEvent event) {
+    handleInteract(event.getPlayer(), event.getInstance(), event.getBlockPosition(), event);
+  }
+
+  private void handleInteract(@NotNull Player player, @NotNull Instance instance, @NotNull Point blockPosition, @NotNull CancellableEvent event) {
     if (this.parent == null || this.cleaned) {
       return;
     }
 
-    if (event.getInstance() != this.parent.instance()) {
+    if (instance != this.parent.instance()) {
       return;
     }
 
-    if (event.getBlockPosition().sameBlock(this.config.spawnPos())) {
+    if (blockPosition.sameBlock(this.config.spawnPos())) {
       event.setCancelled(true);
       this.parent.queueMapObjectUnregister(this);
       this.cleaned = true;
-      event.getPlayer().playSound(Sound.sound(Key.key("entity.parrot.imitate.slime"), Source.AMBIENT, 1F, 0.25F));
+      player.playSound(Sound.sound(Key.key("entity.parrot.imitate.slime"), Source.AMBIENT, 1F, 0.25F));
     }
   }
 
