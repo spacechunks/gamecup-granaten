@@ -8,6 +8,7 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageCl
 import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatScannerConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
+import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public record MapObjectDefaultSetupConfig(
     @NotNull List<FlightRadarConfig> flightRadars,
     @NotNull List<FlightMonitorConfig> flightMonitors,
     @NotNull List<LuggageClaimConfig> luggageClaims,
-    @NotNull List<SeatScannerConfig> seatScanners
+    @NotNull List<SeatScannerConfig> seatScanners,
+    @NotNull List<UpgraderConfig> upgraders
 ) {
 }

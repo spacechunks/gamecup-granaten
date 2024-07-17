@@ -156,6 +156,11 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   @Override
+  public void forceRemoveMoney(int money) {
+    this.money.addAndGet(-money);
+  }
+
+  @Override
   public int passengersMoved() {
     return this.passengersMoved.get();
   }

@@ -62,6 +62,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
     super.handleRegister(parent);
 
     this.parent = parent;
+    upgradeHolder();
   }
 
   @Override

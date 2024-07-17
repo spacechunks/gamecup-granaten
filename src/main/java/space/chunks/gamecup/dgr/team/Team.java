@@ -43,6 +43,8 @@ public interface Team extends MapObject, Named {
 
   boolean removeMoney(int money);
 
+  void forceRemoveMoney(int money);
+
   int passengersMoved();
 
   void addPassengerMoved();

@@ -11,6 +11,7 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatScannerConfi
 import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
+import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
 
 
 /**
@@ -35,6 +36,7 @@ public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
     createFlightMonitors(map);
     createLuggageClaims(map);
     createSeatScanners(map);
+    createUpgraders(map);
   }
 
   private void createTicketControls(@NotNull Map map) {
@@ -80,6 +82,13 @@ public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
   private void createSeatScanners(@NotNull Map map) {
     for (SeatScannerConfig seatScanner : this.config.seatScanners()) {
       MapObject seatScannerObject = this.registry.create("seat_scanner", seatScanner);
+      map.queueMapObjectRegister(seatScannerObject);
+    }
+  }
+
+  private void createUpgraders(Map map) {
+    for (UpgraderConfig upgraderConfig : this.config.upgraders()) {
+      MapObject seatScannerObject = this.registry.create("upgrader", upgraderConfig);
       map.queueMapObjectRegister(seatScannerObject);
     }
   }

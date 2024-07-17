@@ -34,6 +34,9 @@ import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupConfig;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
+import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.Upgrader;
+import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentities;
 import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentitiesConfig;
@@ -70,6 +73,7 @@ public final class MapModule extends AbstractGameModule {
     mapObjectTypeBinder.addBinding("seat").to(SeatProcedure.class);
     mapObjectTypeBinder.addBinding("seat_scanner").to(SeatScanner.class);
     mapObjectTypeBinder.addBinding("trash").to(Trash.class);
+    mapObjectTypeBinder.addBinding("upgrader").to(Upgrader.class);
 
     bind(MapObjectDefaultSetupConfig.class).toInstance(new MapObjectDefaultSetupConfig(
         List.of(
@@ -240,8 +244,24 @@ public final class MapModule extends AbstractGameModule {
                 new Vec(-17, -56, -27),
                 new Vec(13, -56, 5)
             )
+        ),
+        List.of(
+            new UpgraderConfig(
+                "security_check_upgrader",
+                Procedure.SECURITY_CHECK,
+                new Pos(-43.5, -55.0, -10.5, 90, 0),
+                new int[]{10, 50, 100}
+            ),
+            new UpgraderConfig(
+                "luggage_claim_upgrader",
+                Procedure.LUGGAGE_CLAIM,
+                new Pos(0.5, -55.0, -6.5, 180, 0),
+                new int[]{50, 200, 500}
+            )
         )
     ));
     bind(MapObjectDefaultSetup.class).to(MapObjectDefaultSetupImpl.class);
+
+    bind(UpgradeHolderRegistry.class).asEagerSingleton();
   }
 }
