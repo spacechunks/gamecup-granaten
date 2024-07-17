@@ -93,7 +93,8 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
   private boolean stepLuggage(@NotNull Luggage luggage) {
     luggage.step++;
 
-    if (luggage.step == TICKS_PER_STEP) {
+    int neededSteps = (int) (TICKS_PER_STEP * this.luggageClaim.getCurrentPerkValue("speed", 1.0));
+    if (luggage.step == neededSteps) {
       luggage.step = 0;
       luggage.currentLineEntryIndex = (luggage.currentLineEntryIndex+1) % this.luggageClaim.line().size();
 
@@ -111,7 +112,7 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     if (nextLineIndex == 0) {
       direction = fromEntry.direction();
     }
-    Vec step = new Vec(direction.normalX(), 0, direction.normalZ()).div(TICKS_PER_STEP).mul(luggage.step);
+    Vec step = new Vec(direction.normalX(), 0, direction.normalZ()).div(neededSteps).mul(luggage.step);
     Pos newPos = fromEntry.pos().add(step).add(0.5, 1, 0.5);
     luggage.entity.teleport(newPos);
 

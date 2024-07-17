@@ -8,6 +8,8 @@ import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
@@ -22,19 +24,37 @@ public class PassengerIdentity {
   private final PlayerSkin skin;
   private Passenger occupant;
 
+  private final Lock lock = new ReentrantLock();
+
   public boolean isOccupied() {
-    return this.occupant != null;
+    try {
+      this.lock.lock();
+      return this.occupant != null;
+    } finally {
+      this.lock.unlock();
+    }
   }
 
   public boolean occupy(@NotNull Passenger occupant) {
-    if (isOccupied()) {
-      return false;
+    try {
+      this.lock.lock();
+
+      if (isOccupied()) {
+        return false;
+      }
+      this.occupant = occupant;
+      return true;
+    } finally {
+      this.lock.unlock();
     }
-    this.occupant = occupant;
-    return true;
   }
 
   public void free() {
-    this.occupant = null;
+    try {
+      this.lock.lock();
+      this.occupant = null;
+    } finally {
+      this.lock.unlock();
+    }
   }
 }

@@ -9,6 +9,7 @@ import space.chunks.gamecup.dgr.map.object.StateAware;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident.SolutionType;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 
@@ -18,7 +19,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
  *
  * @author Nico_ND1
  */
-public interface Procedure extends MapObject, StateAware, Named {
+public interface Procedure extends MapObject, Upgradable, StateAware, Named {
   @Nullable
   PassengerQueue passengerQueue();
 

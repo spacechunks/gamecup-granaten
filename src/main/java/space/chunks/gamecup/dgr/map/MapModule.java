@@ -38,6 +38,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -65,6 +66,8 @@ public final class MapModule extends AbstractModule {
         List.of(
             new SecurityCheckConfig(
                 "security_check_1",
+                1,
+                Map.of(),
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
                 new Pos(-37.5, -56.0, -12.5, -90, 0),
                 new PassengerQueueConfig(
@@ -83,6 +86,8 @@ public final class MapModule extends AbstractModule {
             ),
             new SecurityCheckConfig(
                 "security_check_2",
+                1,
+                Map.of(),
                 new Pos(-41.5, -56.0, -8.5, -90, 0),
                 new Pos(-37.5, -56.0, -8.5, -90, 0),
                 new PassengerQueueConfig(
@@ -103,6 +108,8 @@ public final class MapModule extends AbstractModule {
         List.of(
             new TicketControlConfig(
                 "ticket_control_1",
+                1,
+                Map.of(),
                 new Pos(-33.5, -56.0, -17.5, -180, 0),
                 new Pos(-32.5, -56.0, -17.5),
                 new PassengerQueueConfig(
@@ -127,6 +134,8 @@ public final class MapModule extends AbstractModule {
             ),
             new TicketControlConfig(
                 "ticket_control_2",
+                1,
+                Map.of(),
                 new Pos(-31.5, -56.0, -17.5, -180, 0),
                 new Pos(-30.5, -56.0, -17.5),
                 new PassengerQueueConfig(
@@ -205,6 +214,10 @@ public final class MapModule extends AbstractModule {
         List.of(
             new LuggageClaimConfig(
                 "luggage_claim_1",
+                3,
+                Map.ofEntries(
+                    Map.entry("speed", new Double[]{1.2, 1.4, 1.6})
+                ),
                 new Pos(0.5, -56.0, -7.5, 180, 0),
                 new PassengerQueueConfig(
                     null,
@@ -220,6 +233,8 @@ public final class MapModule extends AbstractModule {
         List.of(
             new SeatConfig(
                 "seat_1",
+                1,
+                Map.of(),
                 new Pos(-17.5, -56.0, -1.5, 90, 0),
                 new Pos(-15.5, -57.5, -1.5, 90, 0),
                 null

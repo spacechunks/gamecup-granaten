@@ -40,6 +40,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   @Setter
   protected Animation animation;
   private Incident currentIncident;
+  private int currentLevel;
 
   private final Lock editLock = new ReentrantLock();
 
@@ -116,5 +117,24 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
     } finally {
       this.editLock.unlock();
     }
+  }
+
+  @Override
+  public int maxLevel() {
+    return this.config.maxLevel();
+  }
+
+  @Override
+  public java.util.@NotNull Map<String, Double[]> levelPerks() {
+    return this.config.levelPerks();
+  }
+
+  @Override
+  public boolean upgrade() {
+    if (currentLevel() == maxLevel()) {
+      return false;
+    }
+    this.currentLevel++;
+    return true;
   }
 }
