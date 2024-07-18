@@ -23,7 +23,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Nico_ND1
  */
 public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implements FlightRadar {
-  private final List<Flight> flights;
+  protected final List<Flight> flights;
   private final Lock flightsLock;
 
   private final Map<Destination, Integer> destinationDelays;
@@ -76,7 +76,7 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
     int currentTick = this.tickTask.currentTick();
     int randomDelay = destinationConfig.randomDelay();
     int passengerCount = destinationConfig.randomPassengers();
-    Flight flight = new FlightImpl(destinationConfig, passengerCount, currentTick, randomDelay / 3);
+    Flight flight = createFlight(destinationConfig, passengerCount, currentTick, randomDelay / 3);
     this.flights.add(flight);
     this.destinationDelays.put(destinationConfig.destination(), currentTick+randomDelay);
   }
@@ -94,11 +94,11 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
     return TickResult.CONTINUE;
   }
 
-  private void tickFlightDeletor(int currentTick) {
+  protected void tickFlightDeletor(int currentTick) {
     this.flights.removeIf(flight -> flight.targetFinishTick() == currentTick);
   }
 
-  private void tickFlightCreator(int currentTick) {
+  protected void tickFlightCreator(int currentTick) {
     for (DestinationConfig destinationConfig : this.config.destinations()) {
       int delay = this.destinationDelays.getOrDefault(destinationConfig.destination(), 0);
       if (delay > currentTick) {
@@ -107,13 +107,13 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
 
       int randomDelay = destinationConfig.randomDelay();
       int passengerCount = destinationConfig.randomPassengers();
-      Flight flight = new FlightImpl(destinationConfig, passengerCount, currentTick, randomDelay / 3);
+      Flight flight = createFlight(destinationConfig, passengerCount, currentTick, randomDelay / 3);
       this.flights.add(flight);
       this.destinationDelays.put(destinationConfig.destination(), currentTick+randomDelay);
     }
   }
 
-  private void tickFlights(@NotNull space.chunks.gamecup.dgr.map.Map map, int currentTick) {
+  protected void tickFlights(@NotNull space.chunks.gamecup.dgr.map.Map map, int currentTick) {
     for (Flight flight : this.flights) {
       int passengersToSpawn = flight.testPassengerSpawn(currentTick == flight.targetFinishTick());
 
@@ -129,5 +129,9 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
         map.queueMapObjectRegister(passenger);
       }
     }
+  }
+
+  protected @NotNull Flight createFlight(@NotNull DestinationConfig config, int passengerGoal, int currentTick, int delay) {
+    return new FlightImpl(config, passengerGoal, currentTick, delay);
   }
 }

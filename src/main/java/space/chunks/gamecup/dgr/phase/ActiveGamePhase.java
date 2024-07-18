@@ -93,7 +93,7 @@ public class ActiveGamePhase extends AbstractPhase {
         member.player().sendMessage("Game is starting...");
         member.player().setInstance(team.map().instance(), new Pos(-47.5, -56.0, -10.5));
 
-        team.map().queueMapObjectRegister(new MemberScoreboard(member));
+        team.map().queueMapObjectRegister(new MemberScoreboard(this.game, member));
 
         this.game.goal().showTitle(member.player());
       }
@@ -117,5 +117,7 @@ public class ActiveGamePhase extends AbstractPhase {
     for (Map map : this.game.maps()) {
       map.tick(currentTick);
     }
+
+    this.game.goal().tick(currentTick);
   }
 }

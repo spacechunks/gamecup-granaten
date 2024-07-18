@@ -1,7 +1,7 @@
 package space.chunks.gamecup.dgr.team;
 
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.util.RGBLike;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.Named;
 import space.chunks.gamecup.dgr.map.Map;
@@ -17,7 +17,10 @@ import java.util.UUID;
  */
 public interface Team extends MapObject, Named {
   @NotNull
-  RGBLike color();
+  NamedTextColor color();
+
+  @NotNull
+  net.minestom.server.scoreboard.Team scoreboardTeam();
 
   /**
    * Returns the map for this team.

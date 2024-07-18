@@ -9,6 +9,7 @@ import net.minestom.server.scoreboard.Sidebar.NumberFormat;
 import net.minestom.server.scoreboard.Sidebar.ScoreboardLine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;
@@ -22,12 +23,14 @@ import space.chunks.gamecup.dgr.team.member.Member;
  * @author Nico_ND1
  */
 public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefault> implements MapObject {
+  private final Game game;
   private final Member member;
   private Team focusedTeam;
   private Map parent;
   protected Sidebar sidebar;
 
-  public MemberScoreboard(@NotNull Member member) {
+  public MemberScoreboard(@NotNull Game game, @NotNull Member member) {
+    this.game = game;
     this.member = member;
 
     addListener(EventListener.of(ForceUpdateEvent.class, this::handleForceUpdate));
@@ -59,7 +62,9 @@ public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefa
     if (this.sidebar != null) {
       this.sidebar.removeViewer(this.member.player());
     }
-    this.sidebar = new Sidebar(Component.text("Die Granaten \uD83D\uDE0E").color(NamedTextColor.LIGHT_PURPLE));
+
+    Team team = focusedTeam();
+    this.sidebar = new Sidebar(Component.text("Die Granaten \uD83D\uDE0E").color(team == null ? NamedTextColor.DARK_GRAY : team.color()));
     this.sidebar.addViewer(this.member.player());
     initSidebar();
     updateSidebar();

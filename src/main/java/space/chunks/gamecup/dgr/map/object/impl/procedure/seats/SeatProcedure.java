@@ -82,7 +82,7 @@ public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Proc
     this.seat.setInstance(parent.instance(), this.config.seatPos());
     parent.instance().setBlock(this.config.seatPos().sub(0.5, -1.5, 0.5), Block.BARRIER);
 
-    Pos seatModelPos = this.config.seatPos().sub(0, 1.5, 0);
+    Pos seatModelPos = this.config.seatPos().sub(0, 1, 0);
     seatModelPos.withYaw(switch (this.config.direction()) {
       case NORTH -> 180;
       case EAST -> 270;

@@ -89,6 +89,8 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
           if (upgrade) {
             team.forceRemoveMoney(cost);
             event.getPlayer().sendMessage("Upgraded: "+upgrade);
+
+            tick(team.map(), 0);
           }
         } else {
           event.getPlayer().sendMessage("Not enough money!");

@@ -6,7 +6,6 @@ import net.kyori.adventure.bossbar.BossBar.Color;
 import net.kyori.adventure.bossbar.BossBar.Overlay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.util.RGBLike;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
@@ -36,7 +35,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Nico_ND1
  */
 public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> implements Team {
-  private static final RGBLike[] COLORS = new RGBLike[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW};
+  private static final NamedTextColor[] COLORS = new NamedTextColor[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW};
   private static final AtomicInteger ID_COUNT = new AtomicInteger();
 
   private final Game game;
@@ -45,6 +44,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   private final Set<Member> members;
   private final AtomicInteger money;
   private final AtomicInteger passengersMoved;
+  private final net.minestom.server.scoreboard.Team scoreboardTeam;
   private Map map;
 
   private final BossBar goalBossBar;
@@ -58,6 +58,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
     this.money = new AtomicInteger();
     this.passengersMoved = new AtomicInteger();
     this.goalBossBar = BossBar.bossBar(Component.text(" "), 0F, bossbarColor(), Overlay.PROGRESS);
+    this.scoreboardTeam = MinecraftServer.getTeamManager().createTeam(name(), Component.empty(), (NamedTextColor) color(), Component.empty());
 
     addListener(EventListener.of(ForceUpdateEvent.class, this::handleBossbarUpdate));
     addListener(EventListener.of(AddEntityToInstanceEvent.class, this::handleInstanceEntityAdd));
@@ -85,13 +86,13 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   private void handleInstanceEntityRemove(RemoveEntityFromInstanceEvent event) {
-    if (event.getEntity() instanceof Player player) {
+    if (event.getEntity() instanceof Player player && event.getInstance() == this.map.instance()) {
       this.goalBossBar.removeViewer(player);
     }
   }
 
   private void handleInstanceEntityAdd(AddEntityToInstanceEvent event) {
-    if (event.getEntity() instanceof Player player) {
+    if (event.getEntity() instanceof Player player && event.getInstance() == this.map.instance()) {
       this.goalBossBar.addViewer(player);
     }
   }
@@ -107,8 +108,14 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   @Override
-  public @NotNull RGBLike color() {
+  public @NotNull NamedTextColor color() {
     return COLORS[this.id];
+  }
+
+  @NotNull
+  @Override
+  public net.minestom.server.scoreboard.Team scoreboardTeam() {
+    return this.scoreboardTeam;
   }
 
   @Override
@@ -133,11 +140,18 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   @Override
   public void addMember(@NotNull Member member) {
     this.members.add(member);
+    this.scoreboardTeam.addMember(member.player().getUsername());
   }
 
   @Override
   public void removeMember(@NotNull UUID uuid) {
-    this.members.removeIf(member -> member.uuid().equals(uuid));
+    this.members.removeIf(member -> {
+      if (member.uuid().equals(uuid)) {
+        this.scoreboardTeam.removeMember(member.player().getUsername());
+        return true;
+      }
+      return false;
+    });
   }
 
   @Override
