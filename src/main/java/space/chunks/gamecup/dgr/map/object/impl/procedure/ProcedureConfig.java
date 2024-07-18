@@ -1,0 +1,23 @@
+package space.chunks.gamecup.dgr.map.object.impl.procedure;
+
+import net.minestom.server.coordinate.Pos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradableConfig;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
+
+
+/**
+ * @author Nico_ND1
+ */
+public interface ProcedureConfig extends MapObjectConfigEntry, UpgradableConfig {
+  @NotNull
+  Pos workPos();
+
+  @NotNull
+  Pos exitPos();
+
+  @Nullable
+  PassengerQueueConfig queue();
+}

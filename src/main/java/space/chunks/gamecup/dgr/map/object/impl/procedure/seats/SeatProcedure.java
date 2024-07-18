@@ -1,0 +1,106 @@
+package space.chunks.gamecup.dgr.map.object.impl.procedure.seats;
+
+import com.google.inject.Inject;
+import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta.DisplayContext;
+import net.minestom.server.entity.metadata.other.ArmorStandMeta;
+import net.minestom.server.instance.block.Block;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import space.chunks.gamecup.dgr.map.Map;
+import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.AbstractProcedure;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
+import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
+
+
+/**
+ * @author Nico_ND1
+ */
+public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Procedure {
+  protected final Entity seatModel;
+  protected final Entity seat;
+
+  @Inject
+  public SeatProcedure() {
+    this.seat = new Entity(EntityType.ARMOR_STAND);
+    this.seat.editEntityMeta(ArmorStandMeta.class, meta -> {
+      meta.setInvisible(true);
+      meta.setHasNoGravity(true);
+    });
+
+    this.seatModel = new Entity(EntityType.ITEM_DISPLAY);
+    this.seatModel.setNoGravity(true);
+    this.seatModel.editEntityMeta(ItemDisplayMeta.class, meta -> {
+      meta.setDisplayContext(DisplayContext.HEAD);
+      meta.setItemStack(ItemStack.of(Material.PAPER).withCustomModelData(8));
+    });
+  }
+
+  @Override
+  protected @NotNull Class<SeatConfig> configClass() {
+    return SeatConfig.class;
+  }
+
+  @Override
+  public @Nullable Animation createAnimation(@NotNull Passenger passenger) {
+    if (this.animation instanceof SeatSitAnimation sitAnimation) {
+      this.parent.queueMapObjectUnregister(this.animation);
+
+      SeatKickAnimation animation = new SeatKickAnimation(this, sitAnimation.passenger, passenger);
+      animation.config(this.config);
+      bind(animation);
+
+      this.parent.queueMapObjectRegister(animation);
+      this.animation = animation;
+    } else if (this.animation instanceof SeatKickAnimation) {
+      PassengerTask task = passenger.task();
+      if (task != null) {
+        task.state(State.PROCEED);
+      }
+    } else {
+      SeatSitAnimation animation = new SeatSitAnimation(this, passenger);
+      animation.config(this.config);
+      bind(animation);
+
+      this.parent.queueMapObjectRegister(animation);
+      this.animation = animation;
+    }
+    return this.animation;
+  }
+
+  @Override
+  public void handleRegister(@NotNull Map parent) {
+    super.handleRegister(parent);
+    this.seat.setInstance(parent.instance(), this.config.seatPos());
+    parent.instance().setBlock(this.config.seatPos().sub(0.5, -1.5, 0.5), Block.BARRIER);
+
+    Pos seatModelPos = this.config.seatPos().sub(0, 1.5, 0);
+    seatModelPos.withYaw(switch (this.config.direction()) {
+      case NORTH -> 180;
+      case EAST -> 270;
+      case SOUTH -> 0;
+      case WEST -> 90;
+      default -> throw new IllegalStateException("Unexpected value: "+this.config.direction());
+    });
+    this.seatModel.setInstance(parent.instance(), seatModelPos);
+  }
+
+  @Override
+  public void handleTargetUnregister(@NotNull Map parent) {
+    super.handleTargetUnregister(parent);
+    this.animation = null;
+  }
+
+  @Override
+  public @NotNull String group() {
+    return Procedure.SEAT;
+  }
+}
