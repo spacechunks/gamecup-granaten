@@ -21,17 +21,20 @@ public class ForceFlightCommand extends Command {
     super("forceflight");
     this.game = game;
 
-    addSyntax(this::execute, ArgumentType.Enum("destination", Destination.class));
+    addSyntax(this::execute, ArgumentType.Enum("destination", Destination.class), ArgumentType.Integer("amount").setDefaultValue(1));
   }
 
   private void execute(CommandSender commandSender, CommandContext commandContext) {
     Player player = (Player) commandSender;
     Destination destination = commandContext.get("destination");
+    int amount = commandContext.get("amount");
 
     this.game.findTeam(player).ifPresentOrElse(team -> {
       for (FlightRadar flightRadar : team.map().objects().allOfType(FlightRadar.class)) {
-        flightRadar.forceCreate(destination);
-        player.sendMessage("Forced flight to "+destination+"!");
+        for (int i = 0; i < amount; i++) {
+          flightRadar.forceCreate(destination);
+        }
+        player.sendMessage("Forced "+amount+" flight(s) to "+destination+"!");
       }
     }, () -> player.sendMessage("You are not in a team."));
 

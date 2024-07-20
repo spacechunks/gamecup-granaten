@@ -59,7 +59,8 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
       }
 
       Luggage luggage = lineEntry.luggage();
-      if (luggage == null && occupant.task().state() == State.WAIT_IN_QUEUE && Math.random() > 0.25D) {
+      PassengerTask task = occupant.task();
+      if (luggage == null && task != null && task.state() == State.WAIT_IN_QUEUE && Math.random() > 0.25D) {
         ItemStack item = occupant.baggage();
         if (item == null) {
           item = PassengerImpl.BAGGAGE_ITEMS[(int) (Math.random() * PassengerImpl.BAGGAGE_ITEMS.length)];

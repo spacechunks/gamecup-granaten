@@ -18,6 +18,8 @@ public interface Flight {
 
   int passengerGoal();
 
+  int spawnedPassengers();
+
   int currentPassengers();
 
   void addPassenger(@NotNull Passenger passenger);

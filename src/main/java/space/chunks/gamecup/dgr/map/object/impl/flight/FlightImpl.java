@@ -41,6 +41,11 @@ public class FlightImpl implements Flight {
   }
 
   @Override
+  public int spawnedPassengers() {
+    return 0;
+  }
+
+  @Override
   public int currentPassengers() {
     return this.currentPassengers;
   }

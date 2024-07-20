@@ -54,7 +54,10 @@ public class JoinProcedureQueueGoal extends GoalSelector {
   @Override
   public boolean shouldEnd() {
     PassengerTask task = this.passenger.task();
-    assert task != null;
+    if (task == null) {
+      return true;
+    }
+
     Procedure procedure = task.procedure();
     PassengerQueue passengerQueue = procedure.passengerQueue();
     if (passengerQueue == null) {
@@ -67,12 +70,13 @@ public class JoinProcedureQueueGoal extends GoalSelector {
   @Override
   public void end() {
     PassengerTask task = this.passenger.task();
-    assert task != null;
-    Procedure procedure = task.procedure();
-    if (procedure.passengerQueue() == null) {
-      task.state(State.MOVE_TO_WORK_POS);
-    } else {
-      task.state(State.WAIT_IN_QUEUE);
+    if (task != null) {
+      Procedure procedure = task.procedure();
+      if (procedure.passengerQueue() == null) {
+        task.state(State.MOVE_TO_WORK_POS);
+      } else {
+        task.state(State.WAIT_IN_QUEUE);
+      }
     }
 
     this.initiated = false;

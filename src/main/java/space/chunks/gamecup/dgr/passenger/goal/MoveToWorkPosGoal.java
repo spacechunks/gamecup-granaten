@@ -28,10 +28,10 @@ public class MoveToWorkPosGoal extends GoalSelector {
   @Override
   public void start() {
     PassengerTask task = this.passenger.task();
-    assert task != null;
-
-    Procedure procedure = task.procedure();
-    this.passenger.setPathTo(procedure.workPos());
+    if (task != null) {
+      Procedure procedure = task.procedure();
+      this.passenger.setPathTo(procedure.workPos());
+    }
   }
 
   @Override
@@ -46,7 +46,8 @@ public class MoveToWorkPosGoal extends GoalSelector {
   @Override
   public void end() {
     PassengerTask task = this.passenger.task();
-    assert task != null;
-    task.state(State.WORK);
+    if (task != null) {
+      task.state(State.WORK);
+    }
   }
 }

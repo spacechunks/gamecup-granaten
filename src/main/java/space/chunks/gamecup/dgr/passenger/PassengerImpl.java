@@ -251,7 +251,7 @@ public class PassengerImpl implements Passenger {
     }
 
     switch (this.task.state()) {
-      case WAIT_IN_QUEUE -> {
+      case WAIT_IN_QUEUE, JOIN_QUEUE -> {
         this.queueTicks++;
 
         if (this.queueTicks % 20 == 0) {

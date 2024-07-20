@@ -33,10 +33,12 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
   @Override
   public void start() {
     PassengerTask task = this.passenger.task();
-    assert task != null;
-    Procedure procedure = task.procedure();
-    PassengerQueue passengerQueue = procedure.passengerQueue();
-    this.waitingSlot = passengerQueue.findWaitingSlot(this.passenger).orElseThrow(() -> new IllegalStateException("No waiting slot found for passenger"));
+    if (task != null) {
+      Procedure procedure = task.procedure();
+      PassengerQueue passengerQueue = procedure.passengerQueue();
+      assert passengerQueue != null;
+      this.waitingSlot = passengerQueue.findWaitingSlot(this.passenger).orElseThrow(() -> new IllegalStateException("No waiting slot found for passenger"));
+    }
 
     this.firstTickDone = false;
   }

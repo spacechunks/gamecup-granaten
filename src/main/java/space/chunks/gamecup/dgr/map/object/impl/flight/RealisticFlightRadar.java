@@ -13,6 +13,7 @@ import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -124,22 +125,21 @@ public class RealisticFlightRadar extends FlightRadarImpl implements FlightRadar
       }
 
       if (this.config.destination() == Destination.LEAVING) {
-        if (this.spawnedPassengers <= this.passengerGoal) {
+        if (this.spawnedPassengers < this.passengerGoal) {
           return false;
         }
 
-        this.boarding = !this.passengers.isEmpty() && this.passengers.stream().allMatch(passenger -> {
+        return this.boarding = !this.passengers.isEmpty() && this.passengers.stream().allMatch(passenger -> {
           if (!passenger.isValid()) {
             return true;
           }
 
           PassengerTask task = passenger.task();
           if (task != null) {
-            return task.procedureGroup().equals(Procedure.SEAT);
+            return task.state() == State.WORK && task.procedureGroup().equals(Procedure.SEAT);
           }
           return false;
         });
-        return this.boarding;
       }
       return null;
     }
