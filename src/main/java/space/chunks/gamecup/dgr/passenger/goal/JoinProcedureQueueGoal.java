@@ -74,5 +74,7 @@ public class JoinProcedureQueueGoal extends GoalSelector {
     } else {
       task.state(State.WAIT_IN_QUEUE);
     }
+
+    this.initiated = false;
   }
 }

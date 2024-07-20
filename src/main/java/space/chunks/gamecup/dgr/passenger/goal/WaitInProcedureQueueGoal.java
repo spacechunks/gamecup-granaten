@@ -90,6 +90,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
 
   @Override
   public void end() {
-
+    this.firstTickDone = false;
+    this.waitingSlot = null;
   }
 }

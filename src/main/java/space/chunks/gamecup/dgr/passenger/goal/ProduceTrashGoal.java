@@ -100,5 +100,8 @@ public class ProduceTrashGoal extends GoalSelector {
   @Override
   public void end() {
     getEntityCreature().setItemInMainHand(this.previousItemInHand);
+
+    this.previousItemInHand = null;
+    this.animationTicks = 0;
   }
 }

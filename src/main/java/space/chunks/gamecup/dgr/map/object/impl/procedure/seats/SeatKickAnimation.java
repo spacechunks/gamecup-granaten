@@ -31,6 +31,10 @@ public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements 
 
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
+    if (!this.sittingPassenger.isValid() || !this.kickingPassenger.isValid()) {
+      return TickResult.UNREGISTER;
+    }
+
     switch (this.animationTick) {
       case 3, 5 -> {
         this.kickingPassenger.entityUnsafe().lookAt(this.sittingPassenger.entityUnsafe());

@@ -95,6 +95,10 @@ public final class GameImpl implements Game {
 
   @Override
   public void tick(int currentTick) {
-    this.phases.tick(currentTick);
+    try {
+      this.phases.tick(currentTick);
+    } catch (Throwable throwable) {
+      log.error("Error during game tick @ {}", currentTick, throwable);
+    }
   }
 }
