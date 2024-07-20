@@ -10,7 +10,7 @@ import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.impl.TestMapObject;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
-import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarImpl;
+import space.chunks.gamecup.dgr.map.object.impl.flight.RealisticFlightRadar;
 import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitor;
 import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitorConfig;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.Marketing;
@@ -66,10 +66,10 @@ public final class MapModule extends AbstractGameModule {
     mapObjectTypeBinder.addBinding("security_check_failed_incident").to(SecurityCheckFailedIncident.class);
     mapObjectTypeBinder.addBinding(Procedure.TICKET_CONTROL).to(TicketControlProcedure.class);
     mapObjectTypeBinder.addBinding(Procedure.PASS_CONTROL).to(PassControlProcedure.class);
-    mapObjectTypeBinder.addBinding("flight_radar").to(FlightRadarImpl.class);
+    mapObjectTypeBinder.addBinding("flight_radar").to(RealisticFlightRadar.class);
     mapObjectTypeBinder.addBinding("flight_monitor").to(FlightMonitor.class);
     mapObjectTypeBinder.addBinding(Procedure.LUGGAGE_CLAIM).to(LuggageClaimProcedure.class);
-    mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
+    mapObjectTypeBinder.addBinding(Procedure.MARKETING).to(Marketing.class);
     mapObjectTypeBinder.addBinding("seat").to(SeatProcedure.class);
     mapObjectTypeBinder.addBinding("seat_scanner").to(SeatScanner.class);
     mapObjectTypeBinder.addBinding("trash").to(Trash.class);
@@ -79,6 +79,7 @@ public final class MapModule extends AbstractGameModule {
         List.of(
             new SecurityCheckConfig(
                 "security_check_1",
+                0.9,
                 Map.of(),
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
                 new Pos(-37.5, -56.0, -12.5, -90, 0),
@@ -98,6 +99,7 @@ public final class MapModule extends AbstractGameModule {
             ),
             new SecurityCheckConfig(
                 "security_check_2",
+                0.9,
                 null,
                 new Pos(-41.5, -56.0, -8.5, -90, 0),
                 new Pos(-37.5, -56.0, -8.5, -90, 0),
@@ -184,9 +186,9 @@ public final class MapModule extends AbstractGameModule {
                     new DestinationConfig(
                         Destination.LEAVING,
                         3,
-                        2, 5,
-                        20 * 5,
-                        20 * 20,
+                        5, 7,
+                        20 * 30,
+                        20 * 25,
                         new Pos[]{
                             new Pos(-48.5, -56.0, -8.5, -90, 0), new Pos(-48.5, -56.0, -7.5, -90, 0),
                             new Pos(-48.5, -56.0, -13.5, -90, 0), new Pos(-48.5, -56.0, -12.5, -90, 0)
@@ -217,7 +219,13 @@ public final class MapModule extends AbstractGameModule {
         List.of(
             new FlightMonitorConfig(
                 "flight_monitor_1",
-                new Pos(-7.1, -48.0, -10.5, 90, 30)
+                Destination.LEAVING,
+                new Pos(-7.1, -50.0, -10.5, 90, 30)
+            ),
+            new FlightMonitorConfig(
+                "flight_monitor_2",
+                Destination.ARRIVING,
+                new Pos(-5.9, -50.0, -10.5, -90, 30)
             )
         ),
         List.of(

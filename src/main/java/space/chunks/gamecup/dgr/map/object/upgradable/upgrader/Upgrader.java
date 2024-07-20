@@ -153,6 +153,12 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   }
 
   public int getCost(int level) {
-    return this.config.costs()[level];
+    if (level == 0) {
+      return 0;
+    }
+    if (level > this.config.costs().length) {
+      return this.config.costs()[this.config.costs().length-1];
+    }
+    return this.config.costs()[level-1];
   }
 }

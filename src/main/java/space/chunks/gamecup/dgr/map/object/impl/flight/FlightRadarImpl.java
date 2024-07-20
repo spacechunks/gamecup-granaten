@@ -119,12 +119,19 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
 
       for (int i = 0; i < passengersToSpawn; i++) {
         DestinationConfig config = flight.config();
-        Passenger passenger = this.factory.createPassenger(new PassengerConfig(
+        Passenger passenger = this.factory.createPassenger(flight, map, new PassengerConfig(
             config.randomSpawnPosition(),
             config.randomLeavePosition(),
             config.destination(),
-            0.75
+            0.75,
+            60,
+            1,
+            0.1,
+            0.3,
+            10,
+            20
         ));
+        flight.addPassenger(passenger);
 
         map.queueMapObjectRegister(passenger);
       }

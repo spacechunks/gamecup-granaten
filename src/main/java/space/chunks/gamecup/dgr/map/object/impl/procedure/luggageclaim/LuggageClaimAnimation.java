@@ -13,6 +13,7 @@ import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
 import java.util.ArrayList;
@@ -86,7 +87,10 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     occupant.entityUnsafe().swingMainHand();
     luggage.remove();
 
-    occupant.task().state(State.PROCEED);
+    PassengerTask task = occupant.task();
+    if (task != null) {
+      task.state(State.PROCEED);
+    }
     waitingSlot.free();
   }
 

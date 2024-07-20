@@ -14,6 +14,7 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyS
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -130,14 +131,13 @@ public class PassengerQueueImpl implements PassengerQueue {
   }
 
   @Override
-  public @NotNull WaitingSlot findWaitingSlot(@NotNull Passenger passenger) {
+  public @NotNull Optional<WaitingSlot> findWaitingSlot(@NotNull Passenger passenger) {
     try {
       this.slotLock.lock();
 
       return this.waitingSlots.stream()
           .filter(slot -> passenger.equals(slot.occupant()))
-          .findAny()
-          .orElseThrow(() -> new IllegalStateException("Passenger is not waiting in this queue"));
+          .findAny();
     } finally {
       this.slotLock.unlock();
     }

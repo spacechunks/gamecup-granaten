@@ -14,13 +14,14 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMakerImpl;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistryImpl;
+import space.chunks.gamecup.dgr.minestom.actionbar.ActionBarHelper;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntityDebugCommand;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
-import space.chunks.gamecup.dgr.passenger.SpawnPassengersCommand;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueImpl;
 import space.chunks.gamecup.dgr.phase.ActiveGamePhase;
+import space.chunks.gamecup.dgr.phase.EndingPhase;
 import space.chunks.gamecup.dgr.phase.Phase;
 import space.chunks.gamecup.dgr.phase.ShoppingPhase;
 import space.chunks.gamecup.dgr.phase.WaitingPhase;
@@ -53,16 +54,18 @@ public final class GameModule extends AbstractGameModule {
     phaseBinder.addBinding().to(WaitingPhase.class);
     phaseBinder.addBinding().to(ActiveGamePhase.class);
     phaseBinder.addBinding().to(ShoppingPhase.class);
+    phaseBinder.addBinding().to(EndingPhase.class);
 
     bind(PhaseHandler.class).to(PhaseHandlerImpl.class).asEagerSingleton();
     bind(GameConfig.class).toInstance(GameConfig.defaultConfig());
 
     Multibinder<Command> commandsBinder = Multibinder.newSetBinder(binder(), Command.class);
     commandsBinder.addBinding().to(EnterPhaseCommand.class);
-    commandsBinder.addBinding().to(SpawnPassengersCommand.class);
     commandsBinder.addBinding().to(NPCEntityDebugCommand.class);
     commandsBinder.addBinding().to(ForceFlightCommand.class);
     commandsBinder.addBinding().to(ProcedureDebugCommand.class);
+
+    bind(ActionBarHelper.class).asEagerSingleton();
 
     bind(Game.class).to(GameImpl.class).asEagerSingleton();
     bind(GameTickTask.class);

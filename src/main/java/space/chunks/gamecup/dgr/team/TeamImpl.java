@@ -1,6 +1,8 @@
 package space.chunks.gamecup.dgr.team;
 
 import com.google.inject.Inject;
+import lombok.AllArgsConstructor;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.bossbar.BossBar.Color;
 import net.kyori.adventure.bossbar.BossBar.Overlay;
@@ -20,12 +22,14 @@ import space.chunks.gamecup.dgr.map.event.MapObjectUnregisterEvent;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
+import space.chunks.gamecup.dgr.minestom.actionbar.ActionBarHelper;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.team.member.Member;
 import space.chunks.gamecup.dgr.team.member.scoreboard.MemberScoreboard.ForceUpdateEvent;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,6 +43,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   private static final AtomicInteger ID_COUNT = new AtomicInteger();
 
   private final Game game;
+  private final ActionBarHelper actionBarHelper;
   private final int id;
   private final String name;
   private final Set<Member> members;
@@ -50,8 +55,9 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   private final BossBar goalBossBar;
 
   @Inject
-  public TeamImpl(@NotNull Game game) {
+  public TeamImpl(@NotNull Game game, @NotNull ActionBarHelper actionBarHelper) {
     this.game = game;
+    this.actionBarHelper = actionBarHelper;
     this.id = ID_COUNT.get();
     this.name = "Team#"+this.id;
     this.members = new HashSet<>();
@@ -79,7 +85,20 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
 
     if (event.reason() == UnregisterReason.PASSENGER_LEFT_HAPPY) {
       addPassengerMoved();
-      addMoney(10); // TODO: maybe give money depending on patience. Base value could be 10 and depending on how much patience they lost it will go up until it's doubled
+
+      int moneyReward = passenger.calculateMoneyReward();
+      addMoney(moneyReward);
+
+      this.actionBarHelper.sendActionBar(audience(), this, (@NotNull TeamImpl key, @Nullable MoneyAddActionBar previousValue) -> {
+        if (previousValue == null) {
+          return new MoneyAddActionBar(1, moneyReward);
+        }
+        return previousValue.add(moneyReward);
+      }, (key, value) -> {
+        return Component.text("+ "+value.passengers).color(NamedTextColor.GREEN)
+            .append(Component.text(" | ").color(NamedTextColor.DARK_GRAY))
+            .append(Component.text("+ "+value.money, NamedTextColor.GOLD));
+      });
 
       MinecraftServer.getGlobalEventHandler().call(new ForceUpdateEvent(this));
     }
@@ -155,6 +174,11 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   @Override
+  public @NotNull Audience audience() {
+    return Audience.audience(this.members.stream().map(Member::player).toList());
+  }
+
+  @Override
   public int money() {
     return this.money.get();
   }
@@ -212,6 +236,35 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
       GameGoal goal = this.game.goal();
       this.goalBossBar.name(goal.bossBar(this));
       this.goalBossBar.progress((float) goal.progress(this));
+    }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TeamImpl team = (TeamImpl) o;
+    return id == team.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @AllArgsConstructor
+  private class MoneyAddActionBar {
+    private int passengers;
+    private int money;
+
+    private @NotNull MoneyAddActionBar add(int add) {
+      this.money += add;
+      this.passengers++;
+      return this;
     }
   }
 }

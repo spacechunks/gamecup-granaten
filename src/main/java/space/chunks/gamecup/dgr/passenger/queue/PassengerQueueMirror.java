@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 
@@ -45,7 +46,7 @@ public final class PassengerQueueMirror implements PassengerQueue {
   }
 
   @Override
-  public @NotNull WaitingSlot findWaitingSlot(@NotNull Passenger passenger) {
+  public @NotNull Optional<WaitingSlot> findWaitingSlot(@NotNull Passenger passenger) {
     return this.queueSupplier.get().findWaitingSlot(passenger);
   }
 

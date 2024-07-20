@@ -57,6 +57,10 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
     this.exitPos = procedureConfig.exitPos();
   }
 
+  public @Nullable C config() {
+    return this.config;
+  }
+
   @Override
   public void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);

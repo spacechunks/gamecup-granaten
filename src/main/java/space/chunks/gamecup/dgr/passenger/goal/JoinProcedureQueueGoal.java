@@ -15,6 +15,7 @@ import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
  */
 public class JoinProcedureQueueGoal extends GoalSelector {
   private final Passenger passenger;
+  private boolean initiated;
 
   public JoinProcedureQueueGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -29,28 +30,38 @@ public class JoinProcedureQueueGoal extends GoalSelector {
 
   @Override
   public void start() {
+  }
+
+  @Override
+  public void tick(long l) {
+    if (this.initiated) {
+      return;
+    }
+
     PassengerTask task = this.passenger.task();
     assert task != null;
     Procedure procedure = task.procedure();
     PassengerQueue passengerQueue = procedure.passengerQueue();
     if (passengerQueue != null) {
       WaitingSlot waitingSlot = passengerQueue.occupyNextSlot(this.passenger);
-      if (waitingSlot == null) {
-        this.passenger.map().queueMapObjectUnregister(this.passenger);
-        return;
+      if (waitingSlot != null) {
+        this.passenger.setPathTo(waitingSlot.position());
+        this.initiated = true;
       }
-
-      this.passenger.setPathTo(waitingSlot.position());
     }
   }
 
   @Override
-  public void tick(long l) {
-  }
-
-  @Override
   public boolean shouldEnd() {
-    return this.passenger.entityUnsafe().isPathComplete();
+    PassengerTask task = this.passenger.task();
+    assert task != null;
+    Procedure procedure = task.procedure();
+    PassengerQueue passengerQueue = procedure.passengerQueue();
+    if (passengerQueue == null) {
+      return true;
+    }
+
+    return passengerQueue.findWaitingSlot(this.passenger).isPresent() && this.passenger.entityUnsafe().isPathComplete();
   }
 
   @Override

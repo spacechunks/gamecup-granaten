@@ -56,7 +56,8 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
     instance.loadChunk(lineStartPos);
     recursiveLineDiscover(lineStartPos, lineStartPos, instance.getBlock(lineStartPos), lineStartDiscorverInitDirection, lineStartWaitingDirection, passengerQueue, null);
     Collections.shuffle(passengerQueue.waitingSlots());
-    return passengerQueue;  }
+    return passengerQueue;
+  }
 
   private int y = 0;
 

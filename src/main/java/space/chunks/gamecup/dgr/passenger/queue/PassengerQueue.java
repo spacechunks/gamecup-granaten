@@ -7,6 +7,7 @@ import space.chunks.gamecup.dgr.Named;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -38,7 +39,7 @@ public interface PassengerQueue extends Named {
   WaitingSlot occupyNextSlot(@NotNull Passenger passenger);
 
   @NotNull
-  WaitingSlot findWaitingSlot(@NotNull Passenger passenger);
+  Optional<WaitingSlot> findWaitingSlot(@NotNull Passenger passenger);
 
   interface WaitingSlot {
     @NotNull

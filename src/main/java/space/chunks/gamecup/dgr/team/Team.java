@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr.team;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
@@ -39,6 +40,9 @@ public interface Team extends MapObject, Named {
   void addMember(@NotNull Member member);
 
   void removeMember(@NotNull UUID uuid);
+
+  @NotNull
+  Audience audience();
 
   int money();
 

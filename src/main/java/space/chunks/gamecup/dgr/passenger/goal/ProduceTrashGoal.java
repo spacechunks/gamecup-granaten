@@ -22,6 +22,13 @@ import java.util.concurrent.TimeUnit;
  * @author Nico_ND1
  */
 public class ProduceTrashGoal extends GoalSelector {
+  private static final double PATIENCE_THRESHOLD = 0.8;
+  private static final ItemStack[] HAND_ITEMS = {
+      ItemStack.of(Material.COOKED_SALMON), ItemStack.of(Material.COOKED_BEEF), ItemStack.of(Material.COOKED_PORKCHOP),
+      ItemStack.of(Material.APPLE), ItemStack.of(Material.MELON_SLICE), ItemStack.of(Material.CARROT), ItemStack.of(Material.BAKED_POTATO),
+      ItemStack.of(Material.BEETROOT_SOUP), ItemStack.of(Material.MUSHROOM_STEW), ItemStack.of(Material.RABBIT_STEW), ItemStack.of(Material.MILK_BUCKET)
+  };
+
   private static long globalCooldown;
 
   private final Passenger passenger;
@@ -39,9 +46,13 @@ public class ProduceTrashGoal extends GoalSelector {
       return false;
     }
 
+    if (this.passenger.patiencePercentage() > PATIENCE_THRESHOLD && Math.random() > 0.2) { // mostly it should depend on the patience, but sometimes it can be randomly activated
+      return false;
+    }
+
     PassengerTask task = this.passenger.task();
     if (task != null) {
-      if (task.state() == State.WAIT_IN_QUEUE || (task.state() == State.WORK && task.procedureGroup().equals(Procedure.SEAT))) {
+      if ((task.state() == State.WAIT_IN_QUEUE || task.state() == State.JOIN_QUEUE) || (task.state() == State.WORK && task.procedureGroup().equals(Procedure.SEAT))) {
         return Math.random() > 0.6D;
       }
     }
@@ -52,9 +63,9 @@ public class ProduceTrashGoal extends GoalSelector {
   public void start() {
     this.previousItemInHand = getEntityCreature().getItemInMainHand();
 
-    getEntityCreature().setItemInMainHand(ItemStack.of(Material.COOKED_SALMON));
+    getEntityCreature().setItemInMainHand(HAND_ITEMS[(int) (Math.random() * HAND_ITEMS.length)]);
 
-    globalCooldown = System.currentTimeMillis()+TimeUnit.SECONDS.toMillis(10);
+    globalCooldown = System.currentTimeMillis()+TimeUnit.SECONDS.toMillis(8);
   }
 
   @Override

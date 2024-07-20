@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.seats;
 
+import net.minestom.server.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
@@ -14,7 +15,7 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements Animation {
   protected final SeatProcedure seat;
   protected final Passenger passenger;
-  private int animationTick;
+  protected int animationTick;
 
   public SeatSitAnimation(@NotNull SeatProcedure seat, @NotNull Passenger passenger) {
     this.seat = seat;
@@ -29,9 +30,7 @@ public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements A
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     NPCEntity passengerEntity = this.passenger.entityUnsafe();
-    if (this.animationTick <= 30 && (this.animationTick % 10) == 0) {
-      passengerEntity.lookAt(this.config.workPos().withY(y -> y+1.1));
-    }
+    lookAround(passengerEntity);
 
     if (this.animationTick++ == 200) {
       this.seat.seat.removePassenger(passengerEntity);
@@ -42,6 +41,14 @@ public class SeatSitAnimation extends AbstractAnimation<SeatConfig> implements A
       return TickResult.UNREGISTER;
     }
     return TickResult.CONTINUE;
+  }
+
+  protected void lookAround(@NotNull Entity entity) {
+    if (this.animationTick <= 30 && this.animationTick % 10 == 0) {
+      entity.lookAt(this.config.workPos().withY(y -> y+1.1));
+    } else if (this.animationTick > 100 && this.animationTick % (Math.random() * 120)+60 == 0) {
+      entity.lookAt(this.config.workPos().withY(y -> y+1.1+(Math.random() * 0.3)-0.15).withY(yaw -> yaw+(Math.random() * 30)-15));
+    }
   }
 
   @Override

@@ -14,6 +14,7 @@ import space.chunks.gamecup.dgr.Ticking;
 import space.chunks.gamecup.dgr.team.Team;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,9 +42,9 @@ public final class FixedHappyPassengersGameGoal implements GameGoal, Ticking {
 
   @Override
   public @NotNull Component bossBar(@NotNull Team team) {
-    return Component.text(team.passengersMoved()).color(NamedTextColor.YELLOW)
+    return Component.text(team.passengersMoved()).color(NamedTextColor.GREEN)
         .append(Component.text("/").color(NamedTextColor.GRAY))
-        .append(Component.text(this.happyPassengers).color(NamedTextColor.GOLD))
+        .append(Component.text(this.happyPassengers).color(NamedTextColor.DARK_GREEN))
         .append(Component.text(" Passengers").color(NamedTextColor.GRAY));
   }
 
@@ -83,14 +84,15 @@ public final class FixedHappyPassengersGameGoal implements GameGoal, Ticking {
           Boolean goalSentState = goalSentStates[i];
 
           if (goalSentState == null || !goalSentState) {
+            System.out.println("A Team has reached "+team.passengersMoved()+"/"+this.happyPassengers+" happy passengers!\nStates: " +Arrays.toString(goalSentStates) + " with " + i + "=" + alertTick);
             for (Team t : this.game.teams()) {
-              t.map().executeForMembers(member -> member.player().sendMessage(Component.text("A Team").color(TextColor.color(team.color()))
+              t.audience().sendMessage(Component.text("A Team").color(TextColor.color(team.color()))
                   .append(Component.text(" has reached ").color(NamedTextColor.GRAY)
                       .append(Component.text(team.passengersMoved()).color(NamedTextColor.YELLOW))
                       .append(Component.text("/").color(NamedTextColor.GRAY))
                       .append(Component.text(this.happyPassengers).color(NamedTextColor.GOLD))
                       .append(Component.text(" happy passengers!").color(NamedTextColor.GRAY))
-                  )));
+                  ));
             }
             goalSentStates[i] = true;
           }
