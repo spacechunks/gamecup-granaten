@@ -80,7 +80,7 @@ public final class MapModule extends AbstractGameModule {
                 "security_check_1",
                 0.9,
                 Map.ofEntries(
-                    Map.entry("success_rate", new Double[]{0.9, 0.7, 0.5})
+                    Map.entry("success_rate", new Double[]{1.1, 1.3, 1.5})
                 ),
                 null,
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
@@ -230,7 +230,7 @@ public final class MapModule extends AbstractGameModule {
                 "flight_monitor_1",
                 Destination.LEAVING,
                 new Pos(-8.0, -50.0, -10.5, -90, 0),
-                new Pos(-8.14, -48.4, -10.5, 90, 0),
+                new Pos(-8.14, -48.5, -10.5, 90, 0),
                 new Pos(-8.1, -48.6, -10.5, 90, 0)
             ),
             new FlightMonitorConfig(
@@ -272,7 +272,7 @@ public final class MapModule extends AbstractGameModule {
                 "security_check_upgrader",
                 Procedure.SECURITY_CHECK,
                 new Pos(-43.5, -55.0, -10.5, 90, 0),
-                new int[]{10, 50, 100}
+                new int[]{10, 50, 100, 200}
             ),
             new UpgraderConfig(
                 "luggage_claim_upgrader",

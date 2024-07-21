@@ -54,12 +54,13 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
     int lines = 1+FLIGHT_LINES+1;
     this.boardTextEntities = new ArrayList<>(lines);
     for (int i = 0; i < lines; i++) {
+      int j = i;
       Entity boardEntity = new Entity(EntityType.TEXT_DISPLAY);
       boardEntity.setNoGravity(true);
       boardEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
         //meta.setWidth(2F);
         //meta.setHeight(2F);
-        meta.setScale(new Vec(1.4F, 1.4F, 1.4F));
+        meta.setScale(new Vec(1.4F, 1.4F, 1.4F).mul(j == 0 ? 1.2 : 1));
         //meta.setBackgroundColor(i % 2 == 0 ? -13465176 : -15767673);
         meta.setAlignLeft(true);
         meta.setUseDefaultBackground(false);
@@ -102,8 +103,8 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
     Entity headEntity = this.boardTextEntities.getFirst();
     headEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
       meta.setText(Component.text(switch (this.config.destination()) {
-        case ARRIVING -> "Arrivals";
-        case LEAVING -> "Departures";
+        case ARRIVING -> "ARRIVALS";
+        case LEAVING -> "DEPARTURES";
       }).color(NamedTextColor.BLUE).decorate(TextDecoration.BOLD));
     });
 
