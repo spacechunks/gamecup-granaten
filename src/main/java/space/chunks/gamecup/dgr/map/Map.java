@@ -4,6 +4,7 @@ import net.minestom.server.instance.Instance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Ticking;
+import space.chunks.gamecup.dgr.launcher.profiler.SessionProfiler;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
@@ -35,6 +36,9 @@ public interface Map extends Ticking {
    */
   @NotNull
   Instance instance();
+
+  @NotNull
+  SessionProfiler profiler();
 
   void load();
 

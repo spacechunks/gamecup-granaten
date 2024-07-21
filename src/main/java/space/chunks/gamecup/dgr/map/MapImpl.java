@@ -14,6 +14,7 @@ import net.minestom.server.world.DimensionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.GameFactory;
+import space.chunks.gamecup.dgr.launcher.profiler.SessionProfiler;
 import space.chunks.gamecup.dgr.map.event.MapObjectPostRegisterEvent;
 import space.chunks.gamecup.dgr.map.event.MapObjectPreRegisterEvent;
 import space.chunks.gamecup.dgr.map.event.MapObjectUnregisterEvent;
@@ -63,6 +64,7 @@ public class MapImpl implements Map {
   private final MapObjectTypeRegistry objectTypes;
   private final Queue<MapObjectToRegister> objectAddQueue;
   private final Queue<MapObjectToUnregister> objectRemoveQueue;
+  private final SessionProfiler profiler;
 
   private int lastTroubleTick;
 
@@ -84,6 +86,8 @@ public class MapImpl implements Map {
 
     this.troubleMaker = factory.createTroubleMaker(this);
     mapObjectDefaultSetup.createDefaultObjects(this);
+
+    this.profiler = new SessionProfiler(this.instance, Duration.ofMinutes(5));
   }
 
   @Override
