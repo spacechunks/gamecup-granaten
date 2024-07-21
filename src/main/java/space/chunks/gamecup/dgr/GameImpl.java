@@ -97,6 +97,9 @@ public final class GameImpl implements Game {
   public void tick(int currentTick) {
     try {
       this.phases.tick(currentTick);
+      for (Team team : this.teams) {
+        team.tick(currentTick);
+      }
     } catch (Throwable throwable) {
       log.error("Error during game tick @ {}", currentTick, throwable);
     }

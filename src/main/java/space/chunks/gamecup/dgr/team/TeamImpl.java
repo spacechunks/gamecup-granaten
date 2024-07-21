@@ -49,6 +49,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   private final Set<Member> members;
   private final AtomicInteger money;
   private final AtomicInteger passengersMoved;
+  private final TeamReputation reputation;
   private final net.minestom.server.scoreboard.Team scoreboardTeam;
   private Map map;
 
@@ -63,6 +64,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
     this.members = new HashSet<>();
     this.money = new AtomicInteger();
     this.passengersMoved = new AtomicInteger();
+    this.reputation = new TeamReputation();
     this.goalBossBar = BossBar.bossBar(Component.text(" "), 0F, bossbarColor(), Overlay.PROGRESS);
     this.scoreboardTeam = MinecraftServer.getTeamManager().createTeam(name(), Component.empty(), (NamedTextColor) color(), Component.empty());
 
@@ -70,6 +72,11 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
     addListener(EventListener.of(AddEntityToInstanceEvent.class, this::handleInstanceEntityAdd));
     addListener(EventListener.of(RemoveEntityFromInstanceEvent.class, this::handleInstanceEntityRemove));
     addListener(EventListener.of(MapObjectUnregisterEvent.class, this::handleMapObjectUnregister));
+  }
+
+  @Override
+  public void tick(int currentTick) {
+    this.reputation.tick(currentTick);
   }
 
   private void handleMapObjectUnregister(MapObjectUnregisterEvent event) {
@@ -88,6 +95,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
 
       int moneyReward = passenger.calculateMoneyReward();
       addMoney(moneyReward);
+      this.reputation.addEntry(passenger.config().happyPassengerReputationModifier(), passenger.config().happyPassengerReputationLifetime());
 
       this.actionBarHelper.sendActionBar(audience(), this, (@NotNull TeamImpl key, @Nullable MoneyAddActionBar previousValue) -> {
         if (previousValue == null) {
@@ -101,6 +109,8 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
       });
 
       MinecraftServer.getGlobalEventHandler().call(new ForceUpdateEvent(this));
+    } else if (event.reason() == UnregisterReason.PASSENGER_LEFT_ANGRY) {
+      this.reputation.addEntry(passenger.config().angryPassengerReputationModifier(), passenger.config().angryPassengerReputationLifetime());
     }
   }
 
@@ -206,6 +216,11 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   @Override
   public void addPassengerMoved() {
     this.passengersMoved.addAndGet(1);
+  }
+
+  @Override
+  public @NotNull TeamReputation reputation() {
+    return this.reputation;
   }
 
   @Override

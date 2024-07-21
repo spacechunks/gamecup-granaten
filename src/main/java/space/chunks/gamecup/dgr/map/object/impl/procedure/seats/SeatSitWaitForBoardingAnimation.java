@@ -19,6 +19,7 @@ public class SeatSitWaitForBoardingAnimation extends SeatSitAnimation {
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     NPCEntity passengerEntity = this.passenger.entityUnsafe();
     lookAround(passengerEntity);
+    this.animationTick++;
 
     Flight flight = this.passenger.flight();
     if (Boolean.TRUE.equals(flight.isBoarding())) {

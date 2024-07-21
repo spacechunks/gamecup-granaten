@@ -80,6 +80,9 @@ public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefa
     this.sidebar.createLine(line("blank_1", 8, NumberFormat.blank()));
     this.sidebar.createLine(line("passengers_1", 7, NumberFormat.blank()));
     this.sidebar.createLine(line("passengers_2", 6, NumberFormat.blank()));
+    this.sidebar.createLine(line("blank_2", 5, NumberFormat.blank()));
+    this.sidebar.createLine(line("reputation_1", 4, NumberFormat.blank()));
+    this.sidebar.createLine(line("reputation_2", 3, NumberFormat.blank()));
   }
 
   public void updateSidebar() {
@@ -89,6 +92,9 @@ public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefa
 
     this.sidebar.updateLineContent("passengers_1", Component.text("Passengers:").color(NamedTextColor.GRAY));
     this.sidebar.updateLineContent("passengers_2", Component.text(team == null ? "/" : Integer.toString(team.passengersMoved())).color(NamedTextColor.GREEN));
+
+    this.sidebar.updateLineContent("reputation_1", Component.text("Reputation:").color(NamedTextColor.GRAY));
+    this.sidebar.updateLineContent("reputation_2", team == null ? Component.text("/") : team.reputation().getComponent());
   }
 
   @Override

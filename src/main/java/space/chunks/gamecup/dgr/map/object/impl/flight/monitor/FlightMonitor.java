@@ -60,7 +60,10 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
           .filter(flight -> flight.config().destination() == this.config.destination())
           .toList());
     }
-    flights.sort(Comparator.comparingInt(Flight::targetFinishTick));
+    flights.sort(
+        Comparator.comparingInt((Flight flight) -> Boolean.TRUE.equals(flight.isBoarding()) ? -1 : 0)
+            .thenComparingInt(Flight::targetFinishTick)
+    );
     updateDisplay(currentTick, flights);
     return TickResult.CONTINUE;
   }

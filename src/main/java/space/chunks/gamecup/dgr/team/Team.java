@@ -5,6 +5,7 @@ import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.Named;
+import space.chunks.gamecup.dgr.Ticking;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.team.member.Member;
@@ -16,7 +17,7 @@ import java.util.UUID;
 /**
  * @author Nico_ND1
  */
-public interface Team extends MapObject, Named {
+public interface Team extends MapObject, Ticking, Named {
   @NotNull
   NamedTextColor color();
 
@@ -55,6 +56,9 @@ public interface Team extends MapObject, Named {
   int passengersMoved();
 
   void addPassengerMoved();
+
+  @NotNull
+  TeamReputation reputation();
 
   @NotNull
   BossBar goalBossBar();

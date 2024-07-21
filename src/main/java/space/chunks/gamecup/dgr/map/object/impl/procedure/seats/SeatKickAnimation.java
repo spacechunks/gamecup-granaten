@@ -7,6 +7,8 @@ import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
 
 /**
@@ -67,6 +69,11 @@ public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements 
       }
       case 51 -> {
         this.sittingPassenger.entityUnsafe().teleport(this.config.workPos());
+
+        PassengerTask task = this.sittingPassenger.task();
+        if (task != null) {
+          task.state(State.JOIN_QUEUE);
+        }
       }
       case 64 -> {
         map.queueMapObjectUnregister(this);

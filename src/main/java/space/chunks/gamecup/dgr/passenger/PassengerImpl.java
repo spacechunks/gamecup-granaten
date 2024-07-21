@@ -154,7 +154,7 @@ public class PassengerImpl implements Passenger {
 
   @Override
   public int patience() {
-    return (int) Math.ceil(this.patience);
+    return (int) this.patience;
   }
 
   @Override

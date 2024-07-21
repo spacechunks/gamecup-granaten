@@ -18,6 +18,10 @@ public record PassengerConfig(
     double patienceLossPerWaitSitTick,
     double patienceLossPerWaitStandTick,
     int moneyReward,
-    int moneyPatienceReward
+    int moneyPatienceReward,
+    int happyPassengerReputationModifier,
+    int happyPassengerReputationLifetime,
+    int angryPassengerReputationModifier,
+    int angryPassengerReputationLifetime
 ) {
 }

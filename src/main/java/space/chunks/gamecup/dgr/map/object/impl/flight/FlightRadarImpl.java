@@ -124,12 +124,16 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
             config.randomLeavePosition(),
             config.destination(),
             0.75,
-            60,
-            1,
+            30,
+            0.9,
             0.1,
             0.3,
             10,
-            20
+            20,
+            1,
+            45 * 20,
+            -3,
+            75 * 20
         ));
         flight.addPassenger(passenger);
 

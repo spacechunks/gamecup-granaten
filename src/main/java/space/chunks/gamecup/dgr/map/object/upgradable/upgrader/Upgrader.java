@@ -110,7 +110,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
 
     if (currentTick % 20 == 0) {
       this.textEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
-        meta.setText(Component.text("Level: "+upgradeHolder.currentLevel()));
+        meta.setText(Component.text("Level: "+(upgradeHolder.currentLevel()+1)));
       });
     }
 

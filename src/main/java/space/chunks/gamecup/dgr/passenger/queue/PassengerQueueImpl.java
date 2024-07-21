@@ -164,7 +164,7 @@ public class PassengerQueueImpl implements PassengerQueue {
     public boolean isOccupied() {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        return this.occupant != null;
+        return this.occupant != null && this.occupant.isValid();
       } finally {
         PassengerQueueImpl.this.slotLock.unlock();
       }
@@ -174,7 +174,7 @@ public class PassengerQueueImpl implements PassengerQueue {
     public boolean tryOccupy(@NotNull Passenger passenger) {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        if (this.occupant == null) {
+        if (this.occupant == null || !this.occupant.isValid()) {
           this.occupant = passenger;
           return true;
         }

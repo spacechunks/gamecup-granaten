@@ -9,6 +9,8 @@ import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
+import java.util.stream.Collectors;
+
 
 /**
  * @author Nico_ND1
@@ -49,6 +51,32 @@ public class JoinProcedureQueueGoal extends GoalSelector {
         this.initiated = true;
       }
     }
+  }
+
+  public String s() {
+    String s = "";
+
+    PassengerTask task = this.passenger.task();
+    assert task != null;
+    Procedure procedure = task.procedure();
+    PassengerQueue passengerQueue = procedure.passengerQueue();
+    if (passengerQueue != null) {
+      WaitingSlot waitingSlot = passengerQueue.occupyNextSlot(this.passenger);
+      if (waitingSlot != null) {
+        this.passenger.setPathTo(waitingSlot.position());
+        this.initiated = true;
+        s += "initiated";
+      } else {
+        s += "no waitingslot";
+      }
+
+      s += passengerQueue.waitingSlots().stream()
+          .map(slot -> slot.isOccupied()+" : "+(slot.occupant() != null ? ""+slot.occupant().isValid()+slot.occupant().task() : "/"))
+          .collect(Collectors.joining("; "));
+    } else {
+      s += "no queue";
+    }
+    return s;
   }
 
   @Override

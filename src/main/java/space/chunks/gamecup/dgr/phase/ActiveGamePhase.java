@@ -2,6 +2,7 @@ package space.chunks.gamecup.dgr.phase;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.Player.Hand;
@@ -20,10 +21,12 @@ import space.chunks.gamecup.dgr.minestom.listener.PotionAddListener;
 import space.chunks.gamecup.dgr.minestom.listener.PotionRemoveListener;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.goal.JoinProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
 import space.chunks.gamecup.dgr.team.member.scoreboard.MemberScoreboard;
+import space.chunks.gamecup.dgr.team.member.scoreboard.MemberScoreboard.ForceUpdateEvent;
 
 import java.util.Objects;
 
@@ -74,6 +77,10 @@ public class ActiveGamePhase extends AbstractPhase {
               if (currentGoalSelector != null) {
                 player.sendMessage(Component.text("Goal selector ("+(++groupCount)+"): ").color(NamedTextColor.GRAY)
                     .append(Component.text(currentGoalSelector.getClass().getName()).color(NamedTextColor.BLUE)));
+
+                if (currentGoalSelector instanceof JoinProcedureQueueGoal o) {
+                  player.sendMessage(o.s());
+                }
               } else {
                 player.sendMessage(Component.text("Goal selector: ").color(NamedTextColor.GRAY)
                     .append(Component.text("/").color(NamedTextColor.BLUE)));
@@ -119,5 +126,11 @@ public class ActiveGamePhase extends AbstractPhase {
     }
 
     this.game.goal().tick(currentTick);
+
+    if (currentTick % 10 == 0) {
+      for (Team team : this.game.teams()) {
+        MinecraftServer.getGlobalEventHandler().call(new ForceUpdateEvent(team));
+      }
+    }
   }
 }
