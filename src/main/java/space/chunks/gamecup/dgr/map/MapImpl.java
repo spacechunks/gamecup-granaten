@@ -27,17 +27,20 @@ import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.minestom.instance.ChunkLoadingInstance;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
 
 import java.time.Duration;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 /**
@@ -55,9 +58,10 @@ public class MapImpl implements Map {
   private final Team owner;
   private final TroubleMaker troubleMaker;
 
+  private final UpgradeHolderRegistry upgradeRegistry;
   private final MapObjectRegistry objects;
   private final MapObjectTypeRegistry objectTypes;
-  private final Queue<MapObject> objectAddQueue;
+  private final Queue<MapObjectToRegister> objectAddQueue;
   private final Queue<MapObjectToUnregister> objectRemoveQueue;
 
   private int lastTroubleTick;
@@ -72,6 +76,7 @@ public class MapImpl implements Map {
       MapObjectTypeRegistry objectTypes
   ) {
     this.owner = owner;
+    this.upgradeRegistry = new UpgradeHolderRegistry();
     this.objects = factory.createMapObjectRegistry(this);
     this.objectTypes = objectTypes;
     this.objectAddQueue = new ArrayBlockingQueue<>(100);
@@ -106,11 +111,18 @@ public class MapImpl implements Map {
   }
 
   private void tickObjectOperations(int currentTick) {
-    while (!this.objectAddQueue.isEmpty()) {
-      MapObject mapObjectToAdd = this.objectAddQueue.poll();
+    Iterator<MapObjectToRegister> toRegisterIterator = this.objectAddQueue.iterator();
+    while (toRegisterIterator.hasNext()) {
+      MapObjectToRegister mapObjectToRegister = toRegisterIterator.next();
+      if (mapObjectToRegister.condition() != null && !mapObjectToRegister.condition().get()) {
+        continue;
+      }
+
+      MapObject mapObjectToAdd = mapObjectToRegister.mapObject();
       if (handlePreAdd(mapObjectToAdd) && objects().add(mapObjectToAdd)) {
         mapObjectToAdd.handleRegister(this);
         handlePostAdd(mapObjectToAdd);
+        toRegisterIterator.remove();
       }
     }
 
@@ -196,8 +208,8 @@ public class MapImpl implements Map {
   }
 
   @Override
-  public void queueMapObjectRegister(@NotNull MapObject mapObject) {
-    this.objectAddQueue.offer(mapObject);
+  public void queueMapObjectRegister(@NotNull MapObject mapObject, @Nullable Supplier<Boolean> condition) {
+    this.objectAddQueue.offer(new MapObjectToRegister(mapObject, condition));
   }
 
   @Override
@@ -206,6 +218,9 @@ public class MapImpl implements Map {
       reason = UnregisterReason.UNKNOWN;
     }
     this.objectRemoveQueue.offer(new MapObjectToUnregister(mapObject, reason));
+  }
+
+  private record MapObjectToRegister(@NotNull MapObject mapObject, @Nullable Supplier<Boolean> condition) {
   }
 
   private record MapObjectToUnregister(@NotNull MapObject mapObject, @NotNull UnregisterReason reason) {

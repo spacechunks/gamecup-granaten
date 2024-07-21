@@ -16,6 +16,7 @@ import java.util.Map;
 public record LuggageClaimConfig(
     @NotNull String name,
     @Nullable Map<String, Double[]> levelPerks,
+    @Nullable Integer minLevel,
     @NotNull Pos exitPos,
     @NotNull PassengerQueueConfig queue,
     @NotNull Pos lineStartPos,

@@ -1,6 +1,5 @@
 package space.chunks.gamecup.dgr.map.object.impl.flight;
 
-import com.google.inject.Inject;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
@@ -24,9 +22,6 @@ import java.util.List;
  */
 public class RealisticFlightRadar extends FlightRadarImpl implements FlightRadar {
   private static final String[] AIRPORT_NAMES = {"FRA", "MUC", "BER", "HAM", "DUS", "CGN", "STR", "HAJ", "NUE", "LEJ", "ZRH", "VIE", "AMS", "BRU", "LUX", "PRG", "WAW", "CPH", "GVA"};
-
-  @Inject
-  private UpgradeHolderRegistry upgradeHolderRegistry;
 
   @Override
   protected void tickFlightDeletor(int currentTick) {
@@ -75,7 +70,7 @@ public class RealisticFlightRadar extends FlightRadarImpl implements FlightRadar
       int tickDiff = this.targetFinishTick-this.startTick;
       double baseValue = (double) this.passengerGoal / (double) tickDiff;
 
-      UpgradeHolder marketingUpgradeHolder = RealisticFlightRadar.this.upgradeHolderRegistry.holder(Procedure.MARKETING);
+      UpgradeHolder marketingUpgradeHolder = RealisticFlightRadar.this.parent.upgradeRegistry().holder(Procedure.MARKETING);
       if (marketingUpgradeHolder != null) {
         double modifier = marketingUpgradeHolder.getCurrentPerkValue("spawn_speed", 1.0);
         baseValue *= modifier;

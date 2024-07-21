@@ -17,6 +17,7 @@ public record SeatConfig(
     @NotNull String name,
     @NotNull Direction direction,
     @Nullable Map<String, Double[]> levelPerks,
+    @Nullable Integer minLevel,
     @NotNull Pos workPos,
     @NotNull Pos seatPos,
     @Nullable PassengerQueueConfig queue

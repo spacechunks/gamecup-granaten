@@ -34,7 +34,6 @@ import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupConfig;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.Upgrader;
 import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
@@ -80,7 +79,10 @@ public final class MapModule extends AbstractGameModule {
             new SecurityCheckConfig(
                 "security_check_1",
                 0.9,
-                Map.of(),
+                Map.ofEntries(
+                    Map.entry("success_rate", new Double[]{0.9, 0.7, 0.5})
+                ),
+                null,
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
                 new Pos(-37.5, -56.0, -12.5, -90, 0),
                 new PassengerQueueConfig(
@@ -101,6 +103,7 @@ public final class MapModule extends AbstractGameModule {
                 "security_check_2",
                 0.9,
                 null,
+                2,
                 new Pos(-41.5, -56.0, -8.5, -90, 0),
                 new Pos(-37.5, -56.0, -8.5, -90, 0),
                 new PassengerQueueConfig(
@@ -122,6 +125,7 @@ public final class MapModule extends AbstractGameModule {
             new TicketControlConfig(
                 "ticket_control_1",
                 Map.of(),
+                null,
                 new Pos(-33.5, -56.0, -17.5, -180, 0),
                 new Pos(-32.5, -56.0, -17.5),
                 new PassengerQueueConfig(
@@ -147,6 +151,7 @@ public final class MapModule extends AbstractGameModule {
             new TicketControlConfig(
                 "ticket_control_2",
                 null,
+                2,
                 new Pos(-31.5, -56.0, -17.5, -180, 0),
                 new Pos(-30.5, -56.0, -17.5),
                 new PassengerQueueConfig(
@@ -172,6 +177,10 @@ public final class MapModule extends AbstractGameModule {
         ),
         new MarketingConfigEntry(
             "marketing",
+            Map.ofEntries(
+                Map.entry("spawn_speed", new Double[]{0.9, 0.8, 0.7})
+            ),
+            null,
             new Pos(-17.5, -56.0, -10.5, 90, 0),
             new PlayerSkin(
                 "ewogICJ0aW1lc3RhbXAiIDogMTcyMDkwODE0OTgzOCwKICAicHJvZmlsZUlkIiA6ICI0NmNhODkyZTY4ODA0YThmYjFkYzkwYjg0ZTY5ZjVmZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJPbG8xNjA2IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2QyMTI2MzZiN2JkZDk3MTcxOTdlY2EwNmM2ZmExNWY1ZGY1Mzg5YjAxMTVkZmYxZjFhYTc5NWZhM2I2Y2Y5YjciCiAgICB9CiAgfQp9",
@@ -238,6 +247,7 @@ public final class MapModule extends AbstractGameModule {
                 Map.ofEntries(
                     Map.entry("speed", new Double[]{0.8, 0.6, 0.2})
                 ),
+                null,
                 new Pos(0.5, -56.0, -7.5, 180, 0),
                 new PassengerQueueConfig(
                     null,
@@ -273,7 +283,5 @@ public final class MapModule extends AbstractGameModule {
         )
     ));
     bind(MapObjectDefaultSetup.class).to(MapObjectDefaultSetupImpl.class);
-
-    bind(UpgradeHolderRegistry.class).asEagerSingleton();
   }
 }

@@ -16,7 +16,6 @@ import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident.SolutionType;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueRegistry;
 
@@ -34,8 +33,6 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
   private GameFactory factory;
   @Inject
   protected PassengerQueueRegistry passengerQueueRegistry;
-  @Inject
-  protected UpgradeHolderRegistry upgradeHolderRegistry;
 
   protected Map parent;
   private PassengerQueue passengerQueue;
@@ -133,7 +130,7 @@ public abstract class AbstractProcedure<C extends ProcedureConfig> extends Abstr
     try {
       this.editLock.lock();
       if (this.upgradeHolder == null) {
-        this.upgradeHolder = this.upgradeHolderRegistry.holder(this, this.config);
+        this.upgradeHolder = this.parent.upgradeRegistry().holder(this, this.config);
       }
       return this.upgradeHolder;
     } finally {

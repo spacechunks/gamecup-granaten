@@ -33,6 +33,8 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
   @Inject
   private GameTickTask tickTask;
 
+  protected space.chunks.gamecup.dgr.map.Map parent;
+
   @Inject
   public FlightRadarImpl() {
     this.flights = new ArrayList<>();
@@ -54,6 +56,12 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
   @Override
   protected @NotNull Class<FlightRadarConfig> configClass() {
     return FlightRadarConfig.class;
+  }
+
+  @Override
+  public synchronized void handleRegister(space.chunks.gamecup.dgr.map.@NotNull Map parent) {
+    super.handleRegister(parent);
+    this.parent = parent;
   }
 
   @Override

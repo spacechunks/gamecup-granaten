@@ -19,7 +19,6 @@ import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.Ticking;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.team.Team;
 
 import java.util.Optional;
@@ -35,8 +34,8 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
 
   @Inject
   private Game game;
-  @Inject
-  private UpgradeHolderRegistry upgradeHolderRegistry;
+
+  private Map parent;
 
   @Inject
   public Upgrader() {
@@ -57,7 +56,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   }
 
   public @Nullable UpgradeHolder upgradeHolder() {
-    return this.upgradeHolderRegistry.holder(this.config.targetGroup());
+    return this.parent.upgradeRegistry().holder(this.config.targetGroup());
   }
 
   private void handleInteract(PlayerEntityInteractEvent event) {
@@ -136,6 +135,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   @Override
   public synchronized void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
+    this.parent = parent;
     this.entity.setInstance(parent.instance(), this.config.spawnPosition());
     this.textEntity.setInstance(parent.instance(), this.config.spawnPosition().add(0, 1, 0));
   }

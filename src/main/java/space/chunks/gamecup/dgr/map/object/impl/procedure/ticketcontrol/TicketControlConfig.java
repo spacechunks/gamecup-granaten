@@ -15,6 +15,7 @@ import java.util.Map;
 public record TicketControlConfig(
     @NotNull String name,
     @Nullable Map<String, Double[]> levelPerks,
+    @Nullable Integer minLevel,
     @NotNull Pos workPos,
     @NotNull Pos exitPos,
     @NotNull PassengerQueueConfig queue,

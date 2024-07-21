@@ -2,16 +2,16 @@ package space.chunks.gamecup.dgr.map.object.setup;
 
 import com.google.inject.Inject;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
-import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig;
-import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitorConfig;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim.LuggageClaimConfig;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.seats.SeatScannerConfig;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck.SecurityCheckConfig;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.ticketcontrol.TicketControlConfig;
+import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
-import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradableCondition;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradableConfig;
+
+import java.util.List;
 
 
 /**
@@ -29,67 +29,34 @@ public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
 
   @Override
   public void createDefaultObjects(@NotNull Map map) {
-    createSecurityChecks(map);
-    createTicketControls(map);
-    createMarketing(map);
-    createFlightRadars(map);
-    createFlightMonitors(map);
-    createLuggageClaims(map);
-    createSeatScanners(map);
-    createUpgraders(map);
+    acknowledgeList(map, Procedure.SECURITY_CHECK, this.config.securityChecks());
+    acknowledgeList(map, Procedure.TICKET_CONTROL, this.config.ticketControls());
+    acknowledge(map, Procedure.MARKETING, this.config.marketing());
+    acknowledgeList(map, "flight_radar", this.config.flightRadars());
+    acknowledgeList(map, "flight_monitor", this.config.flightMonitors());
+    acknowledgeList(map, Procedure.LUGGAGE_CLAIM, this.config.luggageClaims());
+    acknowledgeList(map, "seat_scanner", this.config.seatScanners());
+    acknowledgeList(map, "upgrader", this.config.upgraders());
   }
 
-  private void createTicketControls(@NotNull Map map) {
-    for (TicketControlConfig ticketControlConfig : this.config.ticketControls()) {
-      MapObject ticketControl = this.registry.create("ticket_control", ticketControlConfig);
-      map.queueMapObjectRegister(ticketControl);
+  private <C extends MapObjectConfigEntry> void acknowledgeList(@NotNull Map map, @NotNull String type, @NotNull List<C> configEntries) {
+    for (MapObjectConfigEntry configEntry : configEntries) {
+      acknowledge(map, type, configEntry);
     }
   }
 
-  private void createMarketing(@NotNull Map map) {
-    MapObject marketing = this.registry.create("marketing", this.config.marketing());
-    map.queueMapObjectRegister(marketing);
-  }
+  private void acknowledge(@NotNull Map map, @NotNull String type, @Nullable MapObjectConfigEntry configEntry) {
+    MapObject mapObject = this.registry.create(type, configEntry);
+    if (configEntry instanceof UpgradableConfig upgradableConfig) {
+      Integer minLevel = upgradableConfig.minLevel();
 
-  private void createSecurityChecks(@NotNull Map map) {
-    for (SecurityCheckConfig securityCheckConfig : this.config.securityChecks()) {
-      MapObject securityCheck = this.registry.create("security_check", securityCheckConfig);
-      map.queueMapObjectRegister(securityCheck);
-    }
-  }
-
-  private void createFlightRadars(@NotNull Map map) {
-    for (FlightRadarConfig flightRadar : this.config.flightRadars()) {
-      MapObject flightRadarObject = this.registry.create("flight_radar", flightRadar);
-      map.queueMapObjectRegister(flightRadarObject);
-    }
-  }
-
-  private void createFlightMonitors(@NotNull Map map) {
-    for (FlightMonitorConfig flightMonitorConfig : this.config.flightMonitors()) {
-      MapObject flightMonitor = this.registry.create("flight_monitor", flightMonitorConfig);
-      map.queueMapObjectRegister(flightMonitor);
-    }
-  }
-
-  private void createLuggageClaims(@NotNull Map map) {
-    for (LuggageClaimConfig luggageClaimConfig : this.config.luggageClaims()) {
-      MapObject luggageClaim = this.registry.create("luggage_claim", luggageClaimConfig);
-      map.queueMapObjectRegister(luggageClaim);
-    }
-  }
-
-  private void createSeatScanners(@NotNull Map map) {
-    for (SeatScannerConfig seatScanner : this.config.seatScanners()) {
-      MapObject seatScannerObject = this.registry.create("seat_scanner", seatScanner);
-      map.queueMapObjectRegister(seatScannerObject);
-    }
-  }
-
-  private void createUpgraders(Map map) {
-    for (UpgraderConfig upgraderConfig : this.config.upgraders()) {
-      MapObject seatScannerObject = this.registry.create("upgrader", upgraderConfig);
-      map.queueMapObjectRegister(seatScannerObject);
+      if (minLevel != null) {
+        map.queueMapObjectRegister(mapObject, new UpgradableCondition(map, type, minLevel));
+      } else {
+        map.queueMapObjectRegister(mapObject);
+      }
+    } else {
+      map.queueMapObjectRegister(mapObject);
     }
   }
 }

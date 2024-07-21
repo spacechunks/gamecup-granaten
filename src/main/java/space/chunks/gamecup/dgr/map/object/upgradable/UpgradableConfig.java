@@ -12,4 +12,7 @@ import java.util.Map;
 public interface UpgradableConfig extends MapObjectConfigEntry {
   @Nullable
   Map<String, Double[]> levelPerks();
+
+  @Nullable
+  Integer minLevel();
 }
