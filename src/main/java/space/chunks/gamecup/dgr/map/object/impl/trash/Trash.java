@@ -101,7 +101,7 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
   private void testSlow(@NotNull Entity entity) {
     Pos position = entity.getPosition();
     if (position.withY(0).distanceSquared(this.config.spawnPos().withY(0)) <= 1.2) {
-      entity.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 0, 70));
+      entity.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 0, 200));
     }
   }
 }
