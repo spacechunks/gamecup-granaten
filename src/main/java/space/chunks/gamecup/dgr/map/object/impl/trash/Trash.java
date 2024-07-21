@@ -92,8 +92,7 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
       testSlow(passenger.entityUnsafe());
     }
     for (Member member : map.owner().members()) {
-      //testSlow(member.player());
-      // TODO: see PotionAddListener
+      testSlow(member.player());
     }
     return TickResult.CONTINUE;
   }
