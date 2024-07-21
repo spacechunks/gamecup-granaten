@@ -12,6 +12,8 @@ import space.chunks.gamecup.dgr.passenger.Passenger;
 public record FlightMonitorConfig(
     @NotNull String name,
     @NotNull Passenger.Destination destination,
-    @NotNull Pos spawnPos
+    @NotNull Pos spawnPos,
+    @NotNull Pos boardHeaderPos,
+    @NotNull Pos boardStartPos
 ) implements MapObjectConfigEntry {
 }

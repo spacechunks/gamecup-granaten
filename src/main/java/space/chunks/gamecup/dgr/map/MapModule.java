@@ -220,12 +220,16 @@ public final class MapModule extends AbstractGameModule {
             new FlightMonitorConfig(
                 "flight_monitor_1",
                 Destination.LEAVING,
-                new Pos(-7.1, -50.0, -10.5, 90, 30)
+                new Pos(-8.0, -50.0, -10.5, -90, 0),
+                new Pos(-8.14, -48.4, -10.5, 90, 0),
+                new Pos(-8.1, -48.6, -10.5, 90, 0)
             ),
             new FlightMonitorConfig(
                 "flight_monitor_2",
                 Destination.ARRIVING,
-                new Pos(-5.9, -50.0, -10.5, -90, 30)
+                new Pos(-6.9, -50.0, -10.5, -90, 0),
+                new Pos(-6.9, -50.0, -10.5, -90, 0),
+                new Pos(-6.9, -50.0, -10.5, -90, 0)
             )
         ),
         List.of(
