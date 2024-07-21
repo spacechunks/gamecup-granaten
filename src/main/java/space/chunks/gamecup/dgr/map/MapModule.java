@@ -256,8 +256,8 @@ public final class MapModule extends AbstractGameModule {
                     List.of(),
                     SlotOccupyStrategy.RANDOM
                 ),
-                new Pos(1, -56, -4),
-                Direction.SOUTH, Direction.EAST
+                new Pos(-1, -56, 4),
+                Direction.NORTH, Direction.WEST
             )
         ),
         List.of(

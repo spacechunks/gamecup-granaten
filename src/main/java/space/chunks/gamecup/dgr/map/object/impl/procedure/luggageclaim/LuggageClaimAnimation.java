@@ -99,7 +99,7 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     luggage.step++;
 
     int neededSteps = (int) (TICKS_PER_STEP * this.luggageClaim.getCurrentPerkValue("speed", 1.0));
-    if (luggage.step == neededSteps) {
+    if (luggage.step >= neededSteps) {
       luggage.step = 0;
       luggage.currentLineEntryIndex = (luggage.currentLineEntryIndex+1) % this.luggageClaim.line().size();
 
@@ -125,7 +125,7 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
       LuggageClaimLineEntry targetEntry = this.luggageClaim.line().get(luggage.targetLineEntryIndex);
       WaitingSlot waitingSlot = targetEntry.waitingSlot();
       Passenger occupant = waitingSlot.occupant();
-      if (occupant != null) {
+      if (occupant != null && occupant.isValid()) {
         occupant.entityUnsafe().lookAt(luggage.entity);
       }
     }
