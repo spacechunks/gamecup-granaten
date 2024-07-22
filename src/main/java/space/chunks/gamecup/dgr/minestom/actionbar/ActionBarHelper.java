@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Log4j2
 public final class ActionBarHelper {
   private final Cache<Object, Object> activeBars = CacheBuilder.newBuilder()
-      .expireAfterAccess(3250L, TimeUnit.MILLISECONDS)
+      .expireAfterAccess(3000L, TimeUnit.MILLISECONDS)
       .build();
 
   public <K, V> void sendActionBar(@NotNull Audience audience, @NotNull K key, @NotNull ValueSupplier<K, V> valueSupplier, @NotNull ContentSupplier<K, V> contentSupplier) {

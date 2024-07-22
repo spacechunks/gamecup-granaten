@@ -135,6 +135,10 @@ public class PassengerImpl implements Passenger {
 
   @Override
   public boolean isValid() {
+    if (patience() == 0) {
+      return false;
+    }
+
     // just not yet registered
     if (this.npc == null) {
       return true;
