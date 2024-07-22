@@ -20,7 +20,7 @@ WORKDIR /data
 COPY --from=builder /app/build/libs/*.jar /data/server.jar
 
 # Copy all files from the template directory to the working directory
-COPY template /data
+COPY template /data/template
 
 # Set the environment variable
 ENV ONLINE_MODE=false
