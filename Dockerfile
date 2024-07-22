@@ -17,7 +17,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /data
 
 # Copy the built jar file from the builder stage
-COPY --from=builder /app/build/libs/*.jar /data/server.jar
+COPY --from=builder /build/libs/*.jar /data/server.jar
 
 # Copy all files from the template directory to the working directory
 COPY template /data/template
