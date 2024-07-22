@@ -24,8 +24,7 @@ public class PotionRemoveListener implements Consumer<EntityPotionRemoveEvent> {
 
     Potion potion = event.getPotion();
     if (potion.effect() == PotionEffect.SLOWNESS) {
-      //livingEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).removeModifier(NamespaceID.from("potions", "slowness"));
-      livingEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.2);
+      livingEntity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).removeModifier(NamespaceID.from("potions", "slowness"));
     }
   }
 }

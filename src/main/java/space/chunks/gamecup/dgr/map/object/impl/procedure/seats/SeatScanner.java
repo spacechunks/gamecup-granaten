@@ -48,7 +48,7 @@ public class SeatScanner extends AbstractMapObject<SeatScannerConfig> implements
 
           Pos workPos = new Pos(x+0.5D, y, z+0.5D).add(direction.normalX(), direction.normalY(), direction.normalZ());
           Pos seatPos = new Pos(x+0.5D, y-1.5D, z+0.5D);
-          MapObject seat = objectTypeRegistry.create("seat", new SeatConfig("seat_"+(i++), direction, null, workPos, seatPos, null));
+          MapObject seat = objectTypeRegistry.create("seat", new SeatConfig("seat_"+(i++), direction, null, null, workPos, seatPos, null));
           parent.queueMapObjectRegister(seat);
           // TODO: bind seats to Destinations
         }

@@ -12,6 +12,16 @@ public record PassengerConfig(
     @NotNull Pos spawnPosition,
     @NotNull Pos leavePosition,
     @NotNull Destination destination,
-    double baggageChance
+    double baggageChance,
+    int basePatience,
+    double patienceLossPerQueueTick,
+    double patienceLossPerWaitSitTick,
+    double patienceLossPerWaitStandTick,
+    int moneyReward,
+    int moneyPatienceReward,
+    int happyPassengerReputationModifier,
+    int happyPassengerReputationLifetime,
+    int angryPassengerReputationModifier,
+    int angryPassengerReputationLifetime
 ) {
 }

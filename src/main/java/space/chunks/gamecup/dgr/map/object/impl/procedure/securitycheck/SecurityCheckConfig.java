@@ -14,7 +14,9 @@ import java.util.Map;
  */
 public record SecurityCheckConfig(
     @NotNull String name,
+    double baseSuccessRate,
     @Nullable Map<String, Double[]> levelPerks,
+    @Nullable Integer minLevel,
     @NotNull Pos workPos,
     @NotNull Pos exitPos,
     @NotNull PassengerQueueConfig queue,

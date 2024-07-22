@@ -89,19 +89,18 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     for (Passenger passenger : map.objects().allOfType(Passenger.class)) {
-      testSlow(passenger.entityUnsafe());
+      testSlow(passenger.entityUnsafe(), 1.2, 200);
     }
     for (Member member : map.owner().members()) {
-      //testSlow(member.player());
-      // TODO: see PotionAddListener
+      testSlow(member.player(), 0.4, 80);
     }
     return TickResult.CONTINUE;
   }
 
-  private void testSlow(@NotNull Entity entity) {
+  private void testSlow(@NotNull Entity entity, double range, int duration) {
     Pos position = entity.getPosition();
-    if (position.withY(0).distanceSquared(this.config.spawnPos().withY(0)) <= 1.2) {
-      entity.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 0, 70));
+    if (position.withY(0).distanceSquared(this.config.spawnPos().withY(0)) <= range) {
+      entity.addEffect(new Potion(PotionEffect.SLOWNESS, (byte) 0, duration));
     }
   }
 }

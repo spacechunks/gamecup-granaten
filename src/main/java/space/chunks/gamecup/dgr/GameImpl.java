@@ -29,13 +29,15 @@ import java.util.Set;
 @Accessors(fluent=true)
 @Log4j2
 public final class GameImpl implements Game {
+  private final GameTickTask tickTask;
   private final GameGoal goal;
   private final PhaseHandler phases;
   private final List<Map> maps;
   private final List<Team> teams;
 
   @Inject
-  public GameImpl(@NotNull PhaseHandler phases, @NotNull GameConfig config, @NotNull GameFactory factory, @NotNull Provider<Team> teamProvider) {
+  public GameImpl(@NotNull GameTickTask tickTask, @NotNull PhaseHandler phases, @NotNull GameConfig config, @NotNull GameFactory factory, @NotNull Provider<Team> teamProvider) {
+    this.tickTask = tickTask;
     this.goal = new FixedHappyPassengersGameGoal(this, 500, new int[]{100, 200, 300, 400, 450});
     this.phases = phases;
 
@@ -72,6 +74,7 @@ public final class GameImpl implements Game {
     log.info("Launching game, entering waiting phase");
 
     this.phases.enterPhase(WaitingPhase.class);
+    MinecraftServer.getSchedulerManager().scheduleTask(this.tickTask, TaskSchedule.tick(1), TaskSchedule.tick(1));
   }
 
   @Override
@@ -80,12 +83,6 @@ public final class GameImpl implements Game {
     for (Map map : maps()) {
       map.executeForMembers(member -> member.player().sendMessage("Game ended! Winner: "+winnerTeam+". Reason: "+reason));
     }
-  }
-
-  @Inject
-  public void registerTickTask(@NotNull GameTickTask task) {
-    MinecraftServer.getSchedulerManager().scheduleTask(task, TaskSchedule.seconds(5), TaskSchedule.tick(1));
-    log.info("Scheduled tick task");
   }
 
   @Inject
@@ -98,6 +95,13 @@ public final class GameImpl implements Game {
 
   @Override
   public void tick(int currentTick) {
-    this.phases.tick(currentTick);
+    try {
+      this.phases.tick(currentTick);
+      for (Team team : this.teams) {
+        team.tick(currentTick);
+      }
+    } catch (Throwable throwable) {
+      log.error("Error during game tick @ {}", currentTick, throwable);
+    }
   }
 }

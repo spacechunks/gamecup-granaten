@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
+import net.minestom.server.event.player.PlayerDisconnectEvent;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.timer.TaskSchedule;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,12 @@ public class WaitingPhase extends AbstractPhase {
       if (this.startTicks == 0) {
         this.startTicks = 16;
       }
+    }));
+
+    addListener(EventListener.of(PlayerDisconnectEvent.class, event -> {
+      this.game.findTeam(event.getPlayer()).ifPresent(team -> {
+        team.removeMember(event.getPlayer().getUuid());
+      });
     }));
   }
 

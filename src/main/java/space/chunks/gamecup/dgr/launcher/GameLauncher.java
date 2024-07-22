@@ -6,6 +6,8 @@ import net.minestom.server.MinecraftServer;
 import net.minestom.server.extras.MojangAuth;
 import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.GameModule;
+import space.chunks.gamecup.dgr.launcher.profiler.ApplicationProfiler;
+import space.chunks.gamecup.dgr.launcher.profiler.ProfilerModule;
 
 
 /**
@@ -16,8 +18,12 @@ public final class GameLauncher {
     launchServer();
 
     Injector injector = Guice.createInjector(
-        new GameModule()
+        new GameModule(),
+        new ProfilerModule()
     );
+
+    ApplicationProfiler applicationProfiler = injector.getInstance(ApplicationProfiler.class);
+    applicationProfiler.register();
 
     Game game = injector.getInstance(Game.class);
     game.launch();

@@ -84,7 +84,7 @@ public class TicketControlAnimation extends AbstractAnimation<TicketControlConfi
   }
 
   private void throwTicket(@NotNull Map map, @NotNull Pos startPos) {
-    this.itemEntity = new ItemEntity(ItemStack.of(Material.PAPER));
+    this.itemEntity = new ItemEntity(ItemStack.of(Material.FILLED_MAP));
     this.itemEntity.setPickable(false);
     this.itemEntity.setInstance(map.instance(), startPos.withY(y -> y+1.5));
 

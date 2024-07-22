@@ -28,9 +28,9 @@ public final class PassengerTaskBuilder {
   private void createTasksForLeaving(Queue<PassengerTask> tasks, Passenger passenger) {
     tasks.add(new PassengerTask(passenger, Procedure.SECURITY_CHECK));
     tasks.add(new PassengerTask(passenger, Procedure.TICKET_CONTROL));
-    if (Math.random() > 0.62322135325421D) {
+    //if (Math.random() > 0.62322135325421D) {
       tasks.add(new PassengerTask(passenger, Procedure.SEAT));
-    }
+    //}
   }
 
   // Baggage Claim (optional)

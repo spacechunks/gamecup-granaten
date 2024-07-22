@@ -1,9 +1,11 @@
 package space.chunks.gamecup.dgr.team;
 
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
-import net.kyori.adventure.util.RGBLike;
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.Named;
+import space.chunks.gamecup.dgr.Ticking;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.team.member.Member;
@@ -15,9 +17,12 @@ import java.util.UUID;
 /**
  * @author Nico_ND1
  */
-public interface Team extends MapObject, Named {
+public interface Team extends MapObject, Ticking, Named {
   @NotNull
-  RGBLike color();
+  NamedTextColor color();
+
+  @NotNull
+  net.minestom.server.scoreboard.Team scoreboardTeam();
 
   /**
    * Returns the map for this team.
@@ -37,6 +42,9 @@ public interface Team extends MapObject, Named {
 
   void removeMember(@NotNull UUID uuid);
 
+  @NotNull
+  Audience audience();
+
   int money();
 
   void addMoney(int money);
@@ -48,6 +56,9 @@ public interface Team extends MapObject, Named {
   int passengersMoved();
 
   void addPassengerMoved();
+
+  @NotNull
+  TeamReputation reputation();
 
   @NotNull
   BossBar goalBossBar();

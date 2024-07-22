@@ -13,6 +13,7 @@ import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
 import java.util.ArrayList;
@@ -58,7 +59,8 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
       }
 
       Luggage luggage = lineEntry.luggage();
-      if (luggage == null && occupant.task().state() == State.WAIT_IN_QUEUE && Math.random() > 0.25D) {
+      PassengerTask task = occupant.task();
+      if (luggage == null && task != null && task.state() == State.WAIT_IN_QUEUE && Math.random() > 0.25D) {
         ItemStack item = occupant.baggage();
         if (item == null) {
           item = PassengerImpl.BAGGAGE_ITEMS[(int) (Math.random() * PassengerImpl.BAGGAGE_ITEMS.length)];
@@ -86,7 +88,10 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     occupant.entityUnsafe().swingMainHand();
     luggage.remove();
 
-    occupant.task().state(State.PROCEED);
+    PassengerTask task = occupant.task();
+    if (task != null) {
+      task.state(State.PROCEED);
+    }
     waitingSlot.free();
   }
 
@@ -94,7 +99,7 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     luggage.step++;
 
     int neededSteps = (int) (TICKS_PER_STEP * this.luggageClaim.getCurrentPerkValue("speed", 1.0));
-    if (luggage.step == neededSteps) {
+    if (luggage.step >= neededSteps) {
       luggage.step = 0;
       luggage.currentLineEntryIndex = (luggage.currentLineEntryIndex+1) % this.luggageClaim.line().size();
 
@@ -120,7 +125,7 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
       LuggageClaimLineEntry targetEntry = this.luggageClaim.line().get(luggage.targetLineEntryIndex);
       WaitingSlot waitingSlot = targetEntry.waitingSlot();
       Passenger occupant = waitingSlot.occupant();
-      if (occupant != null) {
+      if (occupant != null && occupant.isValid()) {
         occupant.entityUnsafe().lookAt(luggage.entity);
       }
     }

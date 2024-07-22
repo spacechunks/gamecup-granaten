@@ -1,12 +1,13 @@
 package space.chunks.gamecup.dgr.team;
 
 import com.google.inject.Inject;
+import lombok.AllArgsConstructor;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.bossbar.BossBar;
 import net.kyori.adventure.bossbar.BossBar.Color;
 import net.kyori.adventure.bossbar.BossBar.Overlay;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import net.kyori.adventure.util.RGBLike;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
@@ -21,12 +22,14 @@ import space.chunks.gamecup.dgr.map.event.MapObjectUnregisterEvent;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
+import space.chunks.gamecup.dgr.minestom.actionbar.ActionBarHelper;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.team.member.Member;
 import space.chunks.gamecup.dgr.team.member.scoreboard.MemberScoreboard.ForceUpdateEvent;
 
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -36,33 +39,44 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Nico_ND1
  */
 public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> implements Team {
-  private static final RGBLike[] COLORS = new RGBLike[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW};
+  private static final NamedTextColor[] COLORS = new NamedTextColor[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW};
   private static final AtomicInteger ID_COUNT = new AtomicInteger();
 
   private final Game game;
+  private final ActionBarHelper actionBarHelper;
   private final int id;
   private final String name;
   private final Set<Member> members;
   private final AtomicInteger money;
   private final AtomicInteger passengersMoved;
+  private final TeamReputation reputation;
+  private final net.minestom.server.scoreboard.Team scoreboardTeam;
   private Map map;
 
   private final BossBar goalBossBar;
 
   @Inject
-  public TeamImpl(@NotNull Game game) {
+  public TeamImpl(@NotNull Game game, @NotNull ActionBarHelper actionBarHelper) {
     this.game = game;
+    this.actionBarHelper = actionBarHelper;
     this.id = ID_COUNT.get();
     this.name = "Team#"+this.id;
     this.members = new HashSet<>();
     this.money = new AtomicInteger();
     this.passengersMoved = new AtomicInteger();
+    this.reputation = new TeamReputation();
     this.goalBossBar = BossBar.bossBar(Component.text(" "), 0F, bossbarColor(), Overlay.PROGRESS);
+    this.scoreboardTeam = MinecraftServer.getTeamManager().createTeam(name(), Component.empty(), (NamedTextColor) color(), Component.empty());
 
     addListener(EventListener.of(ForceUpdateEvent.class, this::handleBossbarUpdate));
     addListener(EventListener.of(AddEntityToInstanceEvent.class, this::handleInstanceEntityAdd));
     addListener(EventListener.of(RemoveEntityFromInstanceEvent.class, this::handleInstanceEntityRemove));
     addListener(EventListener.of(MapObjectUnregisterEvent.class, this::handleMapObjectUnregister));
+  }
+
+  @Override
+  public void tick(int currentTick) {
+    this.reputation.tick(currentTick);
   }
 
   private void handleMapObjectUnregister(MapObjectUnregisterEvent event) {
@@ -78,20 +92,36 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
 
     if (event.reason() == UnregisterReason.PASSENGER_LEFT_HAPPY) {
       addPassengerMoved();
-      addMoney(10); // TODO: maybe give money depending on patience. Base value could be 10 and depending on how much patience they lost it will go up until it's doubled
+
+      int moneyReward = passenger.calculateMoneyReward();
+      addMoney(moneyReward);
+      this.reputation.addEntry(passenger.config().happyPassengerReputationModifier(), passenger.config().happyPassengerReputationLifetime());
+
+      this.actionBarHelper.sendActionBar(audience(), this, (@NotNull TeamImpl key, @Nullable MoneyAddActionBar previousValue) -> {
+        if (previousValue == null) {
+          return new MoneyAddActionBar(1, moneyReward);
+        }
+        return previousValue.add(moneyReward);
+      }, (key, value) -> {
+        return Component.text("+ "+value.passengers).color(NamedTextColor.GREEN)
+            .append(Component.text(" | ").color(NamedTextColor.DARK_GRAY))
+            .append(Component.text("+ "+value.money, NamedTextColor.GOLD));
+      });
 
       MinecraftServer.getGlobalEventHandler().call(new ForceUpdateEvent(this));
+    } else if (event.reason() == UnregisterReason.PASSENGER_LEFT_ANGRY) {
+      this.reputation.addEntry(passenger.config().angryPassengerReputationModifier(), passenger.config().angryPassengerReputationLifetime());
     }
   }
 
   private void handleInstanceEntityRemove(RemoveEntityFromInstanceEvent event) {
-    if (event.getEntity() instanceof Player player) {
+    if (event.getEntity() instanceof Player player && event.getInstance() == this.map.instance()) {
       this.goalBossBar.removeViewer(player);
     }
   }
 
   private void handleInstanceEntityAdd(AddEntityToInstanceEvent event) {
-    if (event.getEntity() instanceof Player player) {
+    if (event.getEntity() instanceof Player player && event.getInstance() == this.map.instance()) {
       this.goalBossBar.addViewer(player);
     }
   }
@@ -107,8 +137,14 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   @Override
-  public @NotNull RGBLike color() {
+  public @NotNull NamedTextColor color() {
     return COLORS[this.id];
+  }
+
+  @NotNull
+  @Override
+  public net.minestom.server.scoreboard.Team scoreboardTeam() {
+    return this.scoreboardTeam;
   }
 
   @Override
@@ -133,11 +169,23 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   @Override
   public void addMember(@NotNull Member member) {
     this.members.add(member);
+    this.scoreboardTeam.addMember(member.player().getUsername());
   }
 
   @Override
   public void removeMember(@NotNull UUID uuid) {
-    this.members.removeIf(member -> member.uuid().equals(uuid));
+    this.members.removeIf(member -> {
+      if (member.uuid().equals(uuid)) {
+        this.scoreboardTeam.removeMember(member.player().getUsername());
+        return true;
+      }
+      return false;
+    });
+  }
+
+  @Override
+  public @NotNull Audience audience() {
+    return Audience.audience(this.members.stream().map(Member::player).toList());
   }
 
   @Override
@@ -171,6 +219,11 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   @Override
+  public @NotNull TeamReputation reputation() {
+    return this.reputation;
+  }
+
+  @Override
   public @NotNull BossBar goalBossBar() {
     return this.goalBossBar;
   }
@@ -198,6 +251,35 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
       GameGoal goal = this.game.goal();
       this.goalBossBar.name(goal.bossBar(this));
       this.goalBossBar.progress((float) goal.progress(this));
+    }
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    TeamImpl team = (TeamImpl) o;
+    return id == team.id;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(id);
+  }
+
+  @AllArgsConstructor
+  private class MoneyAddActionBar {
+    private int passengers;
+    private int money;
+
+    private @NotNull MoneyAddActionBar add(int add) {
+      this.money += add;
+      this.passengers++;
+      return this;
     }
   }
 }

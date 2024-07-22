@@ -51,6 +51,7 @@ public interface Procedure extends MapObject, Upgradable, StateAware, Named, Gro
     return true;
   }
 
+  String MARKETING = "marketing";
   String SECURITY_CHECK = "security_check";
   String TICKET_CONTROL = "ticket_control";
   String LUGGAGE_CLAIM = "luggage_claim";

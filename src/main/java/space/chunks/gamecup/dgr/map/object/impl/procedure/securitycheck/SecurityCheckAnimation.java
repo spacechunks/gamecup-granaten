@@ -38,7 +38,7 @@ public class SecurityCheckAnimation extends AbstractAnimation<SecurityCheckConfi
       case 30 -> {
       }
       case 35 -> {
-        if (Math.random() > 0.92D) {
+        if (Math.random() > this.securityCheck.config().baseSuccessRate() * this.securityCheck.getCurrentPerkValue("success_rate", 1.0D)) {
           Incident incident = (Incident) map.objectTypes().create("security_check_failed_incident");
           incident.bind(this.securityCheck);
           map.queueMapObjectRegister(incident);

@@ -1,7 +1,9 @@
 package space.chunks.gamecup.dgr.map.object.impl.flight;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
+import space.chunks.gamecup.dgr.passenger.Passenger;
 
 
 /**
@@ -24,6 +26,11 @@ public class FlightImpl implements Flight {
   }
 
   @Override
+  public @Nullable String airportName() {
+    return null;
+  }
+
+  @Override
   public @NotNull DestinationConfig config() {
     return this.config;
   }
@@ -34,12 +41,17 @@ public class FlightImpl implements Flight {
   }
 
   @Override
+  public int spawnedPassengers() {
+    return 0;
+  }
+
+  @Override
   public int currentPassengers() {
     return this.currentPassengers;
   }
 
   @Override
-  public void newPassenger() {
+  public void addPassenger(@NotNull Passenger passenger) {
     this.currentPassengers++;
   }
 
@@ -71,5 +83,15 @@ public class FlightImpl implements Flight {
     }
     this.currentPassengers += passengers;
     return passengers;
+  }
+
+  @Override
+  public double progress() {
+    return (double) this.currentPassengers / this.passengerGoal;
+  }
+
+  @Override
+  public Boolean isBoarding() {
+    return null;
   }
 }

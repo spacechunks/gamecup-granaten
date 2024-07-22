@@ -4,13 +4,16 @@ import net.minestom.server.instance.Instance;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.Ticking;
+import space.chunks.gamecup.dgr.launcher.profiler.SessionProfiler;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
 
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 
 /**
@@ -34,7 +37,13 @@ public interface Map extends Ticking {
   @NotNull
   Instance instance();
 
+  @NotNull
+  SessionProfiler profiler();
+
   void load();
+
+  @NotNull
+  UpgradeHolderRegistry upgradeRegistry();
 
   @NotNull
   MapObjectRegistry objects();
@@ -47,7 +56,11 @@ public interface Map extends Ticking {
    *
    * @param mapObject Map object to queue
    */
-  void queueMapObjectRegister(@NotNull MapObject mapObject);
+  default void queueMapObjectRegister(@NotNull MapObject mapObject) {
+    queueMapObjectRegister(mapObject, null);
+  }
+
+  void queueMapObjectRegister(@NotNull MapObject mapObject, @Nullable Supplier<Boolean> condition);
 
   /**
    * Adds the given {@code mapObject} to a queue to be unregistered in the next tick.

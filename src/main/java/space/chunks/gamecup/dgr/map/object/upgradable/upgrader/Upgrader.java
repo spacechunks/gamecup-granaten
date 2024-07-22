@@ -19,7 +19,6 @@ import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.Ticking;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.team.Team;
 
 import java.util.Optional;
@@ -35,8 +34,8 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
 
   @Inject
   private Game game;
-  @Inject
-  private UpgradeHolderRegistry upgradeHolderRegistry;
+
+  private Map parent;
 
   @Inject
   public Upgrader() {
@@ -57,7 +56,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   }
 
   public @Nullable UpgradeHolder upgradeHolder() {
-    return this.upgradeHolderRegistry.holder(this.config.targetGroup());
+    return this.parent.upgradeRegistry().holder(this.config.targetGroup());
   }
 
   private void handleInteract(PlayerEntityInteractEvent event) {
@@ -89,6 +88,8 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
           if (upgrade) {
             team.forceRemoveMoney(cost);
             event.getPlayer().sendMessage("Upgraded: "+upgrade);
+
+            tick(team.map(), 0);
           }
         } else {
           event.getPlayer().sendMessage("Not enough money!");
@@ -108,7 +109,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
 
     if (currentTick % 20 == 0) {
       this.textEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
-        meta.setText(Component.text("Level: "+upgradeHolder.currentLevel()));
+        meta.setText(Component.text("Level: "+(upgradeHolder.currentLevel()+1)));
       });
     }
 
@@ -134,6 +135,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   @Override
   public synchronized void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
+    this.parent = parent;
     this.entity.setInstance(parent.instance(), this.config.spawnPosition());
     this.textEntity.setInstance(parent.instance(), this.config.spawnPosition().add(0, 1, 0));
   }
@@ -151,6 +153,12 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   }
 
   public int getCost(int level) {
-    return this.config.costs()[level];
+    if (level == 0) {
+      return 0;
+    }
+    if (level > this.config.costs().length) {
+      return this.config.costs()[this.config.costs().length-1];
+    }
+    return this.config.costs()[level-1];
   }
 }

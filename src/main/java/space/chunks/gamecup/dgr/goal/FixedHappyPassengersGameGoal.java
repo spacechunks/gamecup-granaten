@@ -14,6 +14,7 @@ import space.chunks.gamecup.dgr.Ticking;
 import space.chunks.gamecup.dgr.team.Team;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,9 +42,9 @@ public final class FixedHappyPassengersGameGoal implements GameGoal, Ticking {
 
   @Override
   public @NotNull Component bossBar(@NotNull Team team) {
-    return Component.text(team.passengersMoved()).color(NamedTextColor.YELLOW)
+    return Component.text(team.passengersMoved()).color(NamedTextColor.GREEN)
         .append(Component.text("/").color(NamedTextColor.GRAY))
-        .append(Component.text(this.happyPassengers).color(NamedTextColor.GOLD))
+        .append(Component.text(this.happyPassengers).color(NamedTextColor.DARK_GREEN))
         .append(Component.text(" Passengers").color(NamedTextColor.GRAY));
   }
 
@@ -65,7 +66,7 @@ public final class FixedHappyPassengersGameGoal implements GameGoal, Ticking {
 
   @Override
   public double progress(@NotNull Team team) {
-    return (double) team.passengersMoved() / this.happyPassengers;
+    return Math.min((double) team.passengersMoved() / this.happyPassengers, 1.0D);
   }
 
   @Override
@@ -77,23 +78,23 @@ public final class FixedHappyPassengersGameGoal implements GameGoal, Ticking {
       }
 
       Boolean[] goalSentStates = this.alertTicksSentPerMap.computeIfAbsent(team, t -> new Boolean[this.alertTicks.length]);
-
-      int goalDiff = this.happyPassengers-team.passengersMoved();
-
       for (int i = 0; i < this.alertTicks.length; i++) {
         int alertTick = this.alertTicks[i];
-        if (alertTick == goalDiff) {
+        if (alertTick == team.passengersMoved()) {
           Boolean goalSentState = goalSentStates[i];
 
           if (goalSentState == null || !goalSentState) {
-            team.map().executeForMembers(member -> Component.text("A Team").color(TextColor.color(team.color()))
-                .append(Component.text(" has reached ").color(NamedTextColor.GRAY)
-                    .append(Component.text(team.passengersMoved()).color(NamedTextColor.YELLOW))
-                    .append(Component.text("/").color(NamedTextColor.GRAY))
-                    .append(Component.text(this.happyPassengers).color(NamedTextColor.GOLD))
-                    .append(Component.text(" happy passengers!").color(NamedTextColor.GRAY))
-                ));
-            goalSentStates[alertTick] = true;
+            System.out.println("A Team has reached "+team.passengersMoved()+"/"+this.happyPassengers+" happy passengers!\nStates: " +Arrays.toString(goalSentStates) + " with " + i + "=" + alertTick);
+            for (Team t : this.game.teams()) {
+              t.audience().sendMessage(Component.text("A Team").color(TextColor.color(team.color()))
+                  .append(Component.text(" has reached ").color(NamedTextColor.GRAY)
+                      .append(Component.text(team.passengersMoved()).color(NamedTextColor.YELLOW))
+                      .append(Component.text("/").color(NamedTextColor.GRAY))
+                      .append(Component.text(this.happyPassengers).color(NamedTextColor.GOLD))
+                      .append(Component.text(" happy passengers!").color(NamedTextColor.GRAY))
+                  ));
+            }
+            goalSentStates[i] = true;
           }
         }
       }

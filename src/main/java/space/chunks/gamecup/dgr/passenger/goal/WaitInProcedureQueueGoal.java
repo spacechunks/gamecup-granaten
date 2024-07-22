@@ -18,7 +18,6 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
   private final Passenger passenger;
   private WaitingSlot waitingSlot;
   private boolean firstTickDone; // we skip the randomizer in the first tick, to prevent standing still
-  private int animationTick;
 
   public WaitInProcedureQueueGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -34,20 +33,18 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
   @Override
   public void start() {
     PassengerTask task = this.passenger.task();
-    assert task != null;
-    Procedure procedure = task.procedure();
-    PassengerQueue passengerQueue = procedure.passengerQueue();
-    this.waitingSlot = passengerQueue.findWaitingSlot(this.passenger);
+    if (task != null) {
+      Procedure procedure = task.procedure();
+      PassengerQueue passengerQueue = procedure.passengerQueue();
+      assert passengerQueue != null;
+      this.waitingSlot = passengerQueue.findWaitingSlot(this.passenger).orElseThrow(() -> new IllegalStateException("No waiting slot found for passenger"));
+    }
 
     this.firstTickDone = false;
   }
 
   @Override
   public void tick(long l) {
-    this.animationTick++;
-    if (this.animationTick % 20 == 0) {
-      this.passenger.losePatience();
-    }
   }
 
   @Override
@@ -95,6 +92,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
 
   @Override
   public void end() {
-
+    this.firstTickDone = false;
+    this.waitingSlot = null;
   }
 }

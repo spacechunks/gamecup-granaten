@@ -10,7 +10,7 @@ import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.impl.TestMapObject;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
-import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarImpl;
+import space.chunks.gamecup.dgr.map.object.impl.flight.RealisticFlightRadar;
 import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitor;
 import space.chunks.gamecup.dgr.map.object.impl.flight.monitor.FlightMonitorConfig;
 import space.chunks.gamecup.dgr.map.object.impl.marketing.Marketing;
@@ -34,7 +34,6 @@ import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupConfig;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.Upgrader;
 import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
@@ -66,10 +65,10 @@ public final class MapModule extends AbstractGameModule {
     mapObjectTypeBinder.addBinding("security_check_failed_incident").to(SecurityCheckFailedIncident.class);
     mapObjectTypeBinder.addBinding(Procedure.TICKET_CONTROL).to(TicketControlProcedure.class);
     mapObjectTypeBinder.addBinding(Procedure.PASS_CONTROL).to(PassControlProcedure.class);
-    mapObjectTypeBinder.addBinding("flight_radar").to(FlightRadarImpl.class);
+    mapObjectTypeBinder.addBinding("flight_radar").to(RealisticFlightRadar.class);
     mapObjectTypeBinder.addBinding("flight_monitor").to(FlightMonitor.class);
     mapObjectTypeBinder.addBinding(Procedure.LUGGAGE_CLAIM).to(LuggageClaimProcedure.class);
-    mapObjectTypeBinder.addBinding("marketing").to(Marketing.class);
+    mapObjectTypeBinder.addBinding(Procedure.MARKETING).to(Marketing.class);
     mapObjectTypeBinder.addBinding("seat").to(SeatProcedure.class);
     mapObjectTypeBinder.addBinding("seat_scanner").to(SeatScanner.class);
     mapObjectTypeBinder.addBinding("trash").to(Trash.class);
@@ -79,7 +78,11 @@ public final class MapModule extends AbstractGameModule {
         List.of(
             new SecurityCheckConfig(
                 "security_check_1",
-                Map.of(),
+                0.9,
+                Map.ofEntries(
+                    Map.entry("success_rate", new Double[]{1.1, 1.3, 1.5})
+                ),
+                null,
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
                 new Pos(-37.5, -56.0, -12.5, -90, 0),
                 new PassengerQueueConfig(
@@ -98,7 +101,9 @@ public final class MapModule extends AbstractGameModule {
             ),
             new SecurityCheckConfig(
                 "security_check_2",
+                0.9,
                 null,
+                2,
                 new Pos(-41.5, -56.0, -8.5, -90, 0),
                 new Pos(-37.5, -56.0, -8.5, -90, 0),
                 new PassengerQueueConfig(
@@ -120,6 +125,7 @@ public final class MapModule extends AbstractGameModule {
             new TicketControlConfig(
                 "ticket_control_1",
                 Map.of(),
+                null,
                 new Pos(-33.5, -56.0, -17.5, -180, 0),
                 new Pos(-32.5, -56.0, -17.5),
                 new PassengerQueueConfig(
@@ -145,6 +151,7 @@ public final class MapModule extends AbstractGameModule {
             new TicketControlConfig(
                 "ticket_control_2",
                 null,
+                2,
                 new Pos(-31.5, -56.0, -17.5, -180, 0),
                 new Pos(-30.5, -56.0, -17.5),
                 new PassengerQueueConfig(
@@ -170,6 +177,10 @@ public final class MapModule extends AbstractGameModule {
         ),
         new MarketingConfigEntry(
             "marketing",
+            Map.ofEntries(
+                Map.entry("spawn_speed", new Double[]{0.9, 0.8, 0.7})
+            ),
+            null,
             new Pos(-17.5, -56.0, -10.5, 90, 0),
             new PlayerSkin(
                 "ewogICJ0aW1lc3RhbXAiIDogMTcyMDkwODE0OTgzOCwKICAicHJvZmlsZUlkIiA6ICI0NmNhODkyZTY4ODA0YThmYjFkYzkwYjg0ZTY5ZjVmZSIsCiAgInByb2ZpbGVOYW1lIiA6ICJPbG8xNjA2IiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2QyMTI2MzZiN2JkZDk3MTcxOTdlY2EwNmM2ZmExNWY1ZGY1Mzg5YjAxMTVkZmYxZjFhYTc5NWZhM2I2Y2Y5YjciCiAgICB9CiAgfQp9",
@@ -184,9 +195,9 @@ public final class MapModule extends AbstractGameModule {
                     new DestinationConfig(
                         Destination.LEAVING,
                         3,
-                        2, 5,
-                        20 * 5,
-                        20 * 20,
+                        5, 7,
+                        20 * 30,
+                        20 * 25,
                         new Pos[]{
                             new Pos(-48.5, -56.0, -8.5, -90, 0), new Pos(-48.5, -56.0, -7.5, -90, 0),
                             new Pos(-48.5, -56.0, -13.5, -90, 0), new Pos(-48.5, -56.0, -12.5, -90, 0)
@@ -217,7 +228,17 @@ public final class MapModule extends AbstractGameModule {
         List.of(
             new FlightMonitorConfig(
                 "flight_monitor_1",
-                new Pos(-7.1, -48.0, -10.5, 90, 30)
+                Destination.LEAVING,
+                new Pos(-8.0, -50.0, -10.5, -90, 0),
+                new Pos(-8.14, -48.5, -10.5, 90, 0),
+                new Pos(-8.1, -48.6, -10.5, 90, 0)
+            ),
+            new FlightMonitorConfig(
+                "flight_monitor_2",
+                Destination.ARRIVING,
+                new Pos(-6.9, -50.0, -10.5, -90, 0),
+                new Pos(-6.9, -50.0, -10.5, -90, 0),
+                new Pos(-6.9, -50.0, -10.5, -90, 0)
             )
         ),
         List.of(
@@ -226,6 +247,7 @@ public final class MapModule extends AbstractGameModule {
                 Map.ofEntries(
                     Map.entry("speed", new Double[]{0.8, 0.6, 0.2})
                 ),
+                null,
                 new Pos(0.5, -56.0, -7.5, 180, 0),
                 new PassengerQueueConfig(
                     null,
@@ -234,8 +256,8 @@ public final class MapModule extends AbstractGameModule {
                     List.of(),
                     SlotOccupyStrategy.RANDOM
                 ),
-                new Pos(1, -56, -4),
-                Direction.SOUTH, Direction.EAST
+                new Pos(-1, -56, 4),
+                Direction.NORTH, Direction.WEST
             )
         ),
         List.of(
@@ -250,7 +272,7 @@ public final class MapModule extends AbstractGameModule {
                 "security_check_upgrader",
                 Procedure.SECURITY_CHECK,
                 new Pos(-43.5, -55.0, -10.5, 90, 0),
-                new int[]{10, 50, 100}
+                new int[]{10, 50, 100, 200}
             ),
             new UpgraderConfig(
                 "luggage_claim_upgrader",
@@ -261,7 +283,5 @@ public final class MapModule extends AbstractGameModule {
         )
     ));
     bind(MapObjectDefaultSetup.class).to(MapObjectDefaultSetupImpl.class);
-
-    bind(UpgradeHolderRegistry.class).asEagerSingleton();
   }
 }

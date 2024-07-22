@@ -61,5 +61,7 @@ public class WorkGoal extends GoalSelector {
     PassengerTask task = this.passenger.task();
     assert task != null;
     task.state(PassengerTask.State.PROCEED);
+
+    this.workAnimationId = null;
   }
 }
