@@ -35,6 +35,6 @@ tasks.named("shadowJar", ShadowJar::class) {
     mergeServiceFiles()
     archiveFileName.set("${project.name}.jar")
     manifest {
-        attributes["Main-Class"] = "space.chunks.gamecup.template.minestom.GameCupExampleMinestomServer"
+        attributes["Main-Class"] = "space.chunks.gamecup.dgr.launcher.GameLauncher"
     }
 }
