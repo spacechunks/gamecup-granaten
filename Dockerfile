@@ -8,7 +8,7 @@ WORKDIR /data
 COPY . .
 
 # Run the Gradle build command
-RUN gradle build
+RUN gradle shadowJar
 
 # Use a new, smaller image for the runtime with JDK 21
 FROM openjdk:21-jdk-slim
