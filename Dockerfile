@@ -18,6 +18,8 @@ WORKDIR /data
 # Copy the built jar file from the builder stage
 COPY --from=builder /home/gradle/src/build/libs/*.jar /data/server.jar
 
+RUN chmod +x /data/server.jar
+
 # Debugging: List the contents of the /data directory to verify the jar file is copied
 RUN ls -l /data/
 
