@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
@@ -98,7 +99,7 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
   private boolean stepLuggage(@NotNull Luggage luggage) {
     luggage.step++;
 
-    int neededSteps = (int) (TICKS_PER_STEP * this.luggageClaim.getCurrentPerkValue("speed", 1.0));
+    int neededSteps = (int) (TICKS_PER_STEP * this.luggageClaim.getCurrentPerkValue(Upgradable.LUGGAGE_CLAIM_SPEED));
     if (luggage.step >= neededSteps) {
       luggage.step = 0;
       luggage.currentLineEntryIndex = (luggage.currentLineEntryIndex+1) % this.luggageClaim.line().size();

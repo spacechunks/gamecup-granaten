@@ -5,6 +5,7 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 
 
@@ -38,7 +39,7 @@ public class SecurityCheckAnimation extends AbstractAnimation<SecurityCheckConfi
       case 30 -> {
       }
       case 35 -> {
-        if (Math.random() > this.securityCheck.config().baseSuccessRate() * this.securityCheck.getCurrentPerkValue("success_rate", 1.0D)) {
+        if (Math.random() > this.securityCheck.config().baseSuccessRate() * this.securityCheck.getCurrentPerkValue(Upgradable.SECURITY_CHECK_SUCCESS_RATE)) {
           Incident incident = (Incident) map.objectTypes().create("security_check_failed_incident");
           incident.bind(this.securityCheck);
           map.queueMapObjectRegister(incident);

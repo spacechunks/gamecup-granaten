@@ -80,7 +80,8 @@ public final class MapModule extends AbstractGameModule {
                 "security_check_1",
                 0.9,
                 Map.ofEntries(
-                    Map.entry("success_rate", new Double[]{1.1, 1.3, 1.5})
+                    Map.entry("security_check_success_rate", new Double[]{1.0, 1.1, 1.3, 1.5}),
+                    Map.entry("procedure_amount", new Double[]{1.0, 1.0, 2.0, 2.0})
                 ),
                 null,
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
@@ -103,7 +104,7 @@ public final class MapModule extends AbstractGameModule {
                 "security_check_2",
                 0.9,
                 null,
-                2,
+                3,
                 new Pos(-41.5, -56.0, -8.5, -90, 0),
                 new Pos(-37.5, -56.0, -8.5, -90, 0),
                 new PassengerQueueConfig(
@@ -178,7 +179,7 @@ public final class MapModule extends AbstractGameModule {
         new MarketingConfigEntry(
             "marketing",
             Map.ofEntries(
-                Map.entry("spawn_speed", new Double[]{0.9, 0.8, 0.7})
+                Map.entry("flight_radar_spawn_speed", new Double[]{1.0, 0.9, 0.8, 0.7})
             ),
             null,
             new Pos(-17.5, -56.0, -10.5, 90, 0),
@@ -245,7 +246,7 @@ public final class MapModule extends AbstractGameModule {
             new LuggageClaimConfig(
                 "luggage_claim_1",
                 Map.ofEntries(
-                    Map.entry("speed", new Double[]{0.8, 0.6, 0.2})
+                    Map.entry("luggage_claim_speed", new Double[]{1.0, 0.8, 0.6, 0.2})
                 ),
                 null,
                 new Pos(0.5, -56.0, -7.5, 180, 0),

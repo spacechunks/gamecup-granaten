@@ -29,4 +29,4 @@ ENV ONLINE_MODE=false
 EXPOSE 25565
 
 # Define the entry point to run the jar
-ENTRYPOINT ["java", "-jar", "/data/server.jar"]
+ENTRYPOINT ["java", "-jar", "/server.jar"]

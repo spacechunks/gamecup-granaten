@@ -56,9 +56,9 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   private final BossBar goalBossBar;
 
   @Inject
-  public TeamImpl(@NotNull Game game, @NotNull ActionBarHelper actionBarHelper) {
+  public TeamImpl(@NotNull Game game) {
     this.game = game;
-    this.actionBarHelper = actionBarHelper;
+    this.actionBarHelper = new ActionBarHelper();
     this.id = ID_COUNT.get();
     this.name = "Team#"+this.id;
     this.members = new HashSet<>();
@@ -66,7 +66,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
     this.passengersMoved = new AtomicInteger();
     this.reputation = new TeamReputation();
     this.goalBossBar = BossBar.bossBar(Component.text(" "), 0F, bossbarColor(), Overlay.PROGRESS);
-    this.scoreboardTeam = MinecraftServer.getTeamManager().createTeam(name(), Component.empty(), (NamedTextColor) color(), Component.empty());
+    this.scoreboardTeam = MinecraftServer.getTeamManager().createTeam(name(), Component.empty(), color(), Component.empty());
 
     addListener(EventListener.of(ForceUpdateEvent.class, this::handleBossbarUpdate));
     addListener(EventListener.of(AddEntityToInstanceEvent.class, this::handleInstanceEntityAdd));
