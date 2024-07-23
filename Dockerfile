@@ -29,4 +29,4 @@ ENV ONLINE_MODE=false
 
 EXPOSE 25565
 
-ENTRYPOINT ["java", "-jar", "server.jar"]
+CMD ["java", "-jar", "/data/server.jar"]
