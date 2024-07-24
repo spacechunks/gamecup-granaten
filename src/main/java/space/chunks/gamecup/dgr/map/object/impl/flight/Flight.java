@@ -24,7 +24,7 @@ public interface Flight {
 
   void addPassenger(@NotNull Passenger passenger);
 
-  int targetFinishTick(); // TODO: targetStartTick, this way we can calculate passengersPerTick
+  int targetFinishTick();
 
   double passengersPerTick();
 

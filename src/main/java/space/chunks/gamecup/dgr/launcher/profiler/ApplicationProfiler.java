@@ -36,11 +36,6 @@ public final class ApplicationProfiler {
   }
 
   public void register() {
-    /*
-    // TODO: use to persist dirty data
-    MinecraftServer.getSchedulerManager().buildShutdownTask(() -> {
-    });*/
-
     log.info("Registering application profiler");
 
     BenchmarkManager benchmarkManager = MinecraftServer.getBenchmarkManager();
