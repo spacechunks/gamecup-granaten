@@ -27,6 +27,7 @@ RUN ls -l /data/
 COPY template /data/template
 
 ENV ONLINE_MODE=false
+ENV VELOCITY_SECRET=abcde
 
 EXPOSE 25565
 

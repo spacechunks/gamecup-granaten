@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.extras.MojangAuth;
+import net.minestom.server.extras.velocity.VelocityProxy;
 import space.chunks.gamecup.dgr.Game;
 import space.chunks.gamecup.dgr.GameModule;
 import space.chunks.gamecup.dgr.launcher.profiler.ApplicationProfiler;
@@ -35,6 +36,11 @@ public final class GameLauncher {
     String onlineModeEnv = System.getenv("ONLINE_MODE");
     if (onlineModeEnv != null && onlineModeEnv.equals("true")) {
       MojangAuth.init();
+    }
+
+    String velocitySecret = System.getenv("VELOCITY_SECRET");
+    if (velocitySecret != null) {
+      VelocityProxy.enable(velocitySecret);
     }
 
     minecraftServer.start("0.0.0.0", 25565);
