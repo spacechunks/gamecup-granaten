@@ -21,13 +21,16 @@ public final class UpgradeHolder {
     this.levelPerks = levelPerks;
   }
 
-  public double getCurrentPerkValue(@NotNull String key, double defaultValue) {
+  public double getCurrentPerkValue(@NotNull String key) {
     Double[] values = this.levelPerks.get(key);
-    if (values == null || this.currentLevel == 0
-    ) {
-      return defaultValue;
+    if (values == null) {
+      return 0.0;
     }
-    return values[this.currentLevel-1];
+
+    if (this.currentLevel >= values.length) {
+      return values[values.length-1];
+    }
+    return values[this.currentLevel];
   }
 
   public int maxLevel() {

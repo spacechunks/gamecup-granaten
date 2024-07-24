@@ -2,6 +2,9 @@ package space.chunks.gamecup.dgr.map.object.upgradable.upgrader;
 
 import com.google.inject.Inject;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.Style;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityCreature;
 import net.minestom.server.entity.EntityType;
@@ -18,6 +21,7 @@ import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.MapObject;
 import space.chunks.gamecup.dgr.map.object.Ticking;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
 import space.chunks.gamecup.dgr.team.Team;
 
@@ -48,7 +52,6 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
     this.textEntity = new Entity(EntityType.TEXT_DISPLAY);
     this.textEntity.setNoGravity(true);
     this.textEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
-      meta.setSeeThrough(true);
       meta.setBillboardRenderConstraints(BillboardConstraints.CENTER);
     });
 
@@ -89,7 +92,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
             team.forceRemoveMoney(cost);
             event.getPlayer().sendMessage("Upgraded: "+upgrade);
 
-            tick(team.map(), 0);
+            tick(team.map(), 0); // force text update
           }
         } else {
           event.getPlayer().sendMessage("Not enough money!");
@@ -109,7 +112,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
 
     if (currentTick % 20 == 0) {
       this.textEntity.editEntityMeta(TextDisplayMeta.class, meta -> {
-        meta.setText(Component.text("Level: "+(upgradeHolder.currentLevel()+1)));
+        meta.setText(text(upgradeHolder));
       });
     }
 
@@ -118,9 +121,73 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
     }
 
     int cost = getCost(currentLevel+1);
-    boolean canPurchaseNextLevel = map.owner().money() >= cost;
+    boolean canPurchaseNextLevel = map.owner().money() >= cost && currentLevel < upgradeHolder.maxLevel();
     dance(canPurchaseNextLevel);
     return TickResult.CONTINUE;
+  }
+
+  private @NotNull Component text(@NotNull UpgradeHolder upgradeHolder) {
+    int currentLevel = upgradeHolder.currentLevel();
+    Component text = Component.text("Level: "+(currentLevel+1));
+    if (currentLevel < upgradeHolder.maxLevel()) {
+      boolean canAfford = this.parent.owner().money() >= getCost(currentLevel+1);
+      Style numberStyle = canAfford ? Style.style(NamedTextColor.YELLOW, TextDecoration.BOLD) : Style.style(NamedTextColor.YELLOW, TextDecoration.STRIKETHROUGH);
+      text = text.color(NamedTextColor.YELLOW)
+          .append(Component.text(" -> ").color(NamedTextColor.WHITE).decorate(TextDecoration.ITALIC))
+          .append(Component.text(currentLevel+2).style(numberStyle))
+          .append(Component.text(" "))
+          .append(Component.text("(Cost: ").color(NamedTextColor.GRAY))
+          .append(Component.text(getCost(currentLevel+1)).color(NamedTextColor.GOLD))
+          .append(Component.text(")").color(NamedTextColor.GRAY));
+    } else {
+      text = text.color(NamedTextColor.GREEN);
+    }
+
+    for (String levelPerkKey : upgradeHolder.levelPerks().keySet()) {
+      Double[] levelPerkValues = upgradeHolder.levelPerks().get(levelPerkKey);
+      double currentValue = upgradeHolder.getCurrentPerkValue(levelPerkKey);
+      Double nextValue = null;
+      if (currentLevel+1 < levelPerkValues.length) {
+        nextValue = levelPerkValues[currentLevel+1];
+      }
+
+      Component perkText = formatPerkName(levelPerkKey).color(NamedTextColor.WHITE).decorate(TextDecoration.ITALIC)
+          .append(Component.text(": ").color(NamedTextColor.GRAY))
+          .append(formatPerkValue(levelPerkKey, currentValue, Style.style(nextValue == null ? NamedTextColor.GREEN : NamedTextColor.YELLOW)));
+      if (nextValue != null) {
+        NamedTextColor color = currentValue+2 < levelPerkValues.length ? NamedTextColor.YELLOW : NamedTextColor.GREEN;
+        perkText = perkText.append(Component.text(" -> ").append(formatPerkValue(levelPerkKey, nextValue, Style.style(color, TextDecoration.BOLD))));
+      }
+
+      text = text.appendNewline().append(perkText);
+    }
+    return text;
+  }
+
+  private @NotNull Component formatPerkName(@NotNull String key) {
+    return switch (key) {
+      case Upgradable.LUGGAGE_CLAIM_SPEED -> Component.text("Rotation speed");
+      case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text("Spawn speed");
+      case Upgradable.SECURITY_CHECK_SUCCESS_RATE -> Component.text("Success rate");
+      default -> throw new IllegalArgumentException("Unknown perk key: "+key);
+    };
+  }
+
+  private @NotNull Component formatPerkValue(@NotNull String key, double value, @NotNull Style style) {
+    int percentage = (int) (value * 100);
+    int percentageIncrease = 100-percentage;
+    int percentageIncreaseFlipped = percentage-100;
+
+    return switch (key) {
+      case Upgradable.SECURITY_CHECK_SUCCESS_RATE -> {
+        yield Component.text("+"+percentageIncreaseFlipped).style(style).append(Component.text("%")).style(style);
+      }
+      case Upgradable.LUGGAGE_CLAIM_SPEED -> {
+        yield Component.text("+"+percentageIncrease).style(style).append(Component.text("%")).style(style);
+      }
+      case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text(-percentageIncrease).style(style).append(Component.text("%")).style(style);
+      default -> throw new IllegalArgumentException("Unknown perk key: "+key);
+    };
   }
 
   private void dance(boolean dance) {

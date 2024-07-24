@@ -23,10 +23,12 @@ RUN chmod +x /data/server.jar
 # Debugging: List the contents of the /data directory to verify the jar file is copied
 RUN ls -l /data/
 
-COPY template /data
+# Copy all files from the template directory to the working directory
+COPY template /data/template
 
 ENV ONLINE_MODE=false
 
 EXPOSE 25565
 
+# Define the entry point to run the jar
 CMD ["java", "-jar", "/data/server.jar"]

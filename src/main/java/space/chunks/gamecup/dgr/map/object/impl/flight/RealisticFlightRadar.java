@@ -7,6 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
@@ -72,7 +73,7 @@ public class RealisticFlightRadar extends FlightRadarImpl implements FlightRadar
 
       UpgradeHolder marketingUpgradeHolder = RealisticFlightRadar.this.parent.upgradeRegistry().holder(Procedure.MARKETING);
       if (marketingUpgradeHolder != null) {
-        double modifier = marketingUpgradeHolder.getCurrentPerkValue("spawn_speed", 1.0);
+        double modifier = marketingUpgradeHolder.getCurrentPerkValue(Upgradable.FLIGHT_RADAR_SPAWN_SPEED);
         baseValue *= modifier;
       }
       return baseValue;

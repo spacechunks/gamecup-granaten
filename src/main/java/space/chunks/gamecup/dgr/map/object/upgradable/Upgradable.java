@@ -11,8 +11,8 @@ public interface Upgradable extends MapObject {
   @NotNull
   UpgradeHolder upgradeHolder();
 
-  default double getCurrentPerkValue(@NotNull String key, double defaultValue) {
-    return upgradeHolder().getCurrentPerkValue(key, defaultValue);
+  default double getCurrentPerkValue(@NotNull String key) {
+    return upgradeHolder().getCurrentPerkValue(key);
   }
 
   default int currentLevel() {
@@ -29,4 +29,9 @@ public interface Upgradable extends MapObject {
   default boolean upgrade() {
     return upgradeHolder().upgrade();
   }
+
+  String PROCEDURES_AMOUNT = "procedures_amount";
+  String SECURITY_CHECK_SUCCESS_RATE = "security_check_success_rate";
+  String LUGGAGE_CLAIM_SPEED = "luggage_claim_speed";
+  String FLIGHT_RADAR_SPAWN_SPEED = "flight_radar_spawn_speed";
 }
