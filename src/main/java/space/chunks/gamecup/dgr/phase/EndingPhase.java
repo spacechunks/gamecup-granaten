@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr.phase;
 
+import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;

@@ -32,8 +32,8 @@ public final class GameLauncher {
   private static void launchServer() {
     MinecraftServer minecraftServer = MinecraftServer.init();
 
-    String onlineModeEnv = System.getenv("OFFLINE_MODE");
-    if (onlineModeEnv == null || onlineModeEnv.equals("false")) {
+    String onlineModeEnv = System.getenv("ONLINE_MODE");
+    if (onlineModeEnv != null && onlineModeEnv.equals("true")) {
       MojangAuth.init();
     }
 
