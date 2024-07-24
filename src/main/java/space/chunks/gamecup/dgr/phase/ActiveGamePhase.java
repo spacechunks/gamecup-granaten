@@ -16,6 +16,7 @@ import net.minestom.server.event.player.PlayerEntityInteractEvent;
 import net.minestom.server.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import space.chunks.gamecup.dgr.Game.EndReason;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.minestom.listener.PotionAddListener;
 import space.chunks.gamecup.dgr.minestom.listener.PotionRemoveListener;
@@ -126,6 +127,10 @@ public class ActiveGamePhase extends AbstractPhase {
       for (Team team : this.game.teams()) {
         MinecraftServer.getGlobalEventHandler().call(new ForceUpdateEvent(team));
       }
+    }
+
+    if (MinecraftServer.getConnectionManager().getOnlinePlayerCount() == 0) {
+      this.game.end(null, EndReason.OTHER);
     }
   }
 }

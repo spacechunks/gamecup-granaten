@@ -31,7 +31,7 @@ public class EndingPhase extends AbstractPhase {
       this.startTicks--;
 
       if (this.startTicks == 0) {
-        this.game.phases().enterPhase(ActiveGamePhase.class);
+        MinecraftServer.stopCleanly();
       }
     }
   }
