@@ -81,7 +81,7 @@ public final class MapModule extends AbstractGameModule {
                 0.9,
                 Map.ofEntries(
                     Map.entry("security_check_success_rate", new Double[]{1.0, 1.1, 1.3, 1.5}),
-                    Map.entry("procedure_amount", new Double[]{1.0, 1.0, 2.0, 2.0})
+                    Map.entry("procedures_amount", new Double[]{1.0, 1.0, 2.0, 2.0})
                 ),
                 null,
                 new Pos(-41.5, -56.0, -12.5, -90, 0),
@@ -215,8 +215,8 @@ public final class MapModule extends AbstractGameModule {
                         20 * 5,
                         20 * 20,
                         new Pos[]{
-                            new Pos(27.5, -56.0, -13.5, 90, 0), new Pos(27.5, -56.0, -12.5, 90, 0),
-                            new Pos(27.5, -56.0, -8.5, 90, 0), new Pos(27.5, -56.0, -7.5, 90, 0),
+                            new Pos(11.5, -56.0, -13.5, 90, 0), new Pos(11.5, -56.0, -12.5, 90, 0),
+                            new Pos(11.5, -56.0, -8.5, 90, 0), new Pos(11.5, -56.0, -7.5, 90, 0),
                         },
                         new Pos[]{
                             new Pos(9.5, -56.0, -24.5, -180, 0),
@@ -237,9 +237,9 @@ public final class MapModule extends AbstractGameModule {
             new FlightMonitorConfig(
                 "flight_monitor_2",
                 Destination.ARRIVING,
-                new Pos(-6.9, -50.0, -10.5, -90, 0),
-                new Pos(-6.9, -50.0, -10.5, -90, 0),
-                new Pos(-6.9, -50.0, -10.5, -90, 0)
+                new Pos(-7.0, -50.0, -10.5, 90, 0),
+                new Pos(-6.86, -48.5, -10.5, -90, 0),
+                new Pos(-6.9, -48.6, -10.5, -90, 0)
             )
         ),
         List.of(

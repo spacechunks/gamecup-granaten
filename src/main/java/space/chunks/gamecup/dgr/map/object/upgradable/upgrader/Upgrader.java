@@ -169,6 +169,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
       case Upgradable.LUGGAGE_CLAIM_SPEED -> Component.text("Rotation speed");
       case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text("Spawn speed");
       case Upgradable.SECURITY_CHECK_SUCCESS_RATE -> Component.text("Success rate");
+      case Upgradable.PROCEDURES_AMOUNT -> Component.text("Amount");
       default -> throw new IllegalArgumentException("Unknown perk key: "+key);
     };
   }
@@ -186,6 +187,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
         yield Component.text("+"+percentageIncrease).style(style).append(Component.text("%")).style(style);
       }
       case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text(-percentageIncrease).style(style).append(Component.text("%")).style(style);
+      case Upgradable.PROCEDURES_AMOUNT -> Component.text((int) value).style(style);
       default -> throw new IllegalArgumentException("Unknown perk key: "+key);
     };
   }
