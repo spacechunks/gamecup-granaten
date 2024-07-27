@@ -82,7 +82,8 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
   }
 
   @Override
-  protected @NotNull Class<MapObjectConfigEntryDefault> configClass() {
+  @NotNull
+  public Class<MapObjectConfigEntryDefault> configClass() {
     return MapObjectConfigEntryDefault.class;
   }
 

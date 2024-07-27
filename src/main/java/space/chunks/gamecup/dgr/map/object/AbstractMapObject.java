@@ -67,7 +67,7 @@ public abstract class AbstractMapObject<C extends MapObjectConfigEntry> implemen
     }
   }
 
-  protected abstract @NotNull Class<C> configClass();
+  public abstract @NotNull Class<C> configClass();
 
   @Override
   public synchronized void handleRegister(@NotNull Map parent) {

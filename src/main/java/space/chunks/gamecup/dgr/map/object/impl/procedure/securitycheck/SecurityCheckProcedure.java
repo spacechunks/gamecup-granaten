@@ -45,7 +45,8 @@ public class SecurityCheckProcedure extends AbstractProcedure<SecurityCheckConfi
   }
 
   @Override
-  protected @NotNull Class<SecurityCheckConfig> configClass() {
+  @NotNull
+  public Class<SecurityCheckConfig> configClass() {
     return SecurityCheckConfig.class;
   }
 

@@ -35,7 +35,8 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
   private List<Entity> boardTextEntities;
 
   @Override
-  protected @NotNull Class<FlightMonitorConfig> configClass() {
+  @NotNull
+  public Class<FlightMonitorConfig> configClass() {
     return FlightMonitorConfig.class;
   }
 
@@ -131,10 +132,7 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
               .append(Component.text(")"));
         }
 
-        textComponent = textComponent.append(switch (this.config.destination()) {
-              case ARRIVING -> Component.text("<- ");
-              case LEAVING -> Component.text("-> ");
-            })
+        textComponent = textComponent
             .append(Component.text(flight.airportName() != null ? flight.airportName() : flight.config().destination().name()))
             .append(Component.text("("+flight.spawnedPassengers()+"/"+flight.passengerGoal()+")"))
             .append(Component.text(": "))

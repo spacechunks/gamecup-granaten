@@ -3,8 +3,14 @@ package space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.coordinate.Vec;
+import net.minestom.server.entity.Entity;
+import net.minestom.server.entity.EntityType;
+import net.minestom.server.entity.metadata.display.ItemDisplayMeta;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.block.Block;
+import net.minestom.server.item.ItemStack;
+import net.minestom.server.item.Material;
 import net.minestom.server.utils.Direction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,7 +38,8 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
   private List<LuggageClaimLineEntry> line;
 
   @Override
-  protected @NotNull Class<LuggageClaimConfig> configClass() {
+  @NotNull
+  public Class<LuggageClaimConfig> configClass() {
     return LuggageClaimConfig.class;
   }
 
@@ -56,19 +63,28 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
     PassengerQueue passengerQueue = super.createPassengerQueue();
 
     instance.loadChunk(lineStartPos);
-    recursiveLineDiscover(lineStartPos, lineStartPos, instance.getBlock(lineStartPos), new HashSet<>(), lineStartDiscorverInitDirection, lineStartWaitingDirection, 0, passengerQueue, null);
-    //fixLineEnding();
+    recursiveLineDiscover(lineStartPos, lineStartPos, instance.getBlock(lineStartPos), new HashSet<>(), lineStartDiscorverInitDirection, lineStartDiscorverInitDirection, lineStartWaitingDirection, 0, passengerQueue, null);
+
+    for (int i = 0; i < this.line.size(); i++) {
+      LuggageClaimLineEntry lineEntry = this.line.get(i);
+      LuggageClaimLineEntry nextEntry = null;
+      if (i+1 < this.line.size()) {
+        nextEntry = this.line.get(i+1);
+      }
+
+      Entity model = new Entity(EntityType.ITEM_DISPLAY);
+      boolean curved = nextEntry != null && nextEntry.direction() != lineEntry.direction();
+      model.setNoGravity(true);
+      model.editEntityMeta(ItemDisplayMeta.class, meta -> {
+        meta.setItemStack(ItemStack.of(Material.PAPER).withCustomModelData(curved ? 13 : 12));
+        meta.setScale(new Vec(1, 1.5, 1));
+      });
+      Direction d = curved ? nextEntry.direction() : null;
+      model.setInstance(instance, lineEntry.pos().add(0.5, 0.75, 0.5).withYaw(yaw -> getModelDirection(yaw, curved, lineEntry.direction(), d)));
+    }
+
     Collections.shuffle(passengerQueue.waitingSlots());
     return passengerQueue;
-  }
-
-  private void fixLineEnding() {
-    LuggageClaimLineEntry last = this.line.getLast();
-    WaitingSlot waitingSlot = last.waitingSlot();
-    if (waitingSlot.leadingSlot() == null) {
-      LuggageClaimLineEntry first = this.line.getFirst();
-      waitingSlot.leadingSlot(first.waitingSlot());
-    }
   }
 
   /*
@@ -79,7 +95,7 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
   private void recursiveLineDiscover(
       Pos startPos, Pos currentPos, Block blockToTest,
       Set<Pos> visitedBlocks,
-      Direction lastDirection, Direction waitingDirection,
+      Direction unchangedLastDirection, Direction lastDirection, Direction waitingDirection,
       int unsuccessfulTries,
       PassengerQueue passengerQueue, WaitingSlot lastWaitingSlot
   ) {
@@ -98,6 +114,7 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
         lastWaitingSlot.leadingSlot(waitingSlot);
       }
 
+      instance.setBlock(currentPos, Block.BARRIER); // TODO: remove this, because the map will consist of barrier blocks
       this.line.add(new LuggageClaimLineEntry(currentPos, lastDirection, waitingSlot, null));
 
       /*
@@ -111,17 +128,35 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
         waitingSlot.leadingSlot(this.line.getFirst().waitingSlot());
       } else {
         recursiveLineDiscover(startPos, currentPos.add(lastDirection.normalX(), lastDirection.normalY(), lastDirection.normalZ()), blockToTest, visitedBlocks,
-            lastDirection, waitingDirection, 0, passengerQueue, waitingSlot);
+            lastDirection, lastDirection, waitingDirection, 0, passengerQueue, waitingSlot);
       }
     } else {
       currentPos = currentPos.sub(lastDirection.normalX(), lastDirection.normalY(), lastDirection.normalZ());
       Direction nextDirection = moveToRight(lastDirection);
       recursiveLineDiscover(startPos, currentPos.add(nextDirection.normalX(), nextDirection.normalY(), nextDirection.normalZ()), blockToTest, visitedBlocks,
-          nextDirection, moveToRight(waitingDirection), unsuccessfulTries+1, passengerQueue, lastWaitingSlot);
+          lastDirection, nextDirection, moveToRight(waitingDirection), unsuccessfulTries+1, passengerQueue, lastWaitingSlot);
 
       nextDirection = moveToLeft(lastDirection);
       recursiveLineDiscover(startPos, currentPos.add(nextDirection.normalX(), nextDirection.normalY(), nextDirection.normalZ()), blockToTest, visitedBlocks,
-          nextDirection, moveToLeft(waitingDirection), unsuccessfulTries+1, passengerQueue, lastWaitingSlot);
+          lastDirection, nextDirection, moveToLeft(waitingDirection), unsuccessfulTries+1, passengerQueue, lastWaitingSlot);
+    }
+  }
+
+  private double getModelDirection(double yaw, boolean curved, Direction lastDirection, Direction targetDirection) {
+    if (curved) {
+      return switch (targetDirection) {
+        case NORTH -> yaw-90;
+        case EAST -> yaw;
+        case SOUTH -> yaw+90;
+        case WEST -> yaw+180;
+        default -> yaw;
+      };
+    } else {
+      return switch (lastDirection) {
+        case NORTH, SOUTH -> yaw;
+        case WEST, EAST -> yaw+90;
+        default -> yaw;
+      };
     }
   }
 

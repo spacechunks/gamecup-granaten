@@ -30,7 +30,8 @@ public class TicketControlAnimation extends AbstractAnimation<TicketControlConfi
   }
 
   @Override
-  protected @NotNull Class<TicketControlConfig> configClass() {
+  @NotNull
+  public Class<TicketControlConfig> configClass() {
     return TicketControlConfig.class;
   }
 

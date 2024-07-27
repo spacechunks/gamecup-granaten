@@ -17,7 +17,8 @@ import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
  */
 public class SeatScanner extends AbstractMapObject<SeatScannerConfig> implements MapObject {
   @Override
-  protected @NotNull Class<SeatScannerConfig> configClass() {
+  @NotNull
+  public Class<SeatScannerConfig> configClass() {
     return SeatScannerConfig.class;
   }
 

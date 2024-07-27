@@ -1,0 +1,103 @@
+[
+  {
+    "name": "flight_radar",
+    "destinations": [
+      {
+        "destination": "LEAVING",
+        "maxConcurrentFlights": 3,
+        "basePassengerCountMin": 5,
+        "basePassengerCountMax": 7,
+        "baseCreateDelayMin": 600,
+        "baseCreateDelayMax": 500,
+        "spawnPositions": [
+          {
+            "x": -51.5,
+            "y": -56.0,
+            "z": -9.5,
+            "yaw": -90.0
+          },
+          {
+            "x": -51.5,
+            "y": -56.0,
+            "z": -8.5,
+            "yaw": -90.0
+          },
+          {
+            "x": -51.5,
+            "y": -56.0,
+            "z": -12.5,
+            "yaw": -90.0
+          },
+          {
+            "x": -51.5,
+            "y": -56.0,
+            "z": -11.5,
+            "yaw": -90.0
+          }
+        ],
+        "leavePositions": [
+          {
+            "x": -20.0,
+            "y": -56.0,
+            "z": -28.5,
+            "yaw": 180.0
+          },
+          {
+            "x": -20.0,
+            "y": -56.0,
+            "z": 7.5,
+            "yaw": 0.0
+          }
+        ]
+      },
+      {
+        "destination": "ARRIVING",
+        "maxConcurrentFlights": 3,
+        "basePassengerCountMin": 2,
+        "basePassengerCountMax": 5,
+        "baseCreateDelayMin": 120,
+        "baseCreateDelayMax": 500,
+        "spawnPositions": [
+          {
+            "x": 15.5,
+            "y": -56.0,
+            "z": -12.5,
+            "yaw": 90.0
+          },
+          {
+            "x": 15.5,
+            "y": -56.0,
+            "z": -11.5,
+            "yaw": 90.0
+          },
+          {
+            "x": 15.5,
+            "y": -56.0,
+            "z": -9.5,
+            "yaw": 90.0
+          },
+          {
+            "x": 15.5,
+            "y": -56.0,
+            "z": -8.5,
+            "yaw": 90.0
+          }
+        ],
+        "leavePositions": [
+          {
+            "x": 9.0,
+            "y": -56.0,
+            "z": 5.5,
+            "yaw": 0.0
+          },
+          {
+            "x": 9.0,
+            "y": -56.0,
+            "z": -26.5,
+            "yaw": 180.0
+          }
+        ]
+      }
+    ]
+  }
+]

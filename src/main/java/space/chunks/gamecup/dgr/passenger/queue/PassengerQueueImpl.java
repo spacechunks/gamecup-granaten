@@ -8,7 +8,6 @@ import net.minestom.server.coordinate.Pos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
-import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
 
 import java.util.ArrayList;
@@ -41,11 +40,11 @@ public class PassengerQueueImpl implements PassengerQueue {
   }
 
   private @NotNull List<WaitingSlot> createSlots(@NotNull PassengerQueueConfig config) {
-    List<Slot> configSlots = config.slots();
+    List<Pos> configSlots = config.slots();
     List<WaitingSlot> slots = new ArrayList<>(configSlots.size());
     WaitingSlot leadingSlot = null;
-    for (Slot configSlot : configSlots) {
-      WaitingSlot waitingSlot = new WaitingSlotImpl(configSlot.position(), leadingSlot);
+    for (Pos configSlot : configSlots) {
+      WaitingSlot waitingSlot = new WaitingSlotImpl(configSlot, leadingSlot);
       leadingSlot = waitingSlot;
       slots.add(waitingSlot);
     }

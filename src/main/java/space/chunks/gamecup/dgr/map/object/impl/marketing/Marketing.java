@@ -43,7 +43,8 @@ public class Marketing extends AbstractMapObject<MarketingConfigEntry> implement
   }
 
   @Override
-  protected @NotNull Class<MarketingConfigEntry> configClass() {
+  @NotNull
+  public Class<MarketingConfigEntry> configClass() {
     return MarketingConfigEntry.class;
   }
 

@@ -1,6 +1,5 @@
 package space.chunks.gamecup.dgr.phase;
 
-import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -16,7 +15,7 @@ import space.chunks.gamecup.dgr.GameFactory;
  */
 public class EndingPhase extends AbstractPhase {
   private Instance spawningInstance;
-  private int startTicks;
+  private int startTicks = 10;
 
   @Inject
   public EndingPhase(@NotNull GameFactory factory) {
@@ -33,6 +32,7 @@ public class EndingPhase extends AbstractPhase {
 
       if (this.startTicks == 0) {
         MinecraftServer.stopCleanly();
+        System.exit(0);
       }
     }
   }
