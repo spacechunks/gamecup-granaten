@@ -33,14 +33,14 @@ import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectTypeRegistryImpl;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetup;
 import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupConfig;
-import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupImpl;
+import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupHardcoded;
+import space.chunks.gamecup.dgr.map.object.setup.MapObjectDefaultSetupLoader;
 import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.Upgrader;
 import space.chunks.gamecup.dgr.map.object.upgradable.upgrader.UpgraderConfig;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentities;
 import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentitiesConfig;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig;
-import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.Slot;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
 
 import java.io.File;
@@ -91,9 +91,9 @@ public final class MapModule extends AbstractGameModule {
                     "security_check_1_queue",
                     new Pos(-47.5, -56.0, -12.5),
                     List.of(
-                        new Slot(new Pos(-44.5, -56.0, -12.5)),
-                        new Slot(new Pos(-45.5, -56.0, -12.5)),
-                        new Slot(new Pos(-46.5, -56.0, -12.5))
+                        new Pos(-44.5, -56.0, -12.5),
+                        new Pos(-45.5, -56.0, -12.5),
+                        new Pos(-46.5, -56.0, -12.5)
                     ),
                     SlotOccupyStrategy.LAST_EMPTY
                 ),
@@ -112,9 +112,9 @@ public final class MapModule extends AbstractGameModule {
                     "security_check_2_queue",
                     new Pos(-47.5, -56.0, -8.5),
                     List.of(
-                        new Slot(new Pos(-44.5, -56.0, -8.5)),
-                        new Slot(new Pos(-45.5, -56.0, -8.5)),
-                        new Slot(new Pos(-46.5, -56.0, -8.5))
+                        new Pos(-44.5, -56.0, -8.5),
+                        new Pos(-45.5, -56.0, -8.5),
+                        new Pos(-46.5, -56.0, -8.5)
                     ),
                     SlotOccupyStrategy.LAST_EMPTY
                 ),
@@ -134,15 +134,15 @@ public final class MapModule extends AbstractGameModule {
                     "ticket_control_1_queue",
                     new Pos(-35.5, -56.0, -13.5),
                     List.of(
-                        new Slot(new Pos(-33.5, -56.0, -16.5)),
-                        new Slot(new Pos(-33.5, -56.0, -15.5)),
-                        new Slot(new Pos(-34.5, -56.0, -15.5)),
-                        new Slot(new Pos(-35.5, -56.0, -15.5)),
-                        new Slot(new Pos(-35.5, -56.0, -14.5)),
-                        new Slot(new Pos(-34.5, -56.0, -14.5)),
-                        new Slot(new Pos(-33.5, -56.0, -14.5)),
-                        new Slot(new Pos(-33.5, -56.0, -13.5)),
-                        new Slot(new Pos(-34.5, -56.0, -13.5))
+                        new Pos(-33.5, -56.0, -16.5),
+                        new Pos(-33.5, -56.0, -15.5),
+                        new Pos(-34.5, -56.0, -15.5),
+                        new Pos(-35.5, -56.0, -15.5),
+                        new Pos(-35.5, -56.0, -14.5),
+                        new Pos(-34.5, -56.0, -14.5),
+                        new Pos(-33.5, -56.0, -14.5),
+                        new Pos(-33.5, -56.0, -13.5),
+                        new Pos(-34.5, -56.0, -13.5)
                     ),
                     SlotOccupyStrategy.LAST_EMPTY
                 ),
@@ -160,15 +160,15 @@ public final class MapModule extends AbstractGameModule {
                     "ticket_control_1_queue",
                     new Pos(-33.5, -56.0, -13.5),
                     List.of(
-                        new Slot(new Pos(-31.5, -56.0, -16.5)),
-                        new Slot(new Pos(-31.5, -56.0, -15.5)),
-                        new Slot(new Pos(-32.5, -56.0, -15.5)),
-                        new Slot(new Pos(-33.5, -56.0, -15.5)),
-                        new Slot(new Pos(-33.5, -56.0, -14.5)),
-                        new Slot(new Pos(-32.5, -56.0, -14.5)),
-                        new Slot(new Pos(-31.5, -56.0, -14.5)),
-                        new Slot(new Pos(-31.5, -56.0, -13.5)),
-                        new Slot(new Pos(-32.5, -56.0, -13.5))
+                        new Pos(-31.5, -56.0, -16.5),
+                        new Pos(-31.5, -56.0, -15.5),
+                        new Pos(-32.5, -56.0, -15.5),
+                        new Pos(-33.5, -56.0, -15.5),
+                        new Pos(-33.5, -56.0, -14.5),
+                        new Pos(-32.5, -56.0, -14.5),
+                        new Pos(-31.5, -56.0, -14.5),
+                        new Pos(-31.5, -56.0, -13.5),
+                        new Pos(-32.5, -56.0, -13.5)
                     ),
                     SlotOccupyStrategy.LAST_EMPTY
                 ),
@@ -283,6 +283,6 @@ public final class MapModule extends AbstractGameModule {
             )
         )
     ));
-    bind(MapObjectDefaultSetup.class).to(MapObjectDefaultSetupImpl.class);
+    bind(MapObjectDefaultSetup.class).to(MapObjectDefaultSetupLoader.class);
   }
 }

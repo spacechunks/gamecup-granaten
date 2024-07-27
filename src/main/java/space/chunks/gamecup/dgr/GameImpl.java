@@ -5,6 +5,8 @@ import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.timer.TaskSchedule;
@@ -80,8 +82,19 @@ public final class GameImpl implements Game {
   @Override
   public void end(@Nullable Team winnerTeam, @NotNull EndReason reason) {
     phases().enterPhase("end");
+
     for (Map map : maps()) {
-      map.executeForMembers(member -> member.player().sendMessage("Game ended! Winner: "+winnerTeam+". Reason: "+reason));
+      Component message = Component.text("Game ended! Winner: ");
+      if (winnerTeam == null) {
+        message = message.append(Component.text("/").color(NamedTextColor.RED));
+      } else {
+        message = message.append(Component.text(winnerTeam.name()));
+      }
+      message = message.append(Component.text(" Reason: ").color(NamedTextColor.GRAY))
+          .append(Component.text(reason.name()).color(NamedTextColor.YELLOW));
+
+      Component t = message;
+      map.executeForMembers(member -> member.player().sendMessage(t));
     }
   }
 

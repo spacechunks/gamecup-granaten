@@ -36,7 +36,8 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
   }
 
   @Override
-  protected @NotNull Class<LuggageClaimConfig> configClass() {
+  @NotNull
+  public Class<LuggageClaimConfig> configClass() {
     return LuggageClaimConfig.class;
   }
 

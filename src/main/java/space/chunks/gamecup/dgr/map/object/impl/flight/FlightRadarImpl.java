@@ -54,7 +54,8 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
   }
 
   @Override
-  protected @NotNull Class<FlightRadarConfig> configClass() {
+  @NotNull
+  public Class<FlightRadarConfig> configClass() {
     return FlightRadarConfig.class;
   }
 

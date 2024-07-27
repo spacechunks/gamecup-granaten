@@ -44,7 +44,8 @@ public class SeatProcedure extends AbstractProcedure<SeatConfig> implements Proc
   }
 
   @Override
-  protected @NotNull Class<SeatConfig> configClass() {
+  @NotNull
+  public Class<SeatConfig> configClass() {
     return SeatConfig.class;
   }
 

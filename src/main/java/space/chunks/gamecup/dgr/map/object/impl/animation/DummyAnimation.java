@@ -10,7 +10,8 @@ import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntryDefault;
  */
 public final class DummyAnimation extends AbstractAnimation<MapObjectConfigEntryDefault> implements Animation {
   @Override
-  protected @NotNull Class<MapObjectConfigEntryDefault> configClass() {
+  @NotNull
+  public Class<MapObjectConfigEntryDefault> configClass() {
     return MapObjectConfigEntryDefault.class;
   }
 

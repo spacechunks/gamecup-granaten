@@ -234,7 +234,8 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   }
 
   @Override
-  protected @NotNull Class<MapObjectConfigEntry> configClass() {
+  @NotNull
+  public Class<MapObjectConfigEntry> configClass() {
     return MapObjectConfigEntry.class;
   }
 

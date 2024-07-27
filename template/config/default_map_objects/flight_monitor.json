@@ -1,0 +1,46 @@
+[
+  {
+    "name": "flight_monitor_leaving_1",
+    "destination": "LEAVING",
+    "spawnPos": {
+      "x": -8.0,
+      "y": -50.0,
+      "z": -10.5,
+      "yaw": -90.0
+    },
+    "boardHeaderPos": {
+      "x": -8.14,
+      "y": -48.5,
+      "z": -10.5,
+      "yaw": 90.0
+    },
+    "boardStartPos": {
+      "x": -8.1,
+      "y": -48.6,
+      "z": -10.5,
+      "yaw": 90.0
+    }
+  },
+  {
+    "name": "flight_monitor_arriving_1",
+    "destination": "ARRIVING",
+    "spawnPos": {
+      "x": -7.0,
+      "y": -50.0,
+      "z": -10.5,
+      "yaw": 90.0
+    },
+    "boardHeaderPos": {
+      "x": -6.86,
+      "y": -48.5,
+      "z": -10.5,
+      "yaw": -90.0
+    },
+    "boardStartPos": {
+      "x": -6.9,
+      "y": -48.6,
+      "z": -10.5,
+      "yaw": -90.0
+    }
+  }
+]

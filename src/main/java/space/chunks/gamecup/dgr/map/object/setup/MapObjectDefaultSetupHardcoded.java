@@ -17,12 +17,12 @@ import java.util.List;
 /**
  * @author Nico_ND1
  */
-public class MapObjectDefaultSetupImpl implements MapObjectDefaultSetup {
+public class MapObjectDefaultSetupHardcoded implements MapObjectDefaultSetup {
   private final MapObjectDefaultSetupConfig config;
   private final MapObjectTypeRegistry registry;
 
   @Inject
-  public MapObjectDefaultSetupImpl(@NotNull MapObjectDefaultSetupConfig config, @NotNull MapObjectTypeRegistry registry) {
+  public MapObjectDefaultSetupHardcoded(@NotNull MapObjectDefaultSetupConfig config, @NotNull MapObjectTypeRegistry registry) {
     this.config = config;
     this.registry = registry;
   }

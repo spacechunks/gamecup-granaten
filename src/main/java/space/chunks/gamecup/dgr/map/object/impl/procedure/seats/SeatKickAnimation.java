@@ -27,7 +27,8 @@ public class SeatKickAnimation extends AbstractAnimation<SeatConfig> implements 
   }
 
   @Override
-  protected @NotNull Class<SeatConfig> configClass() {
+  @NotNull
+  public Class<SeatConfig> configClass() {
     return SeatConfig.class;
   }
 

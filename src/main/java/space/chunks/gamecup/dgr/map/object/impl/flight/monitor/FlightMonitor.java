@@ -35,7 +35,8 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
   private List<Entity> boardTextEntities;
 
   @Override
-  protected @NotNull Class<FlightMonitorConfig> configClass() {
+  @NotNull
+  public Class<FlightMonitorConfig> configClass() {
     return FlightMonitorConfig.class;
   }
 

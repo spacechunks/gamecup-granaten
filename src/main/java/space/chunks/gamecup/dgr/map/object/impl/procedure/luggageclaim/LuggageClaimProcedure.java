@@ -38,7 +38,8 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
   private List<LuggageClaimLineEntry> line;
 
   @Override
-  protected @NotNull Class<LuggageClaimConfig> configClass() {
+  @NotNull
+  public Class<LuggageClaimConfig> configClass() {
     return LuggageClaimConfig.class;
   }
 

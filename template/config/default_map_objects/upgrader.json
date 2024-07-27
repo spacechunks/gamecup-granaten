@@ -1,0 +1,41 @@
+[
+  {
+    "name": "security_check_upgrader",
+    "targetGroup": "security_check",
+    "spawnPosition": {
+      "x": -43.5,
+      "y": -55.0,
+      "z": -10.5,
+      "yaw": 90.0
+    },
+    "costs": [
+      10,
+      50,
+      100,
+      200,
+      300,
+      400,
+      500,
+      600,
+      700,
+      800,
+      900,
+      1000
+    ]
+  },
+  {
+    "name": "luggage_claim_upgrader",
+    "targetGroup": "luggage_claim",
+    "spawnPosition": {
+      "x": 0.5,
+      "y": -55.0,
+      "z": -6.5,
+      "yaw": 180.0
+    },
+    "costs": [
+      50,
+      200,
+      500
+    ]
+  }
+]

@@ -23,7 +23,8 @@ public class SecurityCheckAnimation extends AbstractAnimation<SecurityCheckConfi
   }
 
   @Override
-  protected @NotNull Class<SecurityCheckConfig> configClass() {
+  @NotNull
+  public Class<SecurityCheckConfig> configClass() {
     return SecurityCheckConfig.class;
   }
 

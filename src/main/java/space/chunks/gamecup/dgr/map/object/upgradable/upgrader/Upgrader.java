@@ -217,7 +217,8 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   }
 
   @Override
-  protected @NotNull Class<UpgraderConfig> configClass() {
+  @NotNull
+  public Class<UpgraderConfig> configClass() {
     return UpgraderConfig.class;
   }
 

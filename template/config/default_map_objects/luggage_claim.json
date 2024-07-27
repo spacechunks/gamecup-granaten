@@ -1,0 +1,81 @@
+[
+  {
+    "name": "luggage_claim_1",
+    "levelPerks": {
+      "luggage_claim_speed": [
+        1.0,
+        0.8,
+        0.6,
+        0.2
+      ],
+      "procedures_amount": [
+        1,
+        2,
+        2
+      ]
+    },
+    "minLevel": null,
+    "exitPos": {
+      "x": 0.5,
+      "y": -56.0,
+      "z": -6.5,
+      "yaw": 180.0
+    },
+    "queue": {
+      "ref": null,
+      "name": "luggage_claim_queue_1",
+      "startingPosition": {
+        "x": 3.5,
+        "y": -56.0,
+        "z": -5.5,
+        "yaw": 45.0
+      },
+      "slots": [],
+      "slotOccupyStrategy": "RANDOM"
+    },
+    "lineStartPos": {
+      "x": -1,
+      "y": -56,
+      "z": 4
+    },
+    "lineStartDiscoverInitDirection": "NORTH",
+    "lineStartWaitingDirection": "WEST"
+  },
+  {
+    "name": "luggage_claim_2",
+    "levelPerks": {
+      "luggage_claim_speed": [
+        1.0,
+        0.8,
+        0.6,
+        0.2
+      ]
+    },
+    "minLevel": 2,
+    "exitPos": {
+      "x": 0.5,
+      "y": -56.0,
+      "z": -14.5,
+      "yaw": 0.0
+    },
+    "queue": {
+      "ref": null,
+      "name": "luggage_claim_queue_2",
+      "startingPosition": {
+        "x": 3.5,
+        "y": -56.0,
+        "z": -15.5,
+        "yaw": 135.0
+      },
+      "slots": [],
+      "slotOccupyStrategy": "RANDOM"
+    },
+    "lineStartPos": {
+      "x": -1,
+      "y": -56,
+      "z": -26
+    },
+    "lineStartDiscoverInitDirection": "SOUTH",
+    "lineStartWaitingDirection": "WEST"
+  }
+]

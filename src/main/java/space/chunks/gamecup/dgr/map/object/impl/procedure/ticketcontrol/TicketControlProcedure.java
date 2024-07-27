@@ -29,7 +29,8 @@ public class TicketControlProcedure extends AbstractProcedure<TicketControlConfi
   }
 
   @Override
-  protected @NotNull Class<TicketControlConfig> configClass() {
+  @NotNull
+  public Class<TicketControlConfig> configClass() {
     return TicketControlConfig.class;
   }
 

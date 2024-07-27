@@ -42,7 +42,8 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
   }
 
   @Override
-  protected @NotNull Class<TrashConfig> configClass() {
+  @NotNull
+  public Class<TrashConfig> configClass() {
     return TrashConfig.class;
   }
 
