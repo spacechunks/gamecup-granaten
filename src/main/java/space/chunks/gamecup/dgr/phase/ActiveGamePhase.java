@@ -4,6 +4,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
+import net.minestom.server.entity.GameMode;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.Player.Hand;
 import net.minestom.server.entity.ai.EntityAIGroup;
@@ -93,12 +94,14 @@ public class ActiveGamePhase extends AbstractPhase {
   protected void handleEnter_(@Nullable Phase previousPhase) {
     for (Team team : this.game.teams()) {
       for (Member member : team.members()) {
-        member.player().sendMessage("Game is starting...");
-        member.player().setInstance(team.map().instance(), new Pos(-47.5, -56.0, -10.5));
+        Player player = member.player();
+        player.sendMessage("Game is starting...");
+        player.setInstance(team.map().instance(), new Pos(-47.5, -56.0, -10.5, -90, 0));
+        player.setGameMode(GameMode.ADVENTURE);
 
         team.map().queueMapObjectRegister(new MemberScoreboard(this.game, member));
 
-        this.game.goal().showTitle(member.player());
+        this.game.goal().showTitle(player);
       }
 
       team.map().queueMapObjectRegister(team);
