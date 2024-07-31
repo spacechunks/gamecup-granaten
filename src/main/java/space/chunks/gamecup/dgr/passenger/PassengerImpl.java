@@ -28,6 +28,8 @@ import space.chunks.gamecup.dgr.passenger.goal.WaitInProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.goal.WorkGoal;
 import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentities;
 import space.chunks.gamecup.dgr.passenger.identity.PassengerIdentity;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
+import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTaskBuilder;
@@ -270,6 +272,12 @@ public class PassengerImpl implements Passenger {
 
     if (this.patience < 1) {
       if (this.task != null) {
+        Procedure procedure = this.task.procedure();
+        PassengerQueue passengerQueue = procedure.passengerQueue();
+        if (passengerQueue != null) {
+          passengerQueue.findWaitingSlot(this).ifPresent(WaitingSlot::free);
+        }
+
         this.task.state(State.PROCEED);
       }
       this.task = null;

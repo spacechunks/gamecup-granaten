@@ -1,5 +1,8 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.sound.Sound.Source;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.entity.EntityCreature;
@@ -11,8 +14,11 @@ import net.minestom.server.entity.metadata.villager.VillagerMeta.Level;
 import net.minestom.server.entity.metadata.villager.VillagerMeta.Profession;
 import net.minestom.server.entity.metadata.villager.VillagerMeta.Type;
 import net.minestom.server.entity.metadata.villager.VillagerMeta.VillagerData;
+import net.minestom.server.instance.Instance;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
+import net.minestom.server.network.packet.server.play.ParticlePacket;
+import net.minestom.server.particle.Particle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
@@ -64,8 +70,16 @@ public class SecurityCheckProcedure extends AbstractProcedure<SecurityCheckConfi
   @Override
   public void handleRegister(@NotNull Map parent) {
     super.handleRegister(parent);
-    this.worker.setInstance(parent.instance(), this.config.workerPos());
-    this.gate.setInstance(parent.instance(), this.config.gatePos());
+
+    Instance instance = parent.instance();
+    this.worker.setInstance(instance, this.config.workerPos());
+    this.gate.setInstance(instance, this.config.gatePos());
+
+    if (this.config.minLevel() != null) {
+      ParticlePacket packet = new ParticlePacket(Particle.GLOW_SQUID_INK, false, this.config.gatePos().add(0, 1, 0), new Vec(0.5, 0.6, 0.5), 0.001F, 25);
+      instance.sendGroupedPacket(packet);
+      //instance.playSound(Sound.sound(Key.key("entity.villager.ambient"), Source.AMBIENT, 1F, 1F), this.config.workerPos());
+    }
   }
 
   @Override

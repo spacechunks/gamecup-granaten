@@ -9,6 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueueConfig.SlotOccupyStrategy;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
+import space.chunks.gamecup.dgr.passenger.task.PassengerTask.State;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -163,7 +165,12 @@ public class PassengerQueueImpl implements PassengerQueue {
     public boolean isOccupied() {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        return this.occupant != null && this.occupant.isValid();
+
+        if (this.occupant == null) {
+          return false;
+        }
+        PassengerTask task = this.occupant.task();
+        return this.occupant.isValid() && task != null && (task.state() == State.WAIT_IN_QUEUE || task.state() == State.JOIN_QUEUE);
       } finally {
         PassengerQueueImpl.this.slotLock.unlock();
       }
@@ -173,7 +180,7 @@ public class PassengerQueueImpl implements PassengerQueue {
     public boolean tryOccupy(@NotNull Passenger passenger) {
       try {
         PassengerQueueImpl.this.slotLock.lock();
-        if (this.occupant == null || !this.occupant.isValid()) {
+        if (!isOccupied()) {
           this.occupant = passenger;
           return true;
         }

@@ -23,6 +23,7 @@ import space.chunks.gamecup.dgr.minestom.listener.PotionAddListener;
 import space.chunks.gamecup.dgr.minestom.listener.PotionRemoveListener;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.passenger.Passenger;
+import space.chunks.gamecup.dgr.passenger.goal.WaitInProcedureQueueGoal;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
 import space.chunks.gamecup.dgr.team.Team;
 import space.chunks.gamecup.dgr.team.member.Member;
@@ -78,6 +79,10 @@ public class ActiveGamePhase extends AbstractPhase {
               if (currentGoalSelector != null) {
                 player.sendMessage(Component.text("Goal selector ("+(++groupCount)+"): ").color(NamedTextColor.GRAY)
                     .append(Component.text(currentGoalSelector.getClass().getName()).color(NamedTextColor.BLUE)));
+
+                if(currentGoalSelector instanceof WaitInProcedureQueueGoal waitGoal) {
+                  player.sendMessage(waitGoal.s());
+                }
               } else {
                 player.sendMessage(Component.text("Goal selector: ").color(NamedTextColor.GRAY)
                     .append(Component.text("/").color(NamedTextColor.BLUE)));
