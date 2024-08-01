@@ -10,6 +10,7 @@ import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
+import space.chunks.gamecup.dgr.minestom.inventory.Gui;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 
 import java.util.UUID;
@@ -33,6 +34,8 @@ public class Marketing extends AbstractMapObject<MarketingConfigEntry> implement
 
     this.npc = new NPCEntity(UUID.randomUUID(), "Marketing", this.config.skin());
     this.npc.setInstance(parent.instance(), this.config.spawnPosition());
+
+    upgradeHolder();
   }
 
   @Override
@@ -50,7 +53,8 @@ public class Marketing extends AbstractMapObject<MarketingConfigEntry> implement
 
   private void handleEntityInteract(PlayerEntityInteractEvent event) {
     if (event.getHand() == Hand.MAIN && event.getTarget().equals(this.npc)) {
-      event.getPlayer().sendMessage("Interacted with Marketing NPC"); // TODO: open manage inventory
+      Gui gui = new MarketingGui(event.getPlayer(), this.parent, this.config);
+      gui.open();
     }
   }
 

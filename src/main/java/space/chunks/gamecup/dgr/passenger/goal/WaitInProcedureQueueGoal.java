@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr.passenger.goal;
 
+import net.kyori.adventure.text.Component;
 import net.minestom.server.entity.ai.GoalSelector;
 import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.object.impl.animation.DummyAnimation;
@@ -18,6 +19,7 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
   private final Passenger passenger;
   private WaitingSlot waitingSlot;
   private boolean firstTickDone; // we skip the randomizer in the first tick, to prevent standing still
+  private int pathCompleteIgnoreTicks;
 
   public WaitInProcedureQueueGoal(@NotNull Passenger passenger) {
     super(passenger.entityUnsafe());
@@ -53,9 +55,10 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
       return true;
     }
 
-    if (!this.passenger.entityUnsafe().isPathComplete()) {
+    if (!this.passenger.entityUnsafe().isPathComplete() && ++this.pathCompleteIgnoreTicks < 20) {
       return false;
     }
+    this.pathCompleteIgnoreTicks = 0;
 
     if (this.firstTickDone && Math.random() > 0.223D) {
       return false;
@@ -94,5 +97,15 @@ public class WaitInProcedureQueueGoal extends GoalSelector {
   public void end() {
     this.firstTickDone = false;
     this.waitingSlot = null;
+  }
+
+  public Component s() {
+    WaitingSlot leadingSlot = this.waitingSlot.leadingSlot();
+    Component component = Component.text("leadingSlot="+leadingSlot);
+    if (leadingSlot != null) {
+      component = component.append(Component.text(" "))
+          .append(Component.text("isOccupied? "+leadingSlot.isOccupied()+" : "+(leadingSlot.isOccupied() ? leadingSlot.occupant().name() : "null")));
+    }
+    return component;
   }
 }

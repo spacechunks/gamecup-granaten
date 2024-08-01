@@ -84,17 +84,19 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     assert luggage == lineEntry.luggage();
     WaitingSlot waitingSlot = lineEntry.waitingSlot();
     Passenger occupant = waitingSlot.occupant();
-    assert occupant != null;
 
-    occupant.entityUnsafe().setItemInMainHand(luggage.entity.getItemStack());
-    occupant.entityUnsafe().swingMainHand();
-    luggage.remove();
+    if (occupant != null) {
+      occupant.entityUnsafe().setItemInMainHand(luggage.entity.getItemStack());
+      occupant.entityUnsafe().swingMainHand();
 
-    PassengerTask task = occupant.task();
-    if (task != null) {
-      task.state(State.PROCEED);
+      PassengerTask task = occupant.task();
+      if (task != null) {
+        task.state(State.PROCEED);
+      }
+      waitingSlot.free();
     }
-    waitingSlot.free();
+
+    luggage.remove();
   }
 
   private boolean stepLuggage(@NotNull Luggage luggage) {
@@ -121,14 +123,18 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
     }
     Vec step = new Vec(direction.normalX(), 0, direction.normalZ()).div(neededSteps).mul(luggage.step);
     Pos newPos = fromEntry.pos().add(step).add(0.5, 1, 0.5);
-    luggage.entity.teleport(newPos);
+    if (luggage.entity.getInstance() != null) {
+      luggage.entity.teleport(newPos);
+    }
 
     if (luggage.currentToTargetLineDistance() <= 3) {
       LuggageClaimLineEntry targetEntry = this.luggageClaim.line().get(luggage.targetLineEntryIndex);
       WaitingSlot waitingSlot = targetEntry.waitingSlot();
       Passenger occupant = waitingSlot.occupant();
       if (occupant != null && occupant.isValid()) {
-        occupant.entityUnsafe().lookAt(luggage.entity);
+        if (luggage.entity.getInstance() != null) {
+          occupant.entityUnsafe().lookAt(luggage.entity);
+        }
       }
     }
     return false;

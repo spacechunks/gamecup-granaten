@@ -22,15 +22,19 @@ public final class UpgradeHolder {
   }
 
   public double getCurrentPerkValue(@NotNull String key) {
+    return getPerkValue(key, this.currentLevel);
+  }
+
+  public double getPerkValue(@NotNull String key, int level) {
     Double[] values = this.levelPerks.get(key);
     if (values == null) {
       return 0.0;
     }
 
-    if (this.currentLevel >= values.length) {
+    if (level >= values.length) {
       return values[values.length-1];
     }
-    return values[this.currentLevel];
+    return values[level];
   }
 
   public int maxLevel() {

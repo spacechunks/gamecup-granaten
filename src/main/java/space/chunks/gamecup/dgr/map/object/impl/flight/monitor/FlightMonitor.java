@@ -134,7 +134,7 @@ public class FlightMonitor extends AbstractMapObject<FlightMonitorConfig> implem
 
         textComponent = textComponent
             .append(Component.text(flight.airportName() != null ? flight.airportName() : flight.config().destination().name()))
-            .append(Component.text("("+flight.spawnedPassengers()+"/"+flight.passengerGoal()+")"))
+            .append(Component.text("("+flight.spawnedPassengers()+")"))
             .append(Component.text(": "))
             .append(Component.text(String.format("%.2f", flight.progress() * 100))).append(Component.text("%"))
             .append(Component.text(" ")).append(delayComponent)

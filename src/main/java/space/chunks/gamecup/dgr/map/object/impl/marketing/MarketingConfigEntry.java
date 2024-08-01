@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradableConfig;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -20,11 +19,6 @@ public record MarketingConfigEntry(
     @Nullable Integer minLevel,
     @NotNull Pos spawnPosition,
     @Nullable PlayerSkin skin,
-    @NotNull List<Level> levels
+    int @NotNull [] costs
 ) implements MapObjectConfigEntry, UpgradableConfig {
-  public record Level(
-      int level,
-      int price
-  ) {
-  }
 }
