@@ -1,5 +1,6 @@
 package space.chunks.gamecup.dgr;
 
+import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -9,4 +10,8 @@ import org.jetbrains.annotations.NotNull;
 public interface Named {
   @NotNull
   String name();
+
+  default @NotNull Component displayName() {
+    return Component.text(name());
+  }
 }

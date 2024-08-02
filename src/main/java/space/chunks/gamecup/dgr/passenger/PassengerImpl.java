@@ -7,15 +7,22 @@ import lombok.extern.log4j.Log4j2;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.entity.EntityCreature;
+import net.minestom.server.entity.attribute.Attribute;
+import net.minestom.server.entity.attribute.AttributeModifier;
+import net.minestom.server.entity.attribute.AttributeOperation;
 import net.minestom.server.item.ItemStack;
 import net.minestom.server.item.Material;
 import net.minestom.server.thread.Acquirable;
+import net.minestom.server.utils.NamespaceID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.flight.Flight;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.minestom.npc.NPCEntity;
 import space.chunks.gamecup.dgr.minestom.pathfinding.SimpleGroundNodeFollower;
 import space.chunks.gamecup.dgr.minestom.pathfinding.SimpleGroundNodeGenerator;
@@ -226,6 +233,13 @@ public class PassengerImpl implements Passenger {
     );
     if (this.baggage != null && this.destination == Destination.LEAVING) {
       this.npc.setItemInOffHand(this.baggage);
+    }
+
+    UpgradeHolderRegistry upgradeHolderRegistry = this.map.upgradeRegistry();
+    UpgradeHolder holder = upgradeHolderRegistry.holder(Procedure.MARKETING);
+    if (holder != null) {
+      double moveSpeedModifier = holder.getCurrentPerkValue(Upgradable.PASSENGER_MOVE_SPEED);
+      this.npc.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).addModifier(new AttributeModifier(NamespaceID.from("game", "upgradable"), moveSpeedModifier, AttributeOperation.MULTIPLY_TOTAL));
     }
   }
 

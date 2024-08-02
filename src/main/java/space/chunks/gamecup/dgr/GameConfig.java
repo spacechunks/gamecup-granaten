@@ -11,6 +11,6 @@ public record GameConfig(
     int playersPerTeam
 ) {
   public static @NotNull GameConfig defaultConfig() {
-    return new GameConfig(2, 1);
+    return new GameConfig(1, 1);
   }
 }

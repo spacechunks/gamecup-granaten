@@ -39,7 +39,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Nico_ND1
  */
 public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> implements Team {
-  private static final NamedTextColor[] COLORS = new NamedTextColor[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW};
+  private static final NamedTextColor[] COLORS = new NamedTextColor[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW, NamedTextColor.AQUA,
+      NamedTextColor.DARK_AQUA, NamedTextColor.DARK_BLUE, NamedTextColor.DARK_GREEN, NamedTextColor.DARK_RED, NamedTextColor.DARK_PURPLE, NamedTextColor.LIGHT_PURPLE, NamedTextColor.GOLD,
+      NamedTextColor.WHITE};
   private static final AtomicInteger ID_COUNT = new AtomicInteger();
 
   private final Game game;
@@ -59,7 +61,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   public TeamImpl(@NotNull Game game) {
     this.game = game;
     this.actionBarHelper = new ActionBarHelper();
-    this.id = ID_COUNT.get();
+    this.id = ID_COUNT.incrementAndGet();
     this.name = "Team#"+this.id;
     this.members = new HashSet<>();
     this.money = new AtomicInteger();
@@ -132,7 +134,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
       case 1 -> Color.RED;
       case 2 -> Color.GREEN;
       case 3 -> Color.YELLOW;
-      default -> throw new IllegalStateException("Unexpected value: "+this.id);
+      default -> Color.PURPLE;
     };
   }
 
@@ -231,6 +233,20 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   @Override
   public @NotNull String name() {
     return this.name;
+  }
+
+  @Override
+  public @NotNull Component displayName() {
+    Component result = Component.empty();
+    int i = 0;
+    for (Member member : this.members) {
+      result = result.append(member.displayName().color(NamedTextColor.GOLD));
+
+      if (i++ < this.members.size()-1) {
+        result = result.append(Component.text(", ").color(NamedTextColor.DARK_GRAY));
+      }
+    }
+    return result;
   }
 
   @Override

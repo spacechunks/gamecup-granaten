@@ -25,10 +25,18 @@ public final class UpgradeHolder {
     return getPerkValue(key, this.currentLevel);
   }
 
+  public double getCurrentPerkValue(@NotNull String key, double defaultValue) {
+    return getPerkValue(key, this.currentLevel, defaultValue);
+  }
+
   public double getPerkValue(@NotNull String key, int level) {
+    return getPerkValue(key, level, 0.0);
+  }
+
+  public double getPerkValue(@NotNull String key, int level, double defaultValue) {
     Double[] values = this.levelPerks.get(key);
     if (values == null) {
-      return 0.0;
+      return defaultValue;
     }
 
     if (level >= values.length) {

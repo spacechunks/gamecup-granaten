@@ -5,8 +5,16 @@ import com.google.inject.Provider;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.extern.log4j.Log4j2;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.sound.Sound.Emitter;
+import net.kyori.adventure.sound.Sound.Source;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.kyori.adventure.text.format.TextDecoration;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.Title.Times;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.command.builder.Command;
 import net.minestom.server.timer.TaskSchedule;
@@ -19,6 +27,7 @@ import space.chunks.gamecup.dgr.phase.WaitingPhase;
 import space.chunks.gamecup.dgr.phase.handler.PhaseHandler;
 import space.chunks.gamecup.dgr.team.Team;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -84,11 +93,21 @@ public final class GameImpl implements Game {
     phases().enterPhase("end");
 
     for (Map map : maps()) {
+      Team owningTeam = map.owner();
+      Audience teamAudience = owningTeam.audience();
+
+      teamAudience.playSound(Sound.sound(Key.key("entity.firework_rocket.launch"), Source.AMBIENT, 1F, 1F), Emitter.self());
+      teamAudience.showTitle(Title.title(
+          Component.text("Winners:").color(NamedTextColor.GREEN).decorate(TextDecoration.BOLD),
+          owningTeam.displayName(),
+          Times.times(Duration.ofMillis(100), Duration.ofSeconds(5), Duration.ofMillis(250))
+      ));
+
       Component message = Component.text("Game ended! Winner: ");
       if (winnerTeam == null) {
         message = message.append(Component.text("/").color(NamedTextColor.RED));
       } else {
-        message = message.append(Component.text(winnerTeam.name()));
+        message = message.append(winnerTeam.displayName());
       }
       message = message.append(Component.text(" Reason: ").color(NamedTextColor.GRAY))
           .append(Component.text(reason.name()).color(NamedTextColor.YELLOW));

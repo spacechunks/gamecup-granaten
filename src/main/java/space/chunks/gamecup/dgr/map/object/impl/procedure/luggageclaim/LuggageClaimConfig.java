@@ -21,7 +21,8 @@ public record LuggageClaimConfig(
     @NotNull PassengerQueueConfig queue,
     @NotNull Pos lineStartPos,
     @NotNull Direction lineStartDiscoverInitDirection,
-    @NotNull Direction lineStartWaitingDirection
+    @NotNull Direction lineStartWaitingDirection,
+    double baseFailRate
 ) implements ProcedureConfig {
   @Override
   public @NotNull Pos workPos() {
