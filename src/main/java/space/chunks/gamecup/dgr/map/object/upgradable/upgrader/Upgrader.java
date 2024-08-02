@@ -90,12 +90,13 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
 
           if (upgrade) {
             team.forceRemoveMoney(cost);
-            event.getPlayer().sendMessage("Upgraded: "+upgrade);
+            event.getPlayer().sendMessage(Component.text("Upgraded to level ").color(NamedTextColor.YELLOW)
+                .append(Component.text(upgradeHolder.currentLevel()).color(NamedTextColor.GREEN)));
 
             tick(team.map(), 0); // force text update
           }
         } else {
-          event.getPlayer().sendMessage("Not enough money!");
+          event.getPlayer().sendMessage(Component.text("Not enough money!").color(NamedTextColor.RED));
         }
       }
     }
@@ -167,6 +168,7 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
   private @NotNull Component formatPerkName(@NotNull String key) {
     return switch (key) {
       case Upgradable.LUGGAGE_CLAIM_SPEED -> Component.text("Rotation speed");
+      case Upgradable.LUGGAGE_CLAIM_FAIL_RATE -> Component.text("Fail rate");
       case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text("Spawn speed");
       case Upgradable.SECURITY_CHECK_SUCCESS_RATE -> Component.text("Success rate");
       case Upgradable.PROCEDURES_AMOUNT -> Component.text("Amount");
@@ -185,6 +187,9 @@ public final class Upgrader extends AbstractMapObject<UpgraderConfig> implements
       }
       case Upgradable.LUGGAGE_CLAIM_SPEED -> {
         yield Component.text("+"+percentageIncrease).style(style).append(Component.text("%")).style(style);
+      }
+      case Upgradable.LUGGAGE_CLAIM_FAIL_RATE -> {
+        yield Component.text("-"+percentageIncrease).style(style).append(Component.text("%")).style(style);
       }
       case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text(-percentageIncrease).style(style).append(Component.text("%")).style(style);
       case Upgradable.PROCEDURES_AMOUNT -> Component.text((int) value).style(style);

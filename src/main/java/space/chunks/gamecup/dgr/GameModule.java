@@ -3,19 +3,15 @@ package space.chunks.gamecup.dgr;
 import com.google.inject.assistedinject.FactoryModuleBuilder;
 import com.google.inject.multibindings.Multibinder;
 import net.minestom.server.command.builder.Command;
-import space.chunks.gamecup.dgr.debug.EnterPhaseCommand;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.MapImpl;
 import space.chunks.gamecup.dgr.map.MapModule;
-import space.chunks.gamecup.dgr.map.object.impl.flight.ForceFlightCommand;
-import space.chunks.gamecup.dgr.map.object.impl.procedure.ProcedureDebugCommand;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.Incident;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMaker;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.incident.TroubleMakerImpl;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistry;
 import space.chunks.gamecup.dgr.map.object.registry.MapObjectRegistryImpl;
 import space.chunks.gamecup.dgr.minestom.actionbar.ActionBarHelper;
-import space.chunks.gamecup.dgr.minestom.npc.NPCEntityDebugCommand;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue;
@@ -60,10 +56,9 @@ public final class GameModule extends AbstractGameModule {
     bind(GameConfig.class).toInstance(GameConfig.defaultConfig());
 
     Multibinder<Command> commandsBinder = Multibinder.newSetBinder(binder(), Command.class);
-    commandsBinder.addBinding().to(EnterPhaseCommand.class);
-    commandsBinder.addBinding().to(NPCEntityDebugCommand.class);
-    commandsBinder.addBinding().to(ForceFlightCommand.class);
-    commandsBinder.addBinding().to(ProcedureDebugCommand.class);
+    //commandsBinder.addBinding().to(EnterPhaseCommand.class);
+    //commandsBinder.addBinding().to(NPCEntityDebugCommand.class);
+    //commandsBinder.addBinding().to(ForceFlightCommand.class);
 
     bind(ActionBarHelper.class).asEagerSingleton();
 

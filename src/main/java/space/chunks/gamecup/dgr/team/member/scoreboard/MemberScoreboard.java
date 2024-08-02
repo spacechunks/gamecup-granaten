@@ -88,7 +88,7 @@ public class MemberScoreboard extends AbstractMapObject<MapObjectConfigEntryDefa
     this.sidebar.updateLineContent("money_2", Component.text(team == null ? "/" : Integer.toString(team.money())).color(NamedTextColor.GOLD));
 
     this.sidebar.updateLineContent("reputation_1", Component.text("Reputation:").color(NamedTextColor.GRAY));
-    this.sidebar.updateLineContent("reputation_2", team == null ? Component.text("/") : team.reputation().getComponent());
+    this.sidebar.updateLineContent("reputation_2", team == null ? Component.text("/") : team.reputation().getComponent(true));
   }
 
   @Override

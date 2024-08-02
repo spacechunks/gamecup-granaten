@@ -48,8 +48,11 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
     super.handleRegister(parent);
 
     Animation animation = new LuggageClaimAnimation(this);
+    animation.config(this.config);
     animation(animation);
     parent.queueMapObjectRegister(animation);
+
+    passengerQueue();
   }
 
   @Override
@@ -81,6 +84,8 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
       });
       Direction d = curved ? nextEntry.direction() : null;
       model.setInstance(instance, lineEntry.pos().add(0.5, 0.75, 0.5).withYaw(yaw -> getModelDirection(yaw, curved, lineEntry.direction(), d)));
+
+      lineEntry.model(model);
     }
 
     Collections.shuffle(passengerQueue.waitingSlots());
@@ -115,7 +120,7 @@ public class LuggageClaimProcedure extends AbstractProcedure<LuggageClaimConfig>
       }
 
       instance.setBlock(currentPos, Block.BARRIER); // TODO: remove this, because the map will consist of barrier blocks
-      this.line.add(new LuggageClaimLineEntry(currentPos, lastDirection, waitingSlot, null));
+      this.line.add(new LuggageClaimLineEntry(currentPos, lastDirection, waitingSlot, null, null));
 
       /*
       Uncomment to visualize the line:

@@ -46,8 +46,7 @@ public class WaitingPhase extends AbstractPhase {
 
       event.getPlayer().sendResourcePacks(ResourcePackRequest.resourcePackRequest()
           .prompt(Component.text("Use it!"))
-          .callback((uuid, status, audience) -> {
-          }).packs(ResourcePackInfo.resourcePackInfo(RESOURCE_PACK_UUID, URI.create("https://filebin.net/d3vr254qadlrt6m4/texture_pack__3_.zip"), "bc9e42b86fbdb7801d558dba88d5195b32af9639"))
+          .packs(ResourcePackInfo.resourcePackInfo(RESOURCE_PACK_UUID, URI.create("https://download.mc-packs.net/pack/38f5193f2c1a8479c04e6a96b29f4e77d80a52d2.zip"), "38f5193f2c1a8479c04e6a96b29f4e77d80a52d2"))
           .asResourcePackRequest());
     }));
 

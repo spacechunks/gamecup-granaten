@@ -1,5 +1,10 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.ItemEntity;
@@ -10,7 +15,9 @@ import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
 import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.PassengerImpl;
 import space.chunks.gamecup.dgr.passenger.queue.PassengerQueue.WaitingSlot;
@@ -24,13 +31,18 @@ import java.util.List;
 /**
  * @author Nico_ND1
  */
+@Accessors(fluent=true)
 public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig> implements Animation {
   private static final int TICKS_PER_STEP = 30;
 
   private final LuggageClaimProcedure luggageClaim;
   private final List<Luggage> luggage;
 
-  public LuggageClaimAnimation(LuggageClaimProcedure luggageClaim) {
+  @Getter
+  @Setter
+  private boolean halt;
+
+  public LuggageClaimAnimation(@NotNull LuggageClaimProcedure luggageClaim) {
     this.luggageClaim = luggageClaim;
     this.luggage = new ArrayList<>();
   }
@@ -44,6 +56,17 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
   @Override
   public @NotNull TickResult tick(@NotNull Map map, int currentTick) {
     if (this.luggageClaim.line() == null) {
+      return TickResult.CONTINUE;
+    }
+
+    if (this.halt) {
+      return TickResult.CONTINUE;
+    } else if (tickFail(map, currentTick)) {
+      Animation failAnimation = new LuggageClaimStuckAnimation(this.luggageClaim, this);
+      failAnimation.config(this.config);
+      map.queueMapObjectRegister(failAnimation);
+
+      map.owner().audience().sendMessage(Component.text("Luggage claim is stuck!").color(NamedTextColor.RED));
       return TickResult.CONTINUE;
     }
 
@@ -77,6 +100,21 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
 
     this.luggage.removeIf(this::stepLuggage);
     return TickResult.CONTINUE;
+  }
+
+  private boolean tickFail(Map map, int currentTick) {
+    if (currentTick % 20 != 0) {
+      return false;
+    }
+
+    UpgradeHolder marketingUpgradeHolder = map.upgradeRegistry().holder(Procedure.MARKETING);
+    if (marketingUpgradeHolder != null) {
+      double baseFailRate = this.config.baseFailRate();
+      double failRateModifier = marketingUpgradeHolder.getCurrentPerkValue(Upgradable.LUGGAGE_CLAIM_FAIL_RATE, 1.0D);
+      double random = Math.random();
+      return random < baseFailRate * failRateModifier;
+    }
+    return false;
   }
 
   private void collectLuggage(@NotNull Luggage luggage) {

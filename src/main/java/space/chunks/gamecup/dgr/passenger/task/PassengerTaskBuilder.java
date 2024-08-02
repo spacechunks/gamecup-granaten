@@ -36,6 +36,10 @@ public final class PassengerTaskBuilder {
   // Baggage Claim (optional)
   // Pass Control
   private void createTasksForArriving(Queue<PassengerTask> tasks, Passenger passenger) {
+    if (passenger.baggage() == null) {
+      passenger.newBaggage();
+    }
+
     if (passenger.baggage() != null) {
       tasks.add(new PassengerTask(passenger, Procedure.LUGGAGE_CLAIM));
     }

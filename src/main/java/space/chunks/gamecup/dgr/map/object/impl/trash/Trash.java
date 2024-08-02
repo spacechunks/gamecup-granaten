@@ -84,6 +84,7 @@ public class Trash extends AbstractMapObject<TrashConfig> implements MapObject, 
       this.parent.queueMapObjectUnregister(this);
       this.cleaned = true;
       player.playSound(Sound.sound(Key.key("entity.parrot.imitate.slime"), Source.AMBIENT, 1F, 0.25F));
+      this.game.findTeam(player).ifPresent(team -> team.addMoney(5));
     }
   }
 

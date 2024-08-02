@@ -39,7 +39,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Nico_ND1
  */
 public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> implements Team {
-  private static final NamedTextColor[] COLORS = new NamedTextColor[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW};
+  private static final NamedTextColor[] COLORS = new NamedTextColor[]{NamedTextColor.BLUE, NamedTextColor.RED, NamedTextColor.GREEN, NamedTextColor.YELLOW, NamedTextColor.AQUA,
+      NamedTextColor.DARK_AQUA, NamedTextColor.DARK_BLUE, NamedTextColor.DARK_GREEN, NamedTextColor.DARK_RED, NamedTextColor.DARK_PURPLE, NamedTextColor.LIGHT_PURPLE, NamedTextColor.GOLD,
+      NamedTextColor.WHITE};
   private static final AtomicInteger ID_COUNT = new AtomicInteger();
 
   private final Game game;
@@ -59,7 +61,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   public TeamImpl(@NotNull Game game) {
     this.game = game;
     this.actionBarHelper = new ActionBarHelper();
-    this.id = ID_COUNT.get();
+    this.id = ID_COUNT.incrementAndGet();
     this.name = "Team#"+this.id;
     this.members = new HashSet<>();
     this.money = new AtomicInteger();
@@ -95,23 +97,34 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
 
       int moneyReward = passenger.calculateMoneyReward();
       addMoney(moneyReward);
+      updateActionbar(1, 0, 0);
       this.reputation.addEntry(passenger.config().happyPassengerReputationModifier(), passenger.config().happyPassengerReputationLifetime());
-
-      this.actionBarHelper.sendActionBar(audience(), this, (@NotNull TeamImpl key, @Nullable MoneyAddActionBar previousValue) -> {
-        if (previousValue == null) {
-          return new MoneyAddActionBar(1, moneyReward);
-        }
-        return previousValue.add(moneyReward);
-      }, (key, value) -> {
-        return Component.text("+ "+value.passengers).color(NamedTextColor.GREEN)
-            .append(Component.text(" | ").color(NamedTextColor.DARK_GRAY))
-            .append(Component.text("+ "+value.money, NamedTextColor.GOLD));
-      });
 
       MinecraftServer.getGlobalEventHandler().call(new ForceUpdateEvent(this));
     } else if (event.reason() == UnregisterReason.PASSENGER_LEFT_ANGRY) {
       this.reputation.addEntry(passenger.config().angryPassengerReputationModifier(), passenger.config().angryPassengerReputationLifetime());
     }
+  }
+
+  private void updateActionbar(int passengersAdded, int moneyAdded, int moneyLost) {
+    this.actionBarHelper.sendActionBar(audience(), this, (@NotNull TeamImpl key, @Nullable MoneyAddActionBar previousValue) -> {
+      if (previousValue == null) {
+        return new MoneyAddActionBar(passengersAdded, moneyAdded, moneyLost);
+      }
+      return previousValue.add(moneyAdded, moneyLost);
+    }, (key, value) -> {
+      Component component = Component.text("+ "+value.passengers).color(NamedTextColor.GREEN)
+          .append(Component.text(" | ").color(NamedTextColor.DARK_GRAY))
+          .append(Component.text("+ "+value.money, NamedTextColor.GOLD));
+      if (value.moneyLost > 0) {
+        component = component
+            .append(Component.text(" (").color(NamedTextColor.GRAY))
+            .append(Component.text("-").color(NamedTextColor.RED))
+            .append(Component.text(value.moneyLost).color(NamedTextColor.RED))
+            .append(Component.text(")").color(NamedTextColor.GRAY));
+      }
+      return component;
+    });
   }
 
   private void handleInstanceEntityRemove(RemoveEntityFromInstanceEvent event) {
@@ -132,7 +145,7 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
       case 1 -> Color.RED;
       case 2 -> Color.GREEN;
       case 3 -> Color.YELLOW;
-      default -> throw new IllegalStateException("Unexpected value: "+this.id);
+      default -> Color.PURPLE;
     };
   }
 
@@ -195,7 +208,12 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
 
   @Override
   public void addMoney(int money) {
+    int moneyOriginal = money;
+    double moneyModifier = this.reputation.moneyModifier();
+    money = Math.max(1, (int) (moneyModifier * money));
+
     this.money.addAndGet(money);
+    updateActionbar(0, money, moneyOriginal-money);
   }
 
   @Override
@@ -231,6 +249,20 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   @Override
   public @NotNull String name() {
     return this.name;
+  }
+
+  @Override
+  public @NotNull Component displayName() {
+    Component result = Component.empty();
+    int i = 0;
+    for (Member member : this.members) {
+      result = result.append(member.displayName().color(NamedTextColor.GOLD));
+
+      if (i++ < this.members.size()-1) {
+        result = result.append(Component.text(", ").color(NamedTextColor.DARK_GRAY));
+      }
+    }
+    return result;
   }
 
   @Override
@@ -276,9 +308,11 @@ public final class TeamImpl extends AbstractMapObject<MapObjectConfigEntry> impl
   private class MoneyAddActionBar {
     private int passengers;
     private int money;
+    private int moneyLost;
 
-    private @NotNull MoneyAddActionBar add(int add) {
+    private @NotNull MoneyAddActionBar add(int add, int lost) {
       this.money += add;
+      this.moneyLost += lost;
       this.passengers++;
       return this;
     }

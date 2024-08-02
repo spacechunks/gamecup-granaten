@@ -33,5 +33,7 @@ public interface Upgradable extends MapObject {
   String PROCEDURES_AMOUNT = "procedures_amount";
   String SECURITY_CHECK_SUCCESS_RATE = "security_check_success_rate";
   String LUGGAGE_CLAIM_SPEED = "luggage_claim_speed";
+  String LUGGAGE_CLAIM_FAIL_RATE = "luggage_claim_fail_rate";
   String FLIGHT_RADAR_SPAWN_SPEED = "flight_radar_spawn_speed";
+  String PASSENGER_MOVE_SPEED = "passenger_move_speed";
 }

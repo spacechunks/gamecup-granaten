@@ -64,6 +64,8 @@ public interface Passenger extends MapObject, Ticking {
   @Nullable
   ItemStack baggage();
 
+  void newBaggage();
+
   enum Destination {
     ARRIVING,
     LEAVING
