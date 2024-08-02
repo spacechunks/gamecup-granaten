@@ -5,6 +5,7 @@ import net.kyori.adventure.resource.ResourcePackInfo;
 import net.kyori.adventure.resource.ResourcePackRequest;
 import net.kyori.adventure.text.Component;
 import net.minestom.server.MinecraftServer;
+import net.minestom.server.entity.Player;
 import net.minestom.server.event.EventListener;
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent;
 import net.minestom.server.event.player.PlayerDisconnectEvent;
@@ -28,17 +29,16 @@ import java.util.UUID;
 public class WaitingPhase extends AbstractPhase {
   private static final UUID RESOURCE_PACK_UUID = UUID.fromString("3ADE6EBA-1205-4907-8829-4EB5C522DAB4");
 
+  private final GameFactory factory;
   private Instance spawningInstance;
   private int startTicks;
 
   @Inject
   public WaitingPhase(@NotNull GameFactory factory) {
+    this.factory = factory;
+
     addListener(EventListener.of(AsyncPlayerConfigurationEvent.class, event -> {
       event.setSpawningInstance(this.spawningInstance);
-
-      Member member = factory.createMember(event.getPlayer());
-      Team team = this.game.teams().stream().min(Comparator.comparingInt(team2 -> team2.members().size())).orElseThrow();
-      member.assignTeam(team);
 
       if (this.startTicks == 0) {
         this.startTicks = 16;
@@ -85,6 +85,12 @@ public class WaitingPhase extends AbstractPhase {
     MinecraftServer.getSchedulerManager().scheduleTask(() -> {
       MinecraftServer.getInstanceManager().unregisterInstance(this.spawningInstance);
     }, TaskSchedule.tick(50), TaskSchedule.stop());
+
+    for (Player onlinePlayer : MinecraftServer.getConnectionManager().getOnlinePlayers()) {
+      Member member = this.factory.createMember(onlinePlayer);
+      Team team = this.game.teams().stream().min(Comparator.comparingInt(team2 -> team2.members().size())).orElseThrow();
+      member.assignTeam(team);
+    }
   }
 
   @Override
