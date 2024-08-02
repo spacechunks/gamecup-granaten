@@ -130,5 +130,10 @@ public class RealisticFlightRadar extends FlightRadarImpl implements FlightRadar
       }
       return null;
     }
+
+    @Override
+    public boolean isValid() {
+      return this.passengers.stream().filter(Passenger::isValid).count() > 0;
+    }
   }
 }
