@@ -1,5 +1,7 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.securitycheck;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.entity.Player;
 import net.minestom.server.entity.Player.Hand;
@@ -118,7 +120,7 @@ public class SecurityCheckFailedIncident extends AbstractIncident<MapObjectConfi
     });
 
     parent.executeForMembers(member -> {
-      member.player().sendMessage("Security check failed! Pick them up and throw them out!");
+      member.player().sendMessage(Component.text("Security check failed! Pick them up and throw them out!").color(NamedTextColor.RED));
     });
   }
 

@@ -7,8 +7,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
 import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
-import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
-import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.task.PassengerTask;
@@ -69,14 +67,7 @@ public class RealisticFlightRadar extends FlightRadarImpl implements FlightRadar
     @Override
     public double passengersPerTick() {
       int tickDiff = this.targetFinishTick-this.startTick;
-      double baseValue = (double) this.passengerGoal / (double) tickDiff;
-
-      UpgradeHolder marketingUpgradeHolder = RealisticFlightRadar.this.parent.upgradeRegistry().holder(Procedure.MARKETING);
-      if (marketingUpgradeHolder != null) {
-        double modifier = marketingUpgradeHolder.getCurrentPerkValue(Upgradable.FLIGHT_RADAR_SPAWN_SPEED);
-        baseValue *= modifier;
-      }
-      return baseValue;
+      return (double) this.passengerGoal / (double) tickDiff;
     }
 
     @Override

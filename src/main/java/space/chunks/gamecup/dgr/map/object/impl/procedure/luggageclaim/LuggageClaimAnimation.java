@@ -112,7 +112,6 @@ public class LuggageClaimAnimation extends AbstractAnimation<LuggageClaimConfig>
       double baseFailRate = this.config.baseFailRate();
       double failRateModifier = marketingUpgradeHolder.getCurrentPerkValue(Upgradable.LUGGAGE_CLAIM_FAIL_RATE, 1.0D);
       double random = Math.random();
-      System.out.println("Fail rate: " + (baseFailRate * failRateModifier) + " Random: " + random + " baseFailRate: " + baseFailRate + " failRateModifier: " + failRateModifier);
       return random < baseFailRate * failRateModifier;
     }
     return false;

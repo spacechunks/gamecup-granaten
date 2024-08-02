@@ -7,6 +7,9 @@ import space.chunks.gamecup.dgr.GameTickTask;
 import space.chunks.gamecup.dgr.map.object.AbstractMapObject;
 import space.chunks.gamecup.dgr.map.object.config.MapObjectConfigEntry;
 import space.chunks.gamecup.dgr.map.object.impl.flight.FlightRadarConfig.DestinationConfig;
+import space.chunks.gamecup.dgr.map.object.impl.procedure.Procedure;
+import space.chunks.gamecup.dgr.map.object.upgradable.Upgradable;
+import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
 import space.chunks.gamecup.dgr.passenger.Passenger;
 import space.chunks.gamecup.dgr.passenger.Passenger.Destination;
 import space.chunks.gamecup.dgr.passenger.PassengerConfig;
@@ -115,6 +118,13 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
       }
 
       int randomDelay = destinationConfig.randomDelay();
+
+      UpgradeHolder marketingUpgradeHolder = this.parent.upgradeRegistry().holder(Procedure.MARKETING);
+      if (marketingUpgradeHolder != null) {
+        double modifier = marketingUpgradeHolder.getCurrentPerkValue(Upgradable.FLIGHT_RADAR_SPAWN_SPEED);
+        randomDelay = (int) (randomDelay * modifier);
+      }
+
       int passengerCount = destinationConfig.randomPassengers();
       Flight flight = createFlight(destinationConfig, passengerCount, currentTick, randomDelay / 3);
       this.flights.add(flight);

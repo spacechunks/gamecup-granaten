@@ -37,5 +37,25 @@
       200,
       500
     ]
+  },
+  {
+    "name": "ticket_control_upgrader",
+    "targetGroup": "ticket_control",
+    "spawnPosition": {
+      "x": -32.5,
+      "y": -55.0,
+      "z": -10.5,
+      "yaw": 90.0
+    },
+    "costs": [
+      50,
+      200,
+      300,
+      400,
+      500,
+      500,
+      500,
+      600
+    ]
   }
 ]

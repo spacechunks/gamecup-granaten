@@ -1,5 +1,9 @@
 package space.chunks.gamecup.dgr.map.object.impl.procedure.luggageclaim;
 
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.sound.Sound.Emitter;
+import net.kyori.adventure.sound.Sound.Source;
 import net.minestom.server.coordinate.BlockVec;
 import net.minestom.server.entity.Entity;
 import net.minestom.server.event.EventListener;
@@ -31,6 +35,7 @@ public class LuggageClaimStuckAnimation extends AbstractAnimation<LuggageClaimCo
       if (blockPosition.sameBlock(lineEntry.pos())) {
         event.setCancelled(true);
         this.parent.queueMapObjectUnregister(this, UnregisterReason.INCIDENT_RESOLVED);
+        event.getPlayer().playSound(Sound.sound(Key.key("entity.firework_rocket.launch"), Source.AMBIENT, 1F, 1F), Emitter.self());
         return;
       }
     }

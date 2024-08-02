@@ -84,7 +84,6 @@ public final class FixedHappyPassengersGameGoal implements GameGoal, Ticking {
           Boolean goalSentState = goalSentStates[i];
 
           if (goalSentState == null || !goalSentState) {
-            System.out.println("A Team has reached "+team.passengersMoved()+"/"+this.happyPassengers+" happy passengers!\nStates: " +Arrays.toString(goalSentStates) + " with " + i + "=" + alertTick);
             for (Team t : this.game.teams()) {
               t.audience().sendMessage(Component.text("A Team").color(TextColor.color(team.color()))
                   .append(Component.text(" has reached ").color(NamedTextColor.GRAY)

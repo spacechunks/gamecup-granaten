@@ -43,8 +43,8 @@ public class MarketingGui extends SinglePageGui {
     UpgradeHolderRegistry upgradeHolderRegistry = this.map.upgradeRegistry();
     UpgradeHolder holder = upgradeHolderRegistry.holder(Procedure.MARKETING);
     if (holder != null) {
-      drawItem(0, Material.RECOVERY_COMPASS, Upgradable.FLIGHT_RADAR_SPAWN_SPEED, holder);
-      drawItem(1, Material.LEATHER_BOOTS, Upgradable.PASSENGER_MOVE_SPEED, holder);
+      drawItem(3, Material.RECOVERY_COMPASS, Upgradable.FLIGHT_RADAR_SPAWN_SPEED, holder);
+      drawItem(5, Material.LEATHER_BOOTS, Upgradable.PASSENGER_MOVE_SPEED, holder);
     } else {
       close();
     }
@@ -57,15 +57,16 @@ public class MarketingGui extends SinglePageGui {
     if (currentLevel < holder.maxLevel()) {
       lore.add(Component.text("Next: ").color(NamedTextColor.GRAY).append(formatPerkValue(key, holder.getPerkValue(key, currentLevel+1), Style.style(NamedTextColor.GREEN, TextDecoration.ITALIC))));
       lore.add(Component.empty());
-      lore.add(Component.text("Cost: ").color(NamedTextColor.YELLOW).append(Component.text(getCost(currentLevel+1))));
+      lore.add(Component.text("Cost: ").color(NamedTextColor.GRAY).append(Component.text(getCost(currentLevel+1)).color(NamedTextColor.GOLD)));
     } else {
       lore.add(Component.empty());
       lore.add(Component.text("Max level reached").style(Style.style(NamedTextColor.GREEN, TextDecoration.ITALIC)));
     }
 
     setItem(slot, Item.of(ItemStack.of(iconType)
-            .withCustomName(formatPerkName(key).append(Component.text(" (Lv. "+currentLevel+")").color(NamedTextColor.GRAY)))
-            .withLore(lore))
+            .withCustomName(formatPerkName(key).color(NamedTextColor.YELLOW).append(Component.text(" (Lv. "+currentLevel+")").color(NamedTextColor.GRAY)))
+            .withLore(lore)
+            .withoutExtraTooltip())
         .addAllClickListener(event -> {
           boolean upgrade = holder.upgrade();
           if (upgrade) {
@@ -109,7 +110,7 @@ public class MarketingGui extends SinglePageGui {
         yield Component.text("+"+percentageIncrease).style(style).append(Component.text("%")).style(style);
       }
       case Upgradable.FLIGHT_RADAR_SPAWN_SPEED -> Component.text(-percentageIncrease).style(style).append(Component.text("%")).style(style);
-      case Upgradable.PASSENGER_MOVE_SPEED -> Component.text("+"+percentageIncrease).style(style).append(Component.text("%")).style(style);
+      case Upgradable.PASSENGER_MOVE_SPEED -> Component.text("+"+percentageIncreaseFlipped).style(style).append(Component.text("%")).style(style);
       case Upgradable.PROCEDURES_AMOUNT -> Component.text((int) value).style(style);
       default -> throw new IllegalArgumentException("Unknown perk key: "+key);
     };

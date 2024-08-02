@@ -63,7 +63,7 @@ public class PassengerImpl implements Passenger {
   private final Pos spawnPosition;
   private final Destination destination;
   private final Queue<PassengerTask> taskQueue;
-  private final ItemStack baggage;
+  private ItemStack baggage;
 
   private Map map;
   private PassengerTask task;
@@ -213,6 +213,11 @@ public class PassengerImpl implements Passenger {
   @Override
   public @Nullable ItemStack baggage() {
     return this.baggage;
+  }
+
+  @Override
+  public void newBaggage() {
+    this.baggage = BAGGAGE_ITEMS[(int) (Math.random() * BAGGAGE_ITEMS.length)];
   }
 
   @Override
