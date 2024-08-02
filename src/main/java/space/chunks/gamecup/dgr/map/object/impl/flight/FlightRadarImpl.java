@@ -144,15 +144,15 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
             config.destination(),
             0.75,
             30,
-            0.9,
-            0.1,
+            0.6,
+            0.2,
             0.3,
             10,
-            20,
+            5,
             1,
-            45 * 20,
-            -3,
-            75 * 20
+            50 * 20,
+            -2,
+            65 * 20
         ));
         flight.addPassenger(passenger);
 

@@ -94,7 +94,7 @@
   {
     "name": "ticket_control_2",
     "levelPerks": null,
-    "minLevel": 3,
+    "minLevel": 5,
     "workPos": {
       "x": -31.5,
       "y": -56.0,
@@ -186,7 +186,7 @@
         4
       ]
     },
-    "minLevel": 5,
+    "minLevel": 3,
     "workPos": {
       "x": -33.5,
       "y": -56.0,
