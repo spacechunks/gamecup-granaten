@@ -94,4 +94,9 @@ public class FlightImpl implements Flight {
   public Boolean isBoarding() {
     return null;
   }
+
+  @Override
+  public boolean isValid() {
+    return true;
+  }
 }

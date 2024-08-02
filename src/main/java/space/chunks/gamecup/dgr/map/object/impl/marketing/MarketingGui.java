@@ -20,6 +20,7 @@ import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolder;
 import space.chunks.gamecup.dgr.map.object.upgradable.UpgradeHolderRegistry;
 import space.chunks.gamecup.dgr.minestom.inventory.Item;
 import space.chunks.gamecup.dgr.minestom.inventory.SinglePageGui;
+import space.chunks.gamecup.dgr.team.Team;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,11 +69,19 @@ public class MarketingGui extends SinglePageGui {
             .withLore(lore)
             .withoutExtraTooltip())
         .addAllClickListener(event -> {
-          boolean upgrade = holder.upgrade();
-          if (upgrade) {
-            event.getPlayer().playSound(Sound.sound(Key.key("entity.player.levelup"), Source.AMBIENT, 1F, 1F), this.config.spawnPosition());
+          Team team = this.map.owner();
+          if (team.money() >= getCost(currentLevel+1)) {
+            boolean upgrade = holder.upgrade();
+
+            if (upgrade) {
+              team.forceRemoveMoney(getCost(currentLevel+1));
+              event.getPlayer().playSound(Sound.sound(Key.key("entity.player.levelup"), Source.AMBIENT, 1F, 1F), this.config.spawnPosition());
+            }
+
+            redraw();
+          } else {
+            event.getPlayer().sendMessage(Component.text("Not enough money!").color(NamedTextColor.RED));
           }
-          redraw();
         }));
   }
 

@@ -34,4 +34,6 @@ public interface Flight {
 
   @Nullable
   Boolean isBoarding();
+
+  boolean isValid();
 }

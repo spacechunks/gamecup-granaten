@@ -107,7 +107,7 @@ public class FlightRadarImpl extends AbstractMapObject<FlightRadarConfig> implem
   }
 
   protected void tickFlightDeletor(int currentTick) {
-    this.flights.removeIf(flight -> flight.targetFinishTick() == currentTick);
+    this.flights.removeIf(flight -> !flight.isValid() || flight.targetFinishTick() == currentTick);
   }
 
   protected void tickFlightCreator(int currentTick) {
