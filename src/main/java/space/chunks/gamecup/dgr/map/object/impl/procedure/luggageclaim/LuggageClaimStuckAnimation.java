@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import space.chunks.gamecup.dgr.map.Map;
 import space.chunks.gamecup.dgr.map.object.impl.animation.AbstractAnimation;
 import space.chunks.gamecup.dgr.map.object.impl.animation.Animation;
+import space.chunks.gamecup.dgr.team.Team;
 
 
 /**
@@ -33,6 +34,11 @@ public class LuggageClaimStuckAnimation extends AbstractAnimation<LuggageClaimCo
     BlockVec blockPosition = event.getBlockPosition();
     for (LuggageClaimLineEntry lineEntry : this.procedure.line()) {
       if (blockPosition.sameBlock(lineEntry.pos())) {
+        Team owner = this.parent.owner();
+        if (owner.members().stream().noneMatch(member -> member.uuid().equals(event.getPlayer().getUuid()))) {
+          return;
+        }
+
         event.setCancelled(true);
         this.parent.queueMapObjectUnregister(this, UnregisterReason.INCIDENT_RESOLVED);
         event.getPlayer().playSound(Sound.sound(Key.key("entity.firework_rocket.launch"), Source.AMBIENT, 1F, 1F), Emitter.self());
